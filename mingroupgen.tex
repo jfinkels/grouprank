@@ -23,23 +23,31 @@
 \begin{document}
 \maketitle
 
+In this work we show that the problem of computing the minimum generating set of a group is decidable in deterministic polynomial time.
+
 %% A \emph{group} is a two-tuple $(G, \cdot)$ where $G$ is a (finite or infinite) set and $\cdot$ is a binary operation on $G$ satisfying closure, associativity, and invertibility.
 %% The \emph{Cayley table} of a group is a matrix whose rows and columns are labelled by elements of $G$, and where entry $x$ is labelled by $(a, b)$ if $a \cdot b = x$.
+
+We denote by \P{} the class of decision problems decidable by a deterministic Turing machine halting in polynomial time.
+We denote by $\L^2$ the class of decision problems decidable by a deterministic Turing machine using at most $O(\log^2 n)$ space.
+The (inclusion) relationship between \P{} and $\L^2$ is unknown.
 
 If $(G, \cdot)$ is a group and $S$ is a subset of $G$ then the set of words on $S$ is denoted $S^*$ and the set of inverses of elements in $S$ is denoted $S^{-1}$.
 If $T \subseteq G$, the set \emph{generated} by $T$, denoted $\gen{T}$, is defined by
 \begin{equation*}
-  \gen{T} = \{ x \in G | x \text{ is the product of elements in } T \}.
+  \gen{T} = \{ x \in G \, | \, x \text{ is the product of elements in } T \}.
 \end{equation*}
 A \emph{generating set} for $(G, \cdot)$ is a set $T \subseteq G$ such that $\gen{T} = G$.
 
+Some applications may require computing the minimum generating set for a given group.
+We define a formal optimization problem in order to study its complexity, as well as the corresponding ``budget'' problem (a characterization of the optimization problem as a decision problem).
 
 \begin{definition}[\textsc{Minimum Group Generating Set}]
   \mbox{}
 
   \textbf{Instance:} finite group $(G, \cdot)$ (given as a Cayley table).
 
-  \textbf{Solution:} finite set $T$ such that $\gen{T} = G$.
+  \textbf{Solution:} finite set $T \subseteq G$ such that $\gen{T} = G$.
 
   \textbf{Measure:} $|T|$.
 
@@ -54,12 +62,14 @@ A \emph{generating set} for $(G, \cdot)$ is a set $T \subseteq G$ such that $\ge
   \textbf{Question:} Does there exist a $T \subseteq G$ such that $\gen{T} = G$ and $|T| \leq k$?
 \end{definition}
 
+In order to show that the \textsc{Minimum Group Generating Set Budget} problem is decidable in deterministic polynomial time, we reduce it to the \textsc{Minimum Group Rank Budget} problem, which is known to be \P-complete.
+
 \begin{definition}[\textsc{Minimum Group Rank}]
   \mbox{}
 
   \textbf{Instance:} finite set $S$, finite set $U \subseteq (S \cup S^{-1})^*$.
 
-  \textbf{Solution:} finite set $T$ such that $\gen{T} = \gen{U}$.
+  \textbf{Solution:} finite set $T \subseteq \gen{U}$ such that $\gen{T} = \gen{U}$.
 
   \textbf{Measure:} $|T|$.
 
@@ -74,14 +84,15 @@ A \emph{generating set} for $(G, \cdot)$ is a set $T \subseteq G$ such that $\ge
   \textbf{Question:} Does there exist a $T \subseteq \gen{U}$ such that $\gen{T} = \gen{U}$ and $|T| \leq k$?
 \end{definition}
 
-Previously, the \textsc{Minimum Group Generating Set Budget} problem was known to be in $\L^2$, the class of problems decidable by a deterministic Turing machine using at most $O(\log^2 n)$ space \cite{lsz77}.
+Previously, the \textsc{Minimum Group Generating Set Budget} problem was known to be in $\L^2$, the class of problems decidable by a deterministic Turing machine using at most $O(\log^2 n)$ space \cite{lsz77} (see \cite[Proposition~3]{at06} for a brief description of the algorithm; I can't find a copy of \cite{lsz77} online).
+%% A related problem, the \textsc{Quasigroup Isomorphism Problem}, is known to be in $\GC(O(\log^2 n), \FOLL)$ where $\GC(O(f(n)), \mathcal{C})$ is the class of languages decidable by a $\mathcal{C}$ algorithm augmented with $O(f(n))$ nondeterministic bits and $\FOLL$ is the class of languages decidable by a uniform family of circuits of polynomial size, unbounded fan-in, and depth $O(\log \log n)$.
 
 \begin{theorem}
   $\textsc{Minimum Group Generating Set Budget} \in \P \cap \L^2$.
 \end{theorem}
 \begin{proof}
   We show a logarithmic space many-one reduction from \textsc{Minimum Group Generating Set Budget} to \textsc{Minimum Group Rank Budget}.
-  Since \textsc{Minimum Group Rank Budget} is in \P{} (in fact, it is complete for \P{} under logarithmic space many-one reductions \cite{ghr95}) and \P{} is closed under polynomial time many-one reductions, we conclude that \textsc{Minimum Group Generating Set Budget} is also in \P.
+  Since \textsc{Minimum Group Rank Budget} is in \P{} (in fact, it is complete for \P{} under logarithmic space many-one reductions \cite[Problem~A.8.11]{ghr95}) and \P{} is closed under polynomial time many-one reductions, we conclude that \textsc{Minimum Group Generating Set Budget} is also in \P.
   The reduction is the mapping $\langle (G, \cdot), k \rangle \mapsto \langle G, G, k \rangle$.
   First, we observe that $\langle G, G, k \rangle$ is a correctly formatted instance of the reduced problem: $G$ is a finite set and $G \subseteq (G \cup G^{-1})^*$.
 
