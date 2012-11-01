@@ -13,7 +13,7 @@
 \declaretheorem[]{theorem}
 %\declaretheorem[numberlike=theorem]{corollary}
 %\declaretheorem[numberlike=theorem]{lemma}
-%\declaretheorem[numberlike=theorem]{proposition}
+\declaretheorem[numberlike=theorem]{proposition}
 \declaretheorem[numberlike=theorem, style=definition]{definition}
 
 \title{Complexity of computing minimum generating sets for groups}
@@ -104,6 +104,42 @@ Previously, the \textsc{Minimum Group Generating Set Budget} problem was known t
   Therefore $\langle (G, \cdot), k \rangle \in \textsc{Minimum Group Generating Set Budget}$.
 
   We have shown a correct logarithmic space many-one reduction to a problem in \P, and we conclude that $\textsc{Minimum Group Generating Set Budget} \in \P$.
+\end{proof}
+
+In this section we provide a clearer presentation of the proof of \cite[Theorem~7]{at06}.
+
+\begin{proposition}
+  $\textsc{MIN-NILP-GROUP-GEN} \leq_{ctt}^P \textsc{MIN-p-GROUP-GEN}$.
+\end{proposition}
+\begin{proof}
+  Define the reduction by
+  \begin{equation*}
+    \langle G, k \rangle \mapsto \bigwedge_{i=1}^m \langle S_{p_i}, k \rangle
+  \end{equation*}
+  for all nilpotent groups $G$ of order $n$ and all postive integers $k$, where the prime factorization of $n$ is $p_1^{e_1}p_2^{e_2}\dotsb p_m^{e_m}$ and $S_{p_i}$ is the unique $p_i$-Sylow subgroup of $G$.
+  Since the length of the input is $n^2$, the prime factorization of $n$ can be computed in polynomial time with respect to the length of the input.
+  For each $i$, the Cayley table of the $p_i$-Sylow subgroup of $G$ can be computed in polynomial time because \ldots.
+  The number of clauses in the conjunction is $m$, which is the number of prime factors of $n$, which is bounded by a polynomial in $n^2$ because \ldots.
+  Hence the reduction is polynomial time computable.
+
+  Suppose $\langle G, k \rangle \in \textsc{MIN-NILP-GROUP-GEN}$.
+  \ldots
+\end{proof}
+
+\begin{proposition}
+  $\textsc{MIN-p-GROUP-GEN} \leq_m^P \textsc{MIN-ELEM-ABEL-GROUP-GEN}$.
+\end{proposition}
+\begin{proof}
+  Define the reduction by
+  \begin{equation*}
+    \langle G, k \rangle \mapsto \left\langle \frac{G}{\Phi(G)}, k \right\rangle
+  \end{equation*}
+  for all $p$-groups $G$ of order $n$ and all positive integers $k$, where $\Phi(G)$ is the Frattini subgroup of $G$.
+  By \autoref{lem:frattinip}, the Cayley table of $\Phi(G)$ is computable in polynomial time.
+  By \autoref{lem:factorgroup}, the Cayley table of $\frac{G}{\Phi(G)}$ is computable in polynomial time.
+  Hence the reduction is polynomial time computable.
+
+  \ldots
 \end{proof}
 
 \bibliographystyle{plain}
