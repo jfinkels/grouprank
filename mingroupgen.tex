@@ -35,7 +35,7 @@ Discuss previous work here, including Barrington and McKenzie showing the group 
 $\L^2$ is the class of decision problems decidable by a deterministic Turing machine using at most $O(\log^2 n)$ space.
 The (inclusion) relationship between \P{} and $\L^2$ is unknown.
 Following the notation of Cai and Chen \cite{cc97}, $\GC(f(n), \mathcal{C})$ is the class of decision problems decidable by a $\mathcal{C}$ machine augmented with $O(f(n))$ nondeterministic bits.
-We will consider specifically the complexity class $\GC(\lg^2 n, \L)$.
+We will consider specifically the complexity class $\GC(\log^2 n, \L)$.
 
 If $(G, \cdot)$ is a group and $S$ is a subset of $G$ then the set of words on $S$ is denoted $S^*$ and the set of inverses of elements in $S$ is denoted $S^{-1}$.
 If $T \subseteq G$, the set \emph{generated} by $T$, denoted $\gen{T}$, is the transitive closure of $\cdot$ on $T$.
@@ -164,14 +164,14 @@ We require one algebraic lemma which bounds the size of the minimum generating s
 
 This improves the previous upper bound of $\L^2$ because
 \begin{equation*}
-  \GC(\lg^2 n, \L) \subseteq \GC(\lg^2 n, \NC^2) \subseteq \L^2,
+  \GC(\log^2 n, \L) \subseteq \GC(\log^2 n, \NC^2) \subseteq \L^2,
 \end{equation*}
 where the first inclusion follows from the fact that $\L \subseteq \NL \subseteq \NC^2$, and the second is proven in \cite[Lemma~3.2.8]{wolf90}.
 
 From \autoref{lem:mingenp} and \autoref{lem:mingengc}, we immediately get the following theorem.
 
 \begin{theorem}
-  $\textsc{Min Group Gen} \in \GC(\lg^2 n, \L) \cap \P$.
+  $\textsc{Min Group Gen} \in \GC(\log^2 n, \L) \cap \P$.
 \end{theorem}
 
 We conjecture that this is not the best possible upper bound, and more clever algebra may reveal a more efficient algorithm.
