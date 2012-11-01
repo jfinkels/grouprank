@@ -1,4 +1,4 @@
-\documentclass[draft]{article}
+\documentclass{article}
 
 % Package `amsthm` and `thmtools` must come before package `hyperref`.
 \usepackage{amsthm}
@@ -9,6 +9,7 @@
 \usepackage{amsmath}
 
 \newcommand{\gen}[1]{{\langle #1 \rangle}}
+\newcommand{\email}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
 
 \declaretheorem[]{theorem}
 \declaretheorem[numberlike=theorem]{conjecture}
@@ -217,6 +218,18 @@ TODO add to this section the result of using the results from \cite{bklm01} and 
 
   \ldots
 \end{proof}
+
+\section{About this work}
+
+Copyright 2012 Jef{}frey Finkelstein.
+
+This work is licensed under the Creative Commons Attribution-ShareAlike License 3.0.
+Visit \mbox{\url{https://creativecommons.org/licenses/by-sa/3.0/}} to view a copy of this license.
+
+The \LaTeX{} markup which generated this document is available on the World Wide Web at \mbox{\url{https://github.com/jfinkels/ncapproximation}}.
+It is also licensed under the Creative Commons Attribution-ShareAlike License.
+
+The author can be contacted via email at \email{jeffreyf@bu.edu}.
 
 \bibliographystyle{plain}
 \bibliography{references}
