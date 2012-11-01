@@ -1,4 +1,4 @@
-\documentclass[]{article}
+\documentclass[draft]{article}
 
 % Package `amsthm` and `thmtools` must come before package `hyperref`.
 \usepackage{amsthm}
@@ -11,8 +11,8 @@
 \newcommand{\gen}[1]{{\langle #1 \rangle}}
 
 \declaretheorem[]{theorem}
-%\declaretheorem[numberlike=theorem]{corollary}
-%\declaretheorem[numberlike=theorem]{lemma}
+\declaretheorem[numberlike=theorem]{conjecture}
+\declaretheorem[numberlike=theorem]{lemma}
 \declaretheorem[numberlike=theorem]{proposition}
 \declaretheorem[numberlike=theorem, style=definition]{definition}
 
@@ -23,93 +23,169 @@
 \begin{document}
 \maketitle
 
-In this work we show that the problem of computing the minimum generating set of a group is decidable in deterministic polynomial time.
+\section{Introduction}
 
-%% A \emph{group} is a two-tuple $(G, \cdot)$ where $G$ is a (finite or infinite) set and $\cdot$ is a binary operation on $G$ satisfying closure, associativity, and invertibility.
-%% The \emph{Cayley table} of a group is a matrix whose rows and columns are labelled by elements of $G$, and where entry $x$ is labelled by $(a, b)$ if $a \cdot b = x$.
+In this work we study the problem of computing the minimum generating set of a group.
+Discuss previous work here, including Barrington and McKenzie showing the group membership problem is in $\SL$, and the $\DSPACE(\log^2 n)$ algorithm, \ldots.
 
-We denote by \P{} the class of decision problems decidable by a deterministic Turing machine halting in polynomial time.
-We denote by $\L^2$ the class of decision problems decidable by a deterministic Turing machine using at most $O(\log^2 n)$ space.
+\section{Preliminaries}
+
+\P{} is the class of decision problems decidable by a deterministic Turing machine halting in polynomial time.
+$\L^2$ is the class of decision problems decidable by a deterministic Turing machine using at most $O(\log^2 n)$ space.
 The (inclusion) relationship between \P{} and $\L^2$ is unknown.
+Following the notation of Cai and Chen \cite{cc97}, $\GC(f(n), \mathcal{C})$ is the class of decision problems decidable by a $\mathcal{C}$ machine augmented with $O(f(n))$ nondeterministic bits.
+We will consider specifically the complexity class $\GC(\lg^2 n, \L)$.
 
 If $(G, \cdot)$ is a group and $S$ is a subset of $G$ then the set of words on $S$ is denoted $S^*$ and the set of inverses of elements in $S$ is denoted $S^{-1}$.
-If $T \subseteq G$, the set \emph{generated} by $T$, denoted $\gen{T}$, is defined by
-\begin{equation*}
-  \gen{T} = \{ x \in G \, | \, x \text{ is the product of elements in } T \}.
-\end{equation*}
+If $T \subseteq G$, the set \emph{generated} by $T$, denoted $\gen{T}$, is the transitive closure of $\cdot$ on $T$.
 A \emph{generating set} for $(G, \cdot)$ is a set $T \subseteq G$ such that $\gen{T} = G$.
 
+\section{Computing the minimum generating set}
+
+\subsection{For groups}
+
 Some applications may require computing the minimum generating set for a given group.
-We define a formal optimization problem in order to study its complexity, as well as the corresponding ``budget'' problem (a characterization of the optimization problem as a decision problem).
+In order to study its complexity, we define a decision problem corresponding to this optimization problem.
+%%
+%% \begin{definition}[\textsc{Minimum Group Generating Set}]
+%%   \mbox{}
 
-\begin{definition}[\textsc{Minimum Group Generating Set}]
+%%   \textbf{Instance:} finite group $(G, \cdot)$ (given as a Cayley table).
+
+%%   \textbf{Solution:} finite set $T \subseteq G$ such that $\gen{T} = G$.
+
+%%   \textbf{Measure:} $|T|$.
+
+%%   \textbf{Type:} $\min$.
+%% \end{definition}
+
+\begin{definition}[\textsc{Min Group Gen}]
   \mbox{}
 
-  \textbf{Instance:} finite group $(G, \cdot)$ (given as a Cayley table).
-
-  \textbf{Solution:} finite set $T \subseteq G$ such that $\gen{T} = G$.
-
-  \textbf{Measure:} $|T|$.
-
-  \textbf{Type:} $\min$.
-\end{definition}
-
-\begin{definition}[\textsc{Minimum Group Generating Set Budget}]
-  \mbox{}
-
-  \textbf{Instance:} finite group $(G, \cdot)$ (given as a Cayley table), natural number $k$.
+  \textbf{Instance:} finite group $(G, \cdot)$ (given as a Cayley table), natural number $k$ (given in binary).
 
   \textbf{Question:} Does there exist a $T \subseteq G$ such that $\gen{T} = G$ and $|T| \leq k$?
 \end{definition}
 
-In order to show that the \textsc{Minimum Group Generating Set Budget} problem is decidable in deterministic polynomial time, we reduce it to the \textsc{Minimum Group Rank Budget} problem, which is known to be \P-complete.
+In order to show that the \textsc{Min Group Gen} problem is decidable in deterministic polynomial time, we reduce it to the \textsc{Min Group Rank} problem, which is known to be \P-complete \cite[Problem~A.8.11]{ghr95}.
+%%
+%% \begin{definition}[\textsc{Minimum Group Rank}]
+%%   \mbox{}
 
-\begin{definition}[\textsc{Minimum Group Rank}]
+%%   \textbf{Instance:} finite set $S$, finite set $U \subseteq (S \cup S^{-1})^*$.
+
+%%   \textbf{Solution:} finite set $T \subseteq \gen{U}$ such that $\gen{T} = \gen{U}$.
+
+%%   \textbf{Measure:} $|T|$.
+
+%%   \textbf{Type:} $\min$.
+%% \end{definition}
+
+\begin{definition}[\textsc{Min Group Rank}]
   \mbox{}
 
-  \textbf{Instance:} finite set $S$, finite set $U \subseteq (S \cup S^{-1})^*$.
-
-  \textbf{Solution:} finite set $T \subseteq \gen{U}$ such that $\gen{T} = \gen{U}$.
-
-  \textbf{Measure:} $|T|$.
-
-  \textbf{Type:} $\min$.
-\end{definition}
-
-\begin{definition}[\textsc{Minimum Group Rank Budget}]
-  \mbox{}
-
-  \textbf{Instance:} finite set $S$, finite set $U \subseteq (S \cup S^{-1})^*$, natural number $k$.
+  \textbf{Instance:} finite set $S$, finite set $U \subseteq (S \cup S^{-1})^*$, natural number $k$ (given in binary).
 
   \textbf{Question:} Does there exist a $T \subseteq \gen{U}$ such that $\gen{T} = \gen{U}$ and $|T| \leq k$?
 \end{definition}
 
-Previously, the \textsc{Minimum Group Generating Set Budget} problem was known to be in $\L^2$, the class of problems decidable by a deterministic Turing machine using at most $O(\log^2 n)$ space \cite{lsz77} (see \cite[Proposition~3]{at06} for a brief description of the algorithm; I can't find a copy of \cite{lsz77} online).
-%% A related problem, the \textsc{Quasigroup Isomorphism Problem}, is known to be in $\GC(O(\log^2 n), \FOLL)$ where $\GC(O(f(n)), \mathcal{C})$ is the class of languages decidable by a $\mathcal{C}$ algorithm augmented with $O(f(n))$ nondeterministic bits and $\FOLL$ is the class of languages decidable by a uniform family of circuits of polynomial size, unbounded fan-in, and depth $O(\log \log n)$.
-
-\begin{theorem}
-  $\textsc{Minimum Group Generating Set Budget} \in \P \cap \L^2$.
-\end{theorem}
+\begin{lemma}\label{lem:mingenp}
+  $\textsc{Min Group Gen} \in \P$.
+\end{lemma}
 \begin{proof}
-  We show a logarithmic space many-one reduction from \textsc{Minimum Group Generating Set Budget} to \textsc{Minimum Group Rank Budget}.
-  Since \textsc{Minimum Group Rank Budget} is in \P{} (in fact, it is complete for \P{} under logarithmic space many-one reductions \cite[Problem~A.8.11]{ghr95}) and \P{} is closed under polynomial time many-one reductions, we conclude that \textsc{Minimum Group Generating Set Budget} is also in \P.
+  We show a logarithmic space many-one reduction from \textsc{Min Group Gen} to \textsc{Min Group Rank}.
+  Since \textsc{Min Group Rank} is in \P{} and \P{} is closed under polynomial time many-one reductions, we conclude that \textsc{Min Group Rank} is also in \P.
   The reduction is the mapping $\langle (G, \cdot), k \rangle \mapsto \langle G, G, k \rangle$.
   First, we observe that $\langle G, G, k \rangle$ is a correctly formatted instance of the reduced problem: $G$ is a finite set and $G \subseteq (G \cup G^{-1})^*$.
 
-  Suppose that $\langle (G, \cdot), k \rangle \in \textsc{Minimum Group Generating Set Budget}$, so there exists a $T \subseteq G$ such that $\gen{T} = G$ and $|T| \leq k$.
+  Suppose that $\langle (G, \cdot), k \rangle \in \textsc{Min Group Rank}$, so there exists a $T \subseteq G$ such that $\gen{T} = G$ and $|T| \leq k$.
   Since $G$ is closed under $\cdot$, we know $\gen{G} = G$ and hence $\gen{T} = \gen{G}$.
-  Therefore we conclude that $\langle G, G, k \rangle \in \textsc{Minimum Group Rank Budget}$.
-  For the converse, suppose that $\langle G, G, k \rangle \in \textsc{Minimum Group Rank Budget}$, so there exists a $T \subseteq \gen{G}$ such that $\gen{T} = \gen{G}$.
+  Therefore we conclude that $\langle G, G, k \rangle \in \textsc{Min Group Rank}$.
+  For the converse, suppose that $\langle G, G, k \rangle \in \textsc{Min Group Rank}$, so there exists a $T \subseteq \gen{G}$ such that $\gen{T} = \gen{G}$.
   As stated above, $\gen{G} = G$, so $\gen{T} = G$.
-  Therefore $\langle (G, \cdot), k \rangle \in \textsc{Minimum Group Generating Set Budget}$.
+  Therefore $\langle (G, \cdot), k \rangle \in \textsc{Min Group Gen}$.
 
-  We have shown a correct logarithmic space many-one reduction to a problem in \P, and we conclude that $\textsc{Minimum Group Generating Set Budget} \in \P$.
+  We have shown a correct logarithmic space many-one reduction to a problem in \P, and we conclude that $\textsc{Min Group Gen} \in \P$.
 \end{proof}
 
+Previously, the \textsc{Min Group Gen} problem was known to be in $\L^2$, the class of problems decidable by a deterministic Turing machine using at most $O(\log^2 n)$ space \cite{lsz77} (see \cite[Proposition~3]{at06} for a brief description of the algorithm; I can't find a copy of \cite{lsz77} online).
+We can improve this upper bound by a more careful analysis of the $\L^2$ algorithm.
+We require a definition of the following auxiliary problem.
+
+\begin{definition}[\textsc{Group Membership}]
+  \mbox{}
+
+  \textbf{Instance:} finite group $(G, \cdot)$ (given as a Cayley table), finite set $S \subset G$, group element $v \in G$.
+
+  \textbf{Question:} Is $v \in \gen{X}$?
+\end{definition}
+
+The complexity of several restricted types of groups (cyclic, abelian, solvable, etc.) are explored in \cite{bklm01}, but no progress seems to have been made on the general group membership problem since it was shown to be in \SL{} by an $\NC^1$ reduction to the undirected s-t connectivity problem \cite[Section~3]{bm89}.
+Using the fact that $\SL = \L$ \cite{reingold08}, we have that $\textsc{Group Membership} \in \L$.
+We use the logarithmic space algorithm for this problem to give a simple $\GC(\log^2 n, \L)$ algorithm for \textsc{Min Group Gen}.
+
+We require one algebraic lemma which bounds the size of the minimum generating set of a finite group.
+
+\begin{lemma}\label{lem:log}
+  If $(G, \cdot)$ is a finite group then the size of the minimum generating set is at most $\log n$.
+\end{lemma}
+\begin{proof}
+  Proof can be found at \url{http://math.stackexchange.com/a/226938/29369}, add it here.
+\end{proof}
+
+\begin{lemma}\label{lem:mingengc}
+  $\textsc{Min Group Gen} \in \GC(\log^2 n, L)$.
+\end{lemma}
+\begin{proof}
+  The algorithm proceeds as follows on input $\langle (G, \cdot), k \rangle$, where $G$ is a group of order $n$ with distinguished identity element $e$:
+  \begin{itemize}
+  \item Nondeterministically guess a subset $S \subseteq G$ of cardinality at most $k$.
+  \item Accept if and only if for all $v \in G$, $\langle G, S, v \rangle \in \textsc{Group Membership}$.
+  \end{itemize}
+
+  First we prove that this algorithm uses $O(\log^2 n)$ nondeterministic bits and $O(\log n)$ space.
+  The size of each group element, represented as number in binary, is $\log n$.
+  By \autoref{lem:log}, we assume without loss of generality that the size of the minimum generating set for a group of order $n$ is at most $\log n$, so $k$ must be at most $\log n$.
+  Therefore the total number of nondeterministic bits required to guess $S$ is $O(\log^2 n)$.
+  Iterating over all elements of $G$ requires $O(\log n)$ space to keep track of the current element in the iteration.
+  Since $\textsc{Group Membership} \in \L$ by the above discussion, deciding whether $\langle G, S, v \rangle \in \textsc{Group Membership}$ uses at most $O(\log n)$ space.
+  Therefore the total space required for this algorithm (other than the read-only input and read-only nondeterministic bits) is $O(\log n)$.
+
+  Next we show that the algorithm correctly decides the problem.
+  Suppose $\langle (G, \cdot), k) \rangle \in \textsc{Min Group Gen}$, so there exists a $T \subseteq G$ such that $|T| \leq k$ and $\gen{T} = G$.
+  One of the sets $S$ of cardinality at most $k$ that the algorithm guesses will equal $T$, since $|T| \leq k$.
+  For all elements $v \in G$, we have $v \in \gen{T}$ since $\gen{T} = G$.
+  Hence the (correct) algorithm for \textsc{Group Membership} will accept for all $v \in G$, and the overall algorithm will accept.
+  For the converse, suppose the algorithm accepts the input $\langle (G, \cdot), k \rangle$.
+  This occurs exactly when it has guessed a set $S$ of cardinality at most $k$ such that all elements $v$ in $G$ are members of the subgroup generated by $S$.
+  Thus $S$ is a generating set for $G$ of cardinality at most $k$, so $\langle (G, \cdot), k \in \textsc{Min Group Gen}$.
+\end{proof}
+
+This improves the previous upper bound of $\L^2$ because
+\begin{equation*}
+  \GC(\lg^2 n, \L) \subseteq \GC(\lg^2 n, \NC^2) \subseteq \L^2,
+\end{equation*}
+where the first inclusion follows from the fact that $\L \subseteq \NL \subseteq \NC^2$, and the second is proven in \cite[Lemma~3.2.8]{wolf90}.
+
+From \autoref{lem:mingenp} and \autoref{lem:mingengc}, we immediately get the following theorem.
+
+\begin{theorem}
+  $\textsc{Min Group Gen} \in \GC(\lg^2 n, \L) \cap \P$.
+\end{theorem}
+
+We conjecture that this is not the best possible upper bound, and more clever algebra may reveal a more efficient algorithm.
+
+\begin{conjecture}
+  $\textsc{Min Group Gen} \in \L$.
+\end{conjecture}
+
+\subsection{For special cases}
+
 In this section we provide a clearer presentation of the proof of \cite[Theorem~7]{at06}.
+TODO add to this section the result of using the results from \cite{bklm01} and the algorithm from \autoref{lem:mingengc} to place these problems in smaller complexity classes.
 
 \begin{proposition}
-  $\textsc{MIN-NILP-GROUP-GEN} \leq_{ctt}^P \textsc{MIN-p-GROUP-GEN}$.
+  $\textsc{Min Nilp. Group Gen} \leq_{ctt}^P \textsc{Min p-Group Gen}$.
 \end{proposition}
 \begin{proof}
   Define the reduction by
@@ -122,12 +198,12 @@ In this section we provide a clearer presentation of the proof of \cite[Theorem~
   The number of clauses in the conjunction is $m$, which is the number of prime factors of $n$, which is bounded by a polynomial in $n^2$ because \ldots.
   Hence the reduction is polynomial time computable.
 
-  Suppose $\langle G, k \rangle \in \textsc{MIN-NILP-GROUP-GEN}$.
+  Suppose $\langle G, k \rangle \in \textsc{Min Nilp. Group Gen}$.
   \ldots
 \end{proof}
 
 \begin{proposition}
-  $\textsc{MIN-p-GROUP-GEN} \leq_m^P \textsc{MIN-ELEM-ABEL-GROUP-GEN}$.
+  $\textsc{Min p-Group Gen} \leq_m^P \textsc{Min Elem. Abel. Group Gen}$.
 \end{proposition}
 \begin{proof}
   Define the reduction by
