@@ -27,19 +27,26 @@
 
 \section{Introduction}
 
-In this work we study the problem of computing the size of the minimum generating set of a group, as well as the restriction of this problem to restricted classes of groups.
-TODO Discuss previous work here, including Barrington and McKenzie showing the group membership problem is in $\SL$, and the $\DSPACE(\log^2 n)$ algorithm, the work Graph Isomorphism is not AC0 reducible to Group Isomorphism, which shows that Quasigroup Isomorphism is also in $\GC(\log^2 n, \FOLL)$, \ldots.
-Discuss also the relationship to computing the minimum generating set.
+In this work we study the problem of computing the size of the minimum generating set of a group when given as a Cayley table, as well as the restriction of this problem to restricted classes of groups.
+Previously, the best upper bound for this problem was $\L^2$ (also known as $\DSPACE(\log^2 n)$), due to \cite{lsz77} (also described in \cite[Proposition~3]{at06}).
+The more recent work by many authors on ``bounded nondeterminism'' (in which an algorithm is allowed to nondeterministically guess a limited amount of bits and then verify the guess deterministically) as well as improved algorithms for deciding group membership due to \cite{bm89} and \cite{bklm01} allow us to improve this upper bound to $\GC(\log^2 n, \L)$ (defined in \autoref{sec:prelim}) using a more careful analysis of the original $\L^2$ algorithm.
 
-\section{Preliminaries}
+The related problem of deciding group membership was placed in $\L^2$ by \cite{lsz77}, and later improved to \SL{} by \cite{bm89}.
+In \cite{bklm01}, the group membership problem for several restricted classes of groups was placed in \FOLL, a class similar to $\AC^0$ but with $O(\log \log n)$ depth.
+The more recent proof that $\SL = \L$ \cite{reingold08} places the membership problem for general groups (and thus for restricted classes of groups) squarely in \L.
+
+Also related is the problem of deciding whether two given groups are isomorphic.
+A series of works improved the upper bound for the \emph{quasi}group isomorphism problem (and hence the group isomorphism problem) from $\GC(\log^2 n, \P)$ \cite{py96} to $\GC(\log^2 n, \NC^2)$ \cite{wolf94} to $\GC(\log^2 n, \SAC^1)$ \cite{wagner10} to $\GC(\log^2 n, \FOLL)$ \cite{ctw10}.
+
+\section{Preliminaries}\label{sec:prelim}
 
 \P{} is the class of decision problems decidable by a deterministic Turing machine halting in polynomial time.
 $\L^2$ is the class of decision problems decidable by a deterministic Turing machine using at most $O(\log^2 n)$ space.
 The (inclusion) relationship between \P{} and $\L^2$ is unknown.
-Following the notation of Cai and Chen \cite{cc97}, $\GC(f(n), \mathcal{C})$ is the class of decision problems decidable by a $\mathcal{C}$ machine augmented with $O(f(n))$ nondeterministic bits.
-We will consider specifically the complexity class $\GC(\log^2 n, \L)$.
 \FOLL{} is the class of decision problems decidable by a $\DTIME(\log n)$-uniform family of circuits with polynomial size, unbounded fan-in, and $O(\log \log n)$ depth.
 $\FOLL^2$ is the same, but with $O(\log^2 \log n)$.
+Following the notation of Cai and Chen \cite{cc97}, $\GC(f(n), \mathcal{C})$ is the class of decision problems decidable by a $\mathcal{C}$ machine augmented with $O(f(n))$ nondeterministic bits.
+We will consider specifically the complexity classes $\GC(\log^2 n, \L)$ and $\GC(\log^2 n, \FOLL)$.
 %% TODO definitions for many-one and conjunctive truth table reductions
 
 If $(G, \cdot)$ is a group and $S$ is a subset of $G$ then the set of words on $S$ is denoted $S^*$ and the set of inverses of elements in $S$ is denoted $S^{-1}$.
@@ -53,7 +60,7 @@ We will also consider subclasses of the class of all groups: \textsc{Group}, \te
 Some applications may require computing the size of the minimum generating set for a given group.
 In order to study its complexity, we define a decision problem corresponding to this optimization problem.
 
-\begin{definition}[\textsc{Min Gen Size($\mathcal{G}$}]
+\begin{definition}[\textsc{Min Gen Size($\mathcal{G}$)}]
   \mbox{}
 
   \textbf{Instance:} finite group $(G, \cdot)$ (given as a Cayley table) in the class $\mathcal{G}$, natural number $k$ (given in binary).
@@ -143,7 +150,7 @@ Before providing the general algorithm for computing the size of the minimum gen
   By \autoref{lem:log}, we assume without loss of generality that the size of the minimum generating set for a group of order $n$ is at most $\log n$, so $k$ must be at most $\log n$.
   Therefore the total number of nondeterministic bits required to guess $S$ is $O(\log^2 n)$.
   Iterating over all elements of $G$ requires $O(\log n)$ space to keep track of the current element in the iteration.
-  Since $\textsc{Membership(Group)} \in \L$ by hypothesis, deciding whether $\langle G, S, v \rangle \in \textsc{Membership(Group)}$ uses at most $O(\log n)$ space.
+  Since $\textsc{Membership(Group)} \in \L$ by \autoref{lem:membershipinl}, deciding whether $\langle G, S, v \rangle \in \textsc{Membership(Group)}$ uses at most $O(\log n)$ space.
   Therefore the total space required for this algorithm (other than the read-only input and read-only nondeterministic bits) is $O(\log n)$.
 
   Next we show that the algorithm correctly decides the problem.
@@ -280,6 +287,13 @@ In this section we provide a clearer presentation of the proof of \cite[Theorem~
   \end{equation*}
   Since $\textsc{Min Gen Size(Elementary Abelian)} \in \P$ and $\P$ is closed under polynomial time conjunctive truth table reductions, $\textsc{Min Gen Size(Nilpotent)} \in \P$.
 \end{proof}
+
+\section{Future work}
+
+As noted in the introduction, the (quasi)group isomorphism problem is in $\GC(\log^2 n, \FOLL)$.
+What is the relationship between this problem and the minimum generating set size problem for groups?
+
+What is the relationship between computing the size of the minimum generating set and computing the minimum generating set itself?
 
 \section{About this work}
 
