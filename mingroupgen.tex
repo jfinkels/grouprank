@@ -17,6 +17,7 @@
 \declaretheorem[numberlike=theorem]{lemma}
 \declaretheorem[numberlike=theorem]{proposition}
 \declaretheorem[numberlike=theorem, style=definition]{definition}
+\declaretheorem[numberlike=theorem, style=definition]{todo}
 
 \title{Complexity of computing minimum generating sets for groups}
 \author{Jef{}frey~Finkelstein}
@@ -47,7 +48,9 @@ The (inclusion) relationship between \P{} and $\L^2$ is unknown.
 $\FOLL^2$ is the same, but with $O(\log^2 \log n)$.
 Following the notation of Cai and Chen \cite{cc97}, $\GC(f(n), \mathcal{C})$ is the class of decision problems decidable by a $\mathcal{C}$ machine augmented with $O(f(n))$ nondeterministic bits.
 We will consider specifically the complexity classes $\GC(\log^2 n, \L)$ and $\GC(\log^2 n, \FOLL)$.
-%% TODO definitions for many-one and conjunctive truth table reductions
+\begin{todo}
+  Add definitions for many-one and conjunctive truth table reductions.
+\end{todo}
 
 If $(G, \cdot)$ is a finite group of order $n$, we identify the elements of the group with the indices 1, 2, \ldots, n, where 1 is the identity of the group.
 We sometimes refer to the group as $(G, \cdot)$, but will also sometimes omit the group product and just write $G$.
@@ -82,40 +85,6 @@ In order to study the complexity of computing the size of the minimum generating
 \end{definition}
 
 Since each of the other classes of groups is a subclass of \textsc{Group}, an upper bound on the complexity of \textsc{Min Gen Size(Group)} is also an upper bound on the complexity of \textsc{Min Gen Size} for all the other subclasses.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% TODO this doesn't work because according to Wikipedia, a nontrivial finite %
-%% group is not a free group.                                                 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% We will show that the upper bound for \textsc{Min Gen Size(Group)} is \P.
-%% In order to show that the problem is decidable in deterministic polynomial time, we reduce it to the \textsc{Min Rank(Free Group}} problem, which is known to be \P-complete \cite[Problem~A.8.11]{ghr95}.
-
-%% \begin{definition}[\textsc{Min Rank(Free Group)}]
-%%   \mbox{}
-
-%%   \textbf{Instance:} finite set $S$, finite set $U \subseteq (S \cup S^{-1})^*$, natural number $k$ (given in binary).
-
-%%   \textbf{Question:} Does there exist a $T \subseteq \gen{U}$ such that $\gen{T} = \gen{U}$ and $|T| \leq k$?
-%% \end{definition}
-
-%% \begin{lemma}\label{lem:mingenp}
-%%   $\textsc{Min Gen Size(Group)} \in \P$.
-%% \end{lemma}
-%% \begin{proof}
-%%   We show a logarithmic space many-one reduction from \textsc{Min Gen Size(Group)} to \textsc{Min Rank(Free Group)}.
-%%   Since \textsc{Min Rank(Free Group)} is in \P{} and \P{} is closed under polynomial time many-one reductions, we conclude that \textsc{Min Rank(Free Group)} is also in \P.
-%%   The reduction is the mapping $\langle (G, \cdot), k \rangle \mapsto \langle G, G, k \rangle$.
-%%   First, we observe that $\langle G, G, k \rangle$ is a correctly formatted instance of the reduced problem: $G$ is a finite set and $G \subseteq (G \cup G^{-1})^*$.
-
-%%   Suppose that $\langle (G, \cdot), k \rangle \in \textsc{Min Gen Size(Group)}$, so there exists a $T \subseteq G$ such that $\gen{T} = G$ and $|T| \leq k$.
-%%   Since $G$ is closed under $\cdot$, we know $\gen{G} = G$ and hence $\gen{T} = \gen{G}$.
-%%   Therefore we conclude that $\langle G, G, k \rangle \in \textsc{Min Rank(Free Group)}$.
-%%   For the converse, suppose that $\langle G, G, k \rangle \in \textsc{Min Rank(Free Group)}$, so there exists a $T \subseteq \gen{G}$ such that $\gen{T} = \gen{G}$.
-%%   As stated above, $\gen{G} = G$, so $\gen{T} = G$.
-%%   Therefore $\langle (G, \cdot), k \rangle \in \textsc{Min Gen Size(Group)}$.
-
-%%   We have shown a correct logarithmic space many-one reduction to a problem in \P, and we conclude that $\textsc{Min Gen Size(Group)} \in \P$.
-%% \end{proof}
 
 Previously, the \textsc{Min Gen Size(Group)} problem was known to be in $\L^2$, the class of problems decidable by a deterministic Turing machine using at most $O(\log^2 n)$ space \cite{lsz77} (see \cite[Proposition~3]{at06} for a brief description of the algorithm; I can't find a copy of \cite{lsz77} online).
 We can improve this upper bound by a more careful analysis of the $\L^2$ algorithm.
@@ -186,21 +155,11 @@ This improves the previous upper bound, $\L^2$, because
 \end{equation*}
 where the first inclusion follows from the fact that $\L \subseteq \NL \subseteq \NC^2$, and the second is proven in \cite[Lemma~3.2.8]{wolf90}.
 
-%% From \autoref{lem:mingenp} and \autoref{lem:mingengc}, we immediately get the following theorem.
-
-%% \begin{theorem}
-%%   $\textsc{Min Group Gen} \in \GC(\log^2 n, \L) \cap \P$.
-%% \end{theorem}
-
-%% We conjecture that this is not the best possible upper bound, and more clever algebra may reveal a more efficient algorithm.
-
-%% \begin{conjecture}
-%%   $\textsc{Min Gen Size(Group)} \in \L$.
-%% \end{conjecture}
-
 \subsection{In \texorpdfstring{\FOLL}{FOLL} with bounded nondeterminism}
 
-%% TODO The size of the minimum generating set for cyclic groups is 1.
+\begin{todo}
+  Min Gen Size for Cyclic groups is in O(1) time: always output the value of k > 1.
+\end{todo}
 \begin{theorem}
   \mbox{}
   \begin{enumerate}
@@ -398,17 +357,22 @@ For decision problems in $\GC(\log^2 n, \L)$, however, each level of the binary 
 (The $O(\log n)$ space can still be reused at each level.)
 For this reason, the search problem corresponding to \textsc{Min Gen Size(Group)} is computable in $\GC(\log^3 n, \L)$.
 
-TODO how about binary search in $\GC(\log^2 n, \FOLL)$?
+\begin{todo}
+  How can we perform binary search in $\GC(\log^2 n, \FOLL)$?
+\end{todo}
 
 \section{Completeness}
 
-TODO mention things in GC(log2 n, FOLL) cant be hard for small classes under AC0 reductions.
+\begin{todo}
+  mention that things in GC(log2 n, FOLL) cant be hard for small classes under AC0 reductions, from \cite{ctw10}.
+\end{todo}
 
 \section{Future work}
 
 \autoref{fig:results} contains a summary of the results found in this work.
-
-%% TODO ensure that this is correct
+\begin{todo}
+  Continually check that this table is correct.
+\end{todo}
 \begin{figure}
 \caption{A summary of the upper bounds due to this work for the problem of computing the size of the minimum generating set of a class of groups.\label{fig:results}}
   \begin{center}
