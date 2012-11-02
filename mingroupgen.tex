@@ -56,7 +56,18 @@ We will consider all elements of $G$ to be expressed in binary, so the size of e
 If $T \subseteq G$, the set \emph{generated} by $T$, denoted $\gen{T}$, is the transitive closure of $\cdot$ on $T$.
 A \emph{generating set} for $(G, \cdot)$ is a set $T \subseteq G$ such that $\gen{T} = G$.
 
-We will also consider subclasses of the class of all groups: \textsc{Group}, \textsc{Constant Solvability Class}, \textsc{Nilpotent}, \textsc{Abelian}, \textsc{p-Group}, \textsc{Elementary Abelian}, and \textsc{Cyclic}, where \textsc{Group} is the class of all groups, \textsc{Constant Solvability Class} is the class of all groups of solvability class $O(1)$, etc.
+We will also consider subclasses of the class of all finite groups: \textsc{Group}, \textsc{Constant Solvability Class}, \textsc{Nilpotent}, \textsc{Abelian}, \textsc{p-Group}, \textsc{Elementary Abelian}, and \textsc{Cyclic}, where \textsc{Group} is the class of all groups, \textsc{Constant Solvability Class} is the class of all groups of solvability class $O(1)$, etc.
+From group theory we know that for finite groups,
+\begin{equation*}
+  \textsc{Cyclic} \subseteq \textsc{Elementary Abelian} \subseteq \textsc{Abelian} \subseteq \textsc{Nilpotent} \subseteq \textsc{Group},
+\end{equation*}
+\begin{equation*}
+  \textsc{p-Group} \subseteq \textsc{Nilpotent} \subseteq \textsc{Group},
+\end{equation*}
+and
+\begin{equation*}
+  \textsc{Constant Solvability Class} \subseteq \textsc{Group}.
+\end{equation*}
 
 \section{Decision problem for computing the size of the minimum generating set}
 
@@ -407,7 +418,7 @@ TODO mention things in GC(log2 n, FOLL) cant be hard for small classes under AC0
       \textsc{Group} & $\GC(\log^2 n, \L)$ \\
       \textsc{Solvable} & $\GC(\log^2 n, \L)$ \\
       \textsc{Nilpotent} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL^2) \cap \P$ \\
-      \textsc{p-Group} & $\GC(\log^2 n, \L) \cap \P$ \\
+      \textsc{p-Group} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL^2) \cap \P$ \\
       \textsc{Constant Solvability Class} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL)$ \\
       \textsc{Abelian} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL) \cap \P$ \\
       \textsc{Elementary Abelian} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL) \cap \P$ \\
