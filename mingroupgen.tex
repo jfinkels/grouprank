@@ -49,11 +49,12 @@ Following the notation of Cai and Chen \cite{cc97}, $\GC(f(n), \mathcal{C})$ is 
 We will consider specifically the complexity classes $\GC(\log^2 n, \L)$ and $\GC(\log^2 n, \FOLL)$.
 %% TODO definitions for many-one and conjunctive truth table reductions
 
-If $(G, \cdot)$ is a group and $S$ is a subset of $G$ then the set of words on $S$ is denoted $S^*$ and the set of inverses of elements in $S$ is denoted $S^{-1}$.
+If $(G, \cdot)$ is a finite group of order $n$, we identify the elements of the group with the indices 1, 2, \ldots, n, where 1 is the identity of the group.
+The \emph{Cayley table} of this group is the $n \times n$ matrix with entries from $G$ in which entry $(u, v)$ has value $g$ if $u \cdot g = v$.
 If $T \subseteq G$, the set \emph{generated} by $T$, denoted $\gen{T}$, is the transitive closure of $\cdot$ on $T$.
 A \emph{generating set} for $(G, \cdot)$ is a set $T \subseteq G$ such that $\gen{T} = G$.
 
-We will also consider subclasses of the class of all groups: \textsc{Group}, \textsc{Constant Solvability Class}, \textsc{Nilpotent}, \textsc{Abelian}, \textsc{$p$-Group}, \textsc{Elementary Abelian}, \textsc{Cyclic}, where \textsc{Group} is the class of all groups, \textsc{Constant Solvability Class} is the class of all groups of solvability class $O(1)$, etc.
+We will also consider subclasses of the class of all groups: \textsc{Group}, \textsc{Constant Solvability Class}, \textsc{Nilpotent}, \textsc{Abelian}, \textsc{p-Group}, \textsc{Elementary Abelian}, \textsc{Cyclic}, where \textsc{Group} is the class of all groups, \textsc{Constant Solvability Class} is the class of all groups of solvability class $O(1)$, etc.
 
 \section{Computing the size of the minimum generating set}
 
@@ -217,6 +218,7 @@ We conjecture that this is not the best possible upper bound, and more clever al
 %% for syntactic reasons (the second step in the algorithm from \autoref{thm:mingengc} is either a logarithmic space Turing machine procedure or a $\FO(\log \log n)$ procedure, but not both simultaneously).
 
 At this point, we provide a clearer presentation of the proof of \cite[Theorem~7]{at06}.
+We have split up the proof into multiple parts in order to more easily analyze their complexity.
 
 \begin{proposition}
   $\textsc{Min Gen Size(Nilpotent)} \leq_{ctt}^P \textsc{Min Gen Size(p-Group)}$.
