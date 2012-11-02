@@ -56,7 +56,7 @@ We will consider all elements of $G$ to be expressed in binary, so the size of e
 If $T \subseteq G$, the set \emph{generated} by $T$, denoted $\gen{T}$, is the transitive closure of $\cdot$ on $T$.
 A \emph{generating set} for $(G, \cdot)$ is a set $T \subseteq G$ such that $\gen{T} = G$.
 
-We will also consider subclasses of the class of all groups: \textsc{Group}, \textsc{Constant Solvability Class}, \textsc{Nilpotent}, \textsc{Abelian}, \textsc{p-Group}, \textsc{Elementary Abelian}, \textsc{Cyclic}, where \textsc{Group} is the class of all groups, \textsc{Constant Solvability Class} is the class of all groups of solvability class $O(1)$, etc.
+We will also consider subclasses of the class of all groups: \textsc{Group}, \textsc{Constant Solvability Class}, \textsc{Nilpotent}, \textsc{Abelian}, \textsc{p-Group}, \textsc{Elementary Abelian}, and \textsc{Cyclic}, where \textsc{Group} is the class of all groups, \textsc{Constant Solvability Class} is the class of all groups of solvability class $O(1)$, etc.
 
 \section{Decision problem for computing the size of the minimum generating set}
 
@@ -263,7 +263,7 @@ We start with the algebraic lemmata, then provide the necessary reductions.
 
   Next we show that the reduction is correct.
   Suppose first that $\langle (G, \cdot), k \rangle \in \textsc{Min Gen Size(Nilpotent)}$, so there exists a subset of $G$, say $\{g_1, g_2, \dotsc, g_k\}$, such that $\gen{g_1, g_2, \dotsc, g_k} = G$.
-  If $n_i$ is defined as above, the set $\{g_1^{n_i}, g_2^{n_i}, \dotsc, g_k^{n_i} \}$ is a generating set for $S_{p_i}$.
+  If $n_i = n p_i^{-e_i}$, as defined above, then the set $\{g_1^{n_i}, g_2^{n_i}, \dotsc, g_k^{n_i} \}$ is a generating set for $S_{p_i}$.
   So for each $i$ with $1 \leq i \leq m$, we have $\langle (S_{p_i}, \cdot), k \rangle \in \textsc{Min Gen Size(p-Group)}$.
   For the converse, suppose that each $S_{p_i}$ has a generating set of size $k$, say $\{g_{i, 1}, g_{i, 2}, \dotsc, g_{i, k}\}$.
   Let $g_j = \Pi_{i = 1}^m g_{i, j}$ for all $j$ with $1 \leq j \leq k$.
@@ -378,8 +378,8 @@ We start with the algebraic lemmata, then provide the necessary reductions.
 
 \section{Searching for the exact size of the minimum generating set}
 
-Now that we know the complexity for the decision problem \textsc{Min Gen Size(Group)}, we wish to implement a function which computes the exact size of the minimum generating set of a group.
-For decision problems in polynomial time, the well-known binary search on $k$ between 1 and $n$, the order of the group, places the search problem in polynomial time as well.
+Now that we know the complexity for the decision problem form of \textsc{Min Gen Size(Group)}, we wish to implement a function which computes the exact size of the minimum generating set of a group.
+For decision problems in polynomial time, the well-known binary search on $k$ between 1 and $n$, where $n$ is the order of the group, places the search problem in polynomial time as well.
 For decision problems in $\GC(\log^2 n, \L)$, however, each level of the binary search recursion tree requires an additional $O(\log^2 n)$ bits of nondeterminism.
 (The $O(\log n)$ space can still be reused at each level.)
 For this reason, the search problem corresponding to \textsc{Min Gen Size(Group)} is computable in $\GC(\log^3 n, \L)$.
@@ -409,7 +409,7 @@ TODO mention things in GC(log2 n, FOLL) cant be hard for small classes under AC0
       \textsc{Nilpotent} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL^2) \cap \P$ \\
       \textsc{p-Group} & $\GC(\log^2 n, \L) \cap \P$ \\
       \textsc{Constant Solvability Class} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL)$ \\
-      \textsc{Abelian} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL)$ \\
+      \textsc{Abelian} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL) \cap \P$ \\
       \textsc{Elementary Abelian} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL) \cap \P$ \\
       \textsc{Cyclic} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL) \cap \P$ \\
       \multicolumn{2}{c}{} \\[10pt]
@@ -423,7 +423,7 @@ TODO mention things in GC(log2 n, FOLL) cant be hard for small classes under AC0
       \textsc{Nilpotent} & $\GC(\log^3 n, \L) \cap \P$ \\
       \textsc{p-Group} & $\GC(\log^3 n, \L) \cap \P$ \\
       \textsc{Constant Solvability Class} & $\GC(\log^3 n, \L)$ \\
-      \textsc{Abelian} & $\GC(\log^3 n, \L)$ \\
+      \textsc{Abelian} & $\GC(\log^3 n, \L) \cap \P$ \\
       \textsc{Elementary Abelian} & $\GC(\log^3 n, \L) \cap \P$ \\
       \textsc{Cyclic} & $\GC(\log^3 n, \L) \cap \P$
     \end{tabular}
