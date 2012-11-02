@@ -184,44 +184,47 @@ We conjecture that this is not the best possible upper bound, and more clever al
 \begin{theorem}
   \mbox{}
   \begin{enumerate}
-  \item Each of the problems \textsc{Min Gen Size(Cyclic)}, \textsc{Min Gen Size(Abelian)}, and \textsc{Min Gen Size(Constant Solvability Class)} are in
-    \begin{equation*}
-      \GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL).
-    \end{equation*}
-  \item \textsc{Min Gen Size(Nilpotent)} is in
-    \begin{equation*}
-      \GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL^2).
-    \end{equation*}
+  \item Each of the problems
+    \begin{itemize}
+    \item \textsc{Min Gen Size(Cyclic)},
+    \item \textsc{Min Gen Size(Elementary Abelian)},
+    \item \textsc{Min Gen Size(Abelian)}, and
+    \item \textsc{Min Gen Size(Constant Solvability Class)}
+    \end{itemize}
+    is in $\GC(\log^2 n, \FOLL)$.
+  \item Each of the problems
+    \begin{itemize}
+    \item \textsc{Min Gen Size(p-Group)} and
+    \item \textsc{Min Gen Size(Nilpotent)}
+    \end{itemize}
+    is in $\GC(\log^2 n, \FOLL^2)$.
   \end{enumerate}
 \end{theorem}
 \begin{proof}
   \mbox{}
   \begin{enumerate}
   \item
-    \autoref{thm:mingengc} shows that these problems are in $\GC(\log^2 n, \L)$.
-    We know that the membership problem for each of these classes of groups is not only in \L{} by \autoref{lem:membershipinl}, but also in \FOLL{} \cite[Section~3]{bklm01}.
+    We know that the membership problem for each of these classes of groups is in \FOLL{} by \cite[Section~3]{bklm01}.
     A slight modification of the algorithm from \autoref{thm:mingengc} can be used to show that each of these problems is in $\GC(\log^2 n, \FOLL)$.
     After nondeterministically guessing a set $S$, instead of iterating over each element of the group in logarithmic space, we use $n$ instances of the \FOLL{} circuit which decides the membership problem and compute the conjunction of the output of each of the instances for one additional layer of depth and a $O(n)$ increase in the size of the circuit.
     Since the size of the circuit remains polynomial in $n$ and the depth remains $O(\log \log n)$, we have shown $\textsc{Min Gen Size(Cyclic)} \in \GC(\log^2 n, \FOLL)$.
-  \item The same arugment applies, except using the fact that the membership problem for nilpotent groups is in $\FOLL^2$ \cite[Corollary~3.12]{bklm01}. \qedhere
+  \item The same argument applies, except using the fact that the membership problem for nilpotent groups is in $\FOLL^2$ \cite[Corollary~3.12]{bklm01}. \qedhere
   \end{enumerate}
 \end{proof}
-Observe that even though, for example, $\textsc{Membership(Cyclic)} \in \L \cap \FOLL$, we show that \textsc{Min Gen Size(Cyclic)} is in
-\begin{equation*}
-  \GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL)
-\end{equation*}
-instead of
-\begin{equation*}
-  \GC(\log^2 n, \L \cap \FOLL),
-\end{equation*}
-for syntactic reasons (the second step in the algorithm from \autoref{thm:mingengc} is either a logarithmic space Turing machine procedure or a $\FO(\log \log n)$ procedure, but not both simultaneously).
+%% Observe that even though, for example, $\textsc{Membership(Cyclic)} \in \L \cap \FOLL$, we show that \textsc{Min Gen Size(Cyclic)} is in
+%% \begin{equation*}
+%%   \GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL)
+%% \end{equation*}
+%% instead of
+%% \begin{equation*}
+%%   \GC(\log^2 n, \L \cap \FOLL),
+%% \end{equation*}
+%% for syntactic reasons (the second step in the algorithm from \autoref{thm:mingengc} is either a logarithmic space Turing machine procedure or a $\FO(\log \log n)$ procedure, but not both simultaneously).
 
-\subsection{For special cases}
-
-In this section we provide a clearer presentation of the proof of \cite[Theorem~7]{at06}.
+At this point, we provide a clearer presentation of the proof of \cite[Theorem~7]{at06}.
 
 \begin{proposition}
-  $\textsc{Min Nilp. Group Gen} \leq_{ctt}^P \textsc{Min p-Group Gen}$.
+  $\textsc{Min Gen Size(Nilpotent)} \leq_{ctt}^P \textsc{Min Gen Size(p-Group)}$.
 \end{proposition}
 \begin{proof}
   Define the reduction by
@@ -234,12 +237,12 @@ In this section we provide a clearer presentation of the proof of \cite[Theorem~
   The number of clauses in the conjunction is $m$, which is the number of prime factors of $n$, which is bounded by a polynomial in $n^2$ because \ldots.
   Hence the reduction is polynomial time computable.
 
-  Suppose $\langle G, k \rangle \in \textsc{Min Nilp. Group Gen}$.
+  Suppose $\langle G, k \rangle \in \textsc{Min Gen Size(Nilpotent)}$.
   \ldots
 \end{proof}
 
 \begin{proposition}
-  $\textsc{Min p-Group Gen} \leq_m^P \textsc{Min Elem. Abel. Group Gen}$.
+  $\textsc{Min Gen Size(p-Group)} \leq_m^P \textsc{Min Gen Size(Elementary Abelian)}$.
 \end{proposition}
 \begin{proof}
   Define the reduction by
