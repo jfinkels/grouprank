@@ -26,8 +26,8 @@
 
 \section{Introduction}
 
-In this work we study the problem of computing the size of the minimum generating set of a group.
-Discuss previous work here, including Barrington and McKenzie showing the group membership problem is in $\SL$, and the $\DSPACE(\log^2 n)$ algorithm, \ldots.
+In this work we study the problem of computing the size of the minimum generating set of a group, as well as the restriction of this problem to restricted families of groups.
+TODO Discuss previous work here, including Barrington and McKenzie showing the group membership problem is in $\SL$, and the $\DSPACE(\log^2 n)$ algorithm, \ldots.
 Discuss also the relationship to computing the minimum generating set.
 
 \section{Preliminaries}
@@ -42,92 +42,82 @@ If $(G, \cdot)$ is a group and $S$ is a subset of $G$ then the set of words on $
 If $T \subseteq G$, the set \emph{generated} by $T$, denoted $\gen{T}$, is the transitive closure of $\cdot$ on $T$.
 A \emph{generating set} for $(G, \cdot)$ is a set $T \subseteq G$ such that $\gen{T} = G$.
 
-\section{Computing the size of the minimum generating set}
+%% TODO determine the order of this list, from most general to most specific.
+We will also consider families of groups: \textsc{Group}, \textsc{Solvable}, \textsc{Nilpotent}, \textsc{Abelian}, \textsc{$p$-Group}, \textsc{Elementary Abelian}, \textsc{Cyclic}.
+\textsc{Group} is the set of all groups, \textsc{Solvable} is the set of all solvable groups, etc.
 
-\subsection{For groups}
+\section{Computing the size of the minimum generating set}
 
 Some applications may require computing the size of the minimum generating set for a given group.
 In order to study its complexity, we define a decision problem corresponding to this optimization problem.
-%%
-%% \begin{definition}[\textsc{Minimum Group Generating Set}]
-%%   \mbox{}
 
-%%   \textbf{Instance:} finite group $(G, \cdot)$ (given as a Cayley table).
-
-%%   \textbf{Solution:} finite set $T \subseteq G$ such that $\gen{T} = G$.
-
-%%   \textbf{Measure:} $|T|$.
-
-%%   \textbf{Type:} $\min$.
-%% \end{definition}
-
-%% TODO should this be called Min Group Gen Size
-\begin{definition}[\textsc{Min Group Gen}]
+\begin{definition}[\textsc{Min Gen Size($\mathcal{G}$}]
   \mbox{}
 
-  \textbf{Instance:} finite group $(G, \cdot)$ (given as a Cayley table), natural number $k$ (given in binary).
+  \textbf{Instance:} finite group $(G, \cdot)$ (given as a Cayley table) in the family $\mathcal{G}$, natural number $k$ (given in binary).
 
   \textbf{Question:} Does there exist a $T \subseteq G$ such that $\gen{T} = G$ and $|T| \leq k$?
 \end{definition}
 
-In order to show that the \textsc{Min Group Gen} problem is decidable in deterministic polynomial time, we reduce it to the \textsc{Min Group Rank} problem, which is known to be \P-complete \cite[Problem~A.8.11]{ghr95}.
-%%
-%% \begin{definition}[\textsc{Minimum Group Rank}]
+Since each of the other families of groups is a subfamily of \textsc{Group}, an upper bound on the complexity of \textsc{Min Gen Size(Group)} is also an upper bound on the complexity of \textsc{Min Gen Size} for all the other subfamilies.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% TODO this doesn't work because according to Wikipedia, a nontrivial finite %
+%% group is not a free group.                                                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% We will show that the upper bound for \textsc{Min Gen Size(Group)} is \P.
+%% In order to show that the problem is decidable in deterministic polynomial time, we reduce it to the \textsc{Min Rank(Free Group}} problem, which is known to be \P-complete \cite[Problem~A.8.11]{ghr95}.
+
+%% \begin{definition}[\textsc{Min Rank(Free Group)}]
 %%   \mbox{}
 
-%%   \textbf{Instance:} finite set $S$, finite set $U \subseteq (S \cup S^{-1})^*$.
+%%   \textbf{Instance:} finite set $S$, finite set $U \subseteq (S \cup S^{-1})^*$, natural number $k$ (given in binary).
 
-%%   \textbf{Solution:} finite set $T \subseteq \gen{U}$ such that $\gen{T} = \gen{U}$.
-
-%%   \textbf{Measure:} $|T|$.
-
-%%   \textbf{Type:} $\min$.
+%%   \textbf{Question:} Does there exist a $T \subseteq \gen{U}$ such that $\gen{T} = \gen{U}$ and $|T| \leq k$?
 %% \end{definition}
 
-\begin{definition}[\textsc{Min Group Rank}]
-  \mbox{}
+%% \begin{lemma}\label{lem:mingenp}
+%%   $\textsc{Min Gen Size(Group)} \in \P$.
+%% \end{lemma}
+%% \begin{proof}
+%%   We show a logarithmic space many-one reduction from \textsc{Min Gen Size(Group)} to \textsc{Min Rank(Free Group)}.
+%%   Since \textsc{Min Rank(Free Group)} is in \P{} and \P{} is closed under polynomial time many-one reductions, we conclude that \textsc{Min Rank(Free Group)} is also in \P.
+%%   The reduction is the mapping $\langle (G, \cdot), k \rangle \mapsto \langle G, G, k \rangle$.
+%%   First, we observe that $\langle G, G, k \rangle$ is a correctly formatted instance of the reduced problem: $G$ is a finite set and $G \subseteq (G \cup G^{-1})^*$.
 
-  \textbf{Instance:} finite set $S$, finite set $U \subseteq (S \cup S^{-1})^*$, natural number $k$ (given in binary).
+%%   Suppose that $\langle (G, \cdot), k \rangle \in \textsc{Min Gen Size(Group)}$, so there exists a $T \subseteq G$ such that $\gen{T} = G$ and $|T| \leq k$.
+%%   Since $G$ is closed under $\cdot$, we know $\gen{G} = G$ and hence $\gen{T} = \gen{G}$.
+%%   Therefore we conclude that $\langle G, G, k \rangle \in \textsc{Min Rank(Free Group)}$.
+%%   For the converse, suppose that $\langle G, G, k \rangle \in \textsc{Min Rank(Free Group)}$, so there exists a $T \subseteq \gen{G}$ such that $\gen{T} = \gen{G}$.
+%%   As stated above, $\gen{G} = G$, so $\gen{T} = G$.
+%%   Therefore $\langle (G, \cdot), k \rangle \in \textsc{Min Gen Size(Group)}$.
 
-  \textbf{Question:} Does there exist a $T \subseteq \gen{U}$ such that $\gen{T} = \gen{U}$ and $|T| \leq k$?
-\end{definition}
+%%   We have shown a correct logarithmic space many-one reduction to a problem in \P, and we conclude that $\textsc{Min Gen Size(Group)} \in \P$.
+%% \end{proof}
 
-\begin{lemma}\label{lem:mingenp}
-  $\textsc{Min Group Gen} \in \P$.
-\end{lemma}
-\begin{proof}
-  We show a logarithmic space many-one reduction from \textsc{Min Group Gen} to \textsc{Min Group Rank}.
-  Since \textsc{Min Group Rank} is in \P{} and \P{} is closed under polynomial time many-one reductions, we conclude that \textsc{Min Group Rank} is also in \P.
-  The reduction is the mapping $\langle (G, \cdot), k \rangle \mapsto \langle G, G, k \rangle$.
-  First, we observe that $\langle G, G, k \rangle$ is a correctly formatted instance of the reduced problem: $G$ is a finite set and $G \subseteq (G \cup G^{-1})^*$.
-
-  Suppose that $\langle (G, \cdot), k \rangle \in \textsc{Min Group Rank}$, so there exists a $T \subseteq G$ such that $\gen{T} = G$ and $|T| \leq k$.
-  Since $G$ is closed under $\cdot$, we know $\gen{G} = G$ and hence $\gen{T} = \gen{G}$.
-  Therefore we conclude that $\langle G, G, k \rangle \in \textsc{Min Group Rank}$.
-  For the converse, suppose that $\langle G, G, k \rangle \in \textsc{Min Group Rank}$, so there exists a $T \subseteq \gen{G}$ such that $\gen{T} = \gen{G}$.
-  As stated above, $\gen{G} = G$, so $\gen{T} = G$.
-  Therefore $\langle (G, \cdot), k \rangle \in \textsc{Min Group Gen}$.
-
-  We have shown a correct logarithmic space many-one reduction to a problem in \P, and we conclude that $\textsc{Min Group Gen} \in \P$.
-\end{proof}
-
-Previously, the \textsc{Min Group Gen} problem was known to be in $\L^2$, the class of problems decidable by a deterministic Turing machine using at most $O(\log^2 n)$ space \cite{lsz77} (see \cite[Proposition~3]{at06} for a brief description of the algorithm; I can't find a copy of \cite{lsz77} online).
+Previously, the \textsc{Min Gen Size(Group)} problem was known to be in $\L^2$, the class of problems decidable by a deterministic Turing machine using at most $O(\log^2 n)$ space \cite{lsz77} (see \cite[Proposition~3]{at06} for a brief description of the algorithm; I can't find a copy of \cite{lsz77} online).
 We can improve this upper bound by a more careful analysis of the $\L^2$ algorithm.
 We require a definition of the following auxiliary problem.
 
-\begin{definition}[\textsc{Group Membership}]
+\begin{definition}[\textsc{Membership($\mathcal{G}$)}]
   \mbox{}
 
-  \textbf{Instance:} finite group $(G, \cdot)$ (given as a Cayley table), finite set $S \subset G$, group element $v \in G$.
+  \textbf{Instance:} finite group $(G, \cdot)$ (given as a Cayley table) in the family $\mathcal{G}$, finite set $S \subset G$, group element $v \in G$.
 
   \textbf{Question:} Is $v \in \gen{X}$?
 \end{definition}
 
-The complexity of several restricted types of groups (cyclic, abelian, solvable, etc.) are explored in \cite{bklm01}, but no progress seems to have been made on the general group membership problem since it was shown to be in \SL{} by an $\NC^1$ reduction to the undirected s-t connectivity problem \cite[Section~3]{bm89}.
-Using the fact that $\SL = \L$ \cite{reingold08}, we have that $\textsc{Group Membership} \in \L$.
-We use the logarithmic space algorithm for this problem to give a simple $\GC(\log^2 n, \L)$ algorithm for \textsc{Min Group Gen}.
+\begin{lemma}\label{lem:membershipinl}
+  $\textsc{Membership(Group)} \in \L$.
+\end{lemma}
+\begin{proof}
+  Since $\textsc{Membership(Group)} \in \SL$ \cite[Section~3]{bm89}, and $\SL = \L$ \cite{reingold08}, the lemma follows.
+\end{proof}
 
-We require one algebraic lemma which bounds the size of the minimum generating set of a finite group.
+Upper bounds on the complexity of \textsc{Membership($\mathcal{G}$)} for several subfamilies of \textsc{Group} are explored in \cite{bklm01}.
+%We use the logarithmic space algorithm for this problem to give a simple $\GC(\log^2 n, \L)$ algorithm for \textsc{Min Group Gen}.
+
+Before providing the general algorithm for computing the size of the minimum generating set for families of groups, we require one algebraic lemma which bounds the size of the minimum generating set of any finite group.
 
 \begin{lemma}\label{lem:log}
   If $(G, \cdot)$ is a finite group then the size of the minimum generating set is at most $\log n$.
@@ -137,13 +127,13 @@ We require one algebraic lemma which bounds the size of the minimum generating s
 \end{proof}
 
 \begin{lemma}\label{lem:mingengc}
-  $\textsc{Min Group Gen} \in \GC(\log^2 n, \L)$.
+  $\textsc{Min Gen Size(Group)} \in \GC(\log^2 n, \L)$.
 \end{lemma}
 \begin{proof}
   The algorithm proceeds as follows on input $\langle (G, \cdot), k \rangle$, where $G$ is a group of order $n$ with distinguished identity element $e$:
   \begin{itemize}
   \item Nondeterministically guess a subset $S \subseteq G$ of cardinality at most $k$.
-  \item Accept if and only if for all $v \in G$, $\langle G, S, v \rangle \in \textsc{Group Membership}$.
+  \item Accept if and only if for all $v \in G$, $\langle G, S, v \rangle \in \textsc{Membership(Group)}$.
   \end{itemize}
 
   First we prove that this algorithm uses $O(\log^2 n)$ nondeterministic bits and $O(\log n)$ space.
@@ -151,30 +141,30 @@ We require one algebraic lemma which bounds the size of the minimum generating s
   By \autoref{lem:log}, we assume without loss of generality that the size of the minimum generating set for a group of order $n$ is at most $\log n$, so $k$ must be at most $\log n$.
   Therefore the total number of nondeterministic bits required to guess $S$ is $O(\log^2 n)$.
   Iterating over all elements of $G$ requires $O(\log n)$ space to keep track of the current element in the iteration.
-  Since $\textsc{Group Membership} \in \L$ by the above discussion, deciding whether $\langle G, S, v \rangle \in \textsc{Group Membership}$ uses at most $O(\log n)$ space.
+  Since $\textsc{Membership(Group)} \in \L$ by hypothesis, deciding whether $\langle G, S, v \rangle \in \textsc{Membership(Group)}$ uses at most $O(\log n)$ space.
   Therefore the total space required for this algorithm (other than the read-only input and read-only nondeterministic bits) is $O(\log n)$.
 
   Next we show that the algorithm correctly decides the problem.
-  Suppose $\langle (G, \cdot), k) \rangle \in \textsc{Min Group Gen}$, so there exists a $T \subseteq G$ such that $|T| \leq k$ and $\gen{T} = G$.
+  Suppose $\langle (G, \cdot), k) \rangle \in \textsc{Min Gen Size(Group)}$, so there exists a $T \subseteq G$ such that $|T| \leq k$ and $\gen{T} = G$.
   One of the sets $S$ of cardinality at most $k$ that the algorithm guesses will equal $T$, since $|T| \leq k$.
   For all elements $v \in G$, we have $v \in \gen{T}$ since $\gen{T} = G$.
-  Hence the (correct) algorithm for \textsc{Group Membership} will accept for all $v \in G$, and the overall algorithm will accept.
+  Hence the (correct) algorithm for \textsc{Membership(Group)} will accept for all $v \in G$, and the overall algorithm will accept.
   For the converse, suppose the algorithm accepts the input $\langle (G, \cdot), k \rangle$.
   This occurs exactly when it has guessed a set $S$ of cardinality at most $k$ such that all elements $v$ in $G$ are members of the subgroup generated by $S$.
-  Thus $S$ is a generating set for $G$ of cardinality at most $k$, so $\langle (G, \cdot), k \in \textsc{Min Group Gen}$.
+  Thus $S$ is a generating set for $G$ of cardinality at most $k$, so $\langle (G, \cdot), k \in \textsc{Min Gen Size(Group)}$.
 \end{proof}
 
-This improves the previous upper bound of $\L^2$ because
+This improves the previous upper bound, $\L^2$, because
 \begin{equation*}
   \GC(\log^2 n, \L) \subseteq \GC(\log^2 n, \NC^2) \subseteq \L^2,
 \end{equation*}
 where the first inclusion follows from the fact that $\L \subseteq \NL \subseteq \NC^2$, and the second is proven in \cite[Lemma~3.2.8]{wolf90}.
 
-From \autoref{lem:mingenp} and \autoref{lem:mingengc}, we immediately get the following theorem.
+%% From \autoref{lem:mingenp} and \autoref{lem:mingengc}, we immediately get the following theorem.
 
-\begin{theorem}
-  $\textsc{Min Group Gen} \in \GC(\log^2 n, \L) \cap \P$.
-\end{theorem}
+%% \begin{theorem}
+%%   $\textsc{Min Group Gen} \in \GC(\log^2 n, \L) \cap \P$.
+%% \end{theorem}
 
 We conjecture that this is not the best possible upper bound, and more clever algebra may reveal a more efficient algorithm.
 
