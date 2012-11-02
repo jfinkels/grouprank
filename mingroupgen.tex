@@ -26,7 +26,7 @@
 
 \section{Introduction}
 
-In this work we study the problem of computing the size of the minimum generating set of a group, as well as the restriction of this problem to restricted families of groups.
+In this work we study the problem of computing the size of the minimum generating set of a group, as well as the restriction of this problem to restricted classes of groups.
 TODO Discuss previous work here, including Barrington and McKenzie showing the group membership problem is in $\SL$, and the $\DSPACE(\log^2 n)$ algorithm, \ldots.
 Discuss also the relationship to computing the minimum generating set.
 
@@ -42,9 +42,7 @@ If $(G, \cdot)$ is a group and $S$ is a subset of $G$ then the set of words on $
 If $T \subseteq G$, the set \emph{generated} by $T$, denoted $\gen{T}$, is the transitive closure of $\cdot$ on $T$.
 A \emph{generating set} for $(G, \cdot)$ is a set $T \subseteq G$ such that $\gen{T} = G$.
 
-%% TODO determine the order of this list, from most general to most specific.
-We will also consider families of groups: \textsc{Group}, \textsc{Solvable}, \textsc{Nilpotent}, \textsc{Abelian}, \textsc{$p$-Group}, \textsc{Elementary Abelian}, \textsc{Cyclic}.
-\textsc{Group} is the set of all groups, \textsc{Solvable} is the set of all solvable groups, etc.
+We will also consider subclasses of the class of all groups: \textsc{Group}, \textsc{Solvable}, \textsc{Nilpotent}, \textsc{Abelian}, \textsc{$p$-Group}, \textsc{Elementary Abelian}, \textsc{Cyclic}, where \textsc{Group} is the class of all groups, \textsc{Solvable} is the class of all solvable groups, etc.
 
 \section{Computing the size of the minimum generating set}
 
@@ -54,12 +52,12 @@ In order to study its complexity, we define a decision problem corresponding to 
 \begin{definition}[\textsc{Min Gen Size($\mathcal{G}$}]
   \mbox{}
 
-  \textbf{Instance:} finite group $(G, \cdot)$ (given as a Cayley table) in the family $\mathcal{G}$, natural number $k$ (given in binary).
+  \textbf{Instance:} finite group $(G, \cdot)$ (given as a Cayley table) in the class $\mathcal{G}$, natural number $k$ (given in binary).
 
   \textbf{Question:} Does there exist a $T \subseteq G$ such that $\gen{T} = G$ and $|T| \leq k$?
 \end{definition}
 
-Since each of the other families of groups is a subfamily of \textsc{Group}, an upper bound on the complexity of \textsc{Min Gen Size(Group)} is also an upper bound on the complexity of \textsc{Min Gen Size} for all the other subfamilies.
+Since each of the other classes of groups is a subclass of \textsc{Group}, an upper bound on the complexity of \textsc{Min Gen Size(Group)} is also an upper bound on the complexity of \textsc{Min Gen Size} for all the other subclasses.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TODO this doesn't work because according to Wikipedia, a nontrivial finite %
@@ -102,7 +100,7 @@ We require a definition of the following auxiliary problem.
 \begin{definition}[\textsc{Membership($\mathcal{G}$)}]
   \mbox{}
 
-  \textbf{Instance:} finite group $(G, \cdot)$ (given as a Cayley table) in the family $\mathcal{G}$, finite set $S \subset G$, group element $v \in G$.
+  \textbf{Instance:} finite group $(G, \cdot)$ (given as a Cayley table) in the class $\mathcal{G}$, finite set $S \subset G$, group element $v \in G$.
 
   \textbf{Question:} Is $v \in \gen{X}$?
 \end{definition}
@@ -114,10 +112,10 @@ We require a definition of the following auxiliary problem.
   Since $\textsc{Membership(Group)} \in \SL$ \cite[Section~3]{bm89}, and $\SL = \L$ \cite{reingold08}, the lemma follows.
 \end{proof}
 
-Upper bounds on the complexity of \textsc{Membership($\mathcal{G}$)} for several subfamilies of \textsc{Group} are explored in \cite{bklm01}.
+Upper bounds on the complexity of \textsc{Membership($\mathcal{G}$)} for several subclasses of \textsc{Group} are explored in \cite{bklm01}.
 %We use the logarithmic space algorithm for this problem to give a simple $\GC(\log^2 n, \L)$ algorithm for \textsc{Min Group Gen}.
 
-Before providing the general algorithm for computing the size of the minimum generating set for families of groups, we require one algebraic lemma which bounds the size of the minimum generating set of any finite group.
+Before providing the general algorithm for computing the size of the minimum generating set for classes of groups, we require one algebraic lemma which bounds the size of the minimum generating set of any finite group.
 
 \begin{lemma}\label{lem:log}
   If $(G, \cdot)$ is a finite group then the size of the minimum generating set is at most $\log n$.
