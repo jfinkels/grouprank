@@ -12,7 +12,7 @@
 \newcommand{\gen}[1]{{\langle #1 \rangle}}
 \newcommand{\email}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
 
-\declaretheorem[]{theorem}
+\declaretheorem[numberwithin=section]{theorem}
 \declaretheorem[numberlike=theorem]{conjecture}
 \declaretheorem[numberlike=theorem]{lemma}
 \declaretheorem[numberlike=theorem]{proposition}
@@ -253,7 +253,9 @@ We start with the algebraic lemmata, then provide the necessary reductions.
 %% \end{lemma}
 
 \begin{proposition}
-  $\textsc{Min Gen Size(Nilpotent)} \leq_{ctt}^P \textsc{Min Gen Size(p-Group)}$.
+  \begin{equation*}
+    \textsc{Min Gen Size(Nilpotent)} \leq_{ctt}^P \textsc{Min Gen Size(p-Group)}.
+  \end{equation*}
 \end{proposition}
 \begin{proof}
   Define the reduction by
