@@ -28,7 +28,7 @@
 \section{Introduction}
 
 In this work we study the problem of computing the size of the minimum generating set of a group, as well as the restriction of this problem to restricted classes of groups.
-TODO Discuss previous work here, including Barrington and McKenzie showing the group membership problem is in $\SL$, and the $\DSPACE(\log^2 n)$ algorithm, \ldots.
+TODO Discuss previous work here, including Barrington and McKenzie showing the group membership problem is in $\SL$, and the $\DSPACE(\log^2 n)$ algorithm, the work Graph Isomorphism is not AC0 reducible to Group Isomorphism, which shows that Quasigroup Isomorphism is also in $\GC(\log^2 n, \FOLL)$, \ldots.
 Discuss also the relationship to computing the minimum generating set.
 
 \section{Preliminaries}
@@ -38,13 +38,15 @@ $\L^2$ is the class of decision problems decidable by a deterministic Turing mac
 The (inclusion) relationship between \P{} and $\L^2$ is unknown.
 Following the notation of Cai and Chen \cite{cc97}, $\GC(f(n), \mathcal{C})$ is the class of decision problems decidable by a $\mathcal{C}$ machine augmented with $O(f(n))$ nondeterministic bits.
 We will consider specifically the complexity class $\GC(\log^2 n, \L)$.
+\FOLL{} is the class of decision problems decidable by a $\DTIME(\log n)$-uniform family of circuits with polynomial size, unbounded fan-in, and $O(\log \log n)$ depth.
+$\FOLL^2$ is the same, but with $O(\log^2 \log n)$.
 %% TODO definitions for many-one and conjunctive truth table reductions
 
 If $(G, \cdot)$ is a group and $S$ is a subset of $G$ then the set of words on $S$ is denoted $S^*$ and the set of inverses of elements in $S$ is denoted $S^{-1}$.
 If $T \subseteq G$, the set \emph{generated} by $T$, denoted $\gen{T}$, is the transitive closure of $\cdot$ on $T$.
 A \emph{generating set} for $(G, \cdot)$ is a set $T \subseteq G$ such that $\gen{T} = G$.
 
-We will also consider subclasses of the class of all groups: \textsc{Group}, \textsc{Solvable}, \textsc{Nilpotent}, \textsc{Abelian}, \textsc{$p$-Group}, \textsc{Elementary Abelian}, \textsc{Cyclic}, where \textsc{Group} is the class of all groups, \textsc{Solvable} is the class of all solvable groups, etc.
+We will also consider subclasses of the class of all groups: \textsc{Group}, \textsc{Constant Solvability Class}, \textsc{Nilpotent}, \textsc{Abelian}, \textsc{$p$-Group}, \textsc{Elementary Abelian}, \textsc{Cyclic}, where \textsc{Group} is the class of all groups, \textsc{Constant Solvability Class} is the class of all groups of solvability class $O(1)$, etc.
 
 \section{Computing the size of the minimum generating set}
 
@@ -126,9 +128,9 @@ Before providing the general algorithm for computing the size of the minimum gen
   Proof can be found at \url{http://math.stackexchange.com/a/226938/29369}, add it here.
 \end{proof}
 
-\begin{lemma}\label{lem:mingengc}
+\begin{theorem}\label{thm:mingengc}
   $\textsc{Min Gen Size(Group)} \in \GC(\log^2 n, \L)$.
-\end{lemma}
+\end{theorem}
 \begin{proof}
   The algorithm proceeds as follows on input $\langle (G, \cdot), k \rangle$, where $G$ is a group of order $n$ with distinguished identity element $e$:
   \begin{itemize}
@@ -168,14 +170,48 @@ where the first inclusion follows from the fact that $\L \subseteq \NL \subseteq
 
 We conjecture that this is not the best possible upper bound, and more clever algebra may reveal a more efficient algorithm.
 
-\begin{conjecture}
-  $\textsc{Min Group Gen} \in \L$.
-\end{conjecture}
+%% \begin{conjecture}
+%%   $\textsc{Min Gen Size(Group)} \in \L$.
+%% \end{conjecture}
+
+\begin{theorem}
+  \mbox{}
+  \begin{enumerate}
+  \item Each of the problems \textsc{Min Gen Size(Cyclic)}, \textsc{Min Gen Size(Abelian)}, and \textsc{Min Gen Size(Constant Solvability Class)} are in
+    \begin{equation*}
+      \GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL).
+    \end{equation*}
+  \item \textsc{Min Gen Size(Nilpotent)} is in
+    \begin{equation*}
+      \GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL^2).
+    \end{equation*}
+  \end{enumerate}
+\end{theorem}
+\begin{proof}
+  \mbox{}
+  \begin{enumerate}
+  \item
+    \autoref{thm:mingengc} shows that these problems are in $\GC(\log^2 n, \L)$.
+    We know that the membership problem for each of these classes of groups is not only in \L{} by \autoref{lem:membershipinl}, but also in \FOLL{} \cite[Section~3]{bklm01}.
+    A slight modification of the algorithm from \autoref{thm:mingengc} can be used to show that each of these problems is in $\GC(\log^2 n, \FOLL)$.
+    After nondeterministically guessing a set $S$, instead of iterating over each element of the group in logarithmic space, we use $n$ instances of the \FOLL{} circuit which decides the membership problem and compute the conjunction of the output of each of the instances for one additional layer of depth and a $O(n)$ increase in the size of the circuit.
+    Since the size of the circuit remains polynomial in $n$ and the depth remains $O(\log \log n)$, we have shown $\textsc{Min Gen Size(Cyclic)} \in \GC(\log^2 n, \FOLL)$.
+  \item The same arugment applies, except using the fact that the membership problem for nilpotent groups is in $\FOLL^2$ \cite[Corollary~3.12]{bklm01}. \qedhere
+  \end{enumerate}
+\end{proof}
+Observe that even though, for example, $\textsc{Membership(Cyclic)} \in \L \cap \FOLL$, we show that \textsc{Min Gen Size(Cyclic)} is in
+\begin{equation*}
+  \GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL)
+\end{equation*}
+instead of
+\begin{equation*}
+  \GC(\log^2 n, \L \cap \FOLL),
+\end{equation*}
+for syntactic reasons (the second step in the algorithm from \autoref{thm:mingengc} is either a logarithmic space Turing machine procedure or a $\FO(\log \log n)$ procedure, but not both simultaneously).
 
 \subsection{For special cases}
 
 In this section we provide a clearer presentation of the proof of \cite[Theorem~7]{at06}.
-TODO add to this section the result of using the results from \cite{bklm01} and the algorithm from \autoref{lem:mingengc} to place these problems in smaller complexity classes.
 
 \begin{proposition}
   $\textsc{Min Nilp. Group Gen} \leq_{ctt}^P \textsc{Min p-Group Gen}$.
