@@ -197,7 +197,6 @@ where the first inclusion follows from the fact that $\L \subseteq \NL \subseteq
 
 At this point, we provide a clearer presentation of the proof of \cite[Theorem~7]{at06}.
 We have split up the proof into multiple parts in order to more easily analyze their complexity.
-We start with the algebraic lemmata, then provide the necessary reductions.
 
 \begin{lemma}\label{lem:sylow}
   Suppose $(G, \cdot)$ is a finite group of order $n$, where the (unique) prime factorization of $n$ is $\Pi_{i = 1}^m p_i^{e_i}$.
@@ -217,7 +216,7 @@ We start with the algebraic lemmata, then provide the necessary reductions.
 \begin{proof}
   Define the reduction by
   \begin{equation*}
-    \langle (G, \cdot), k \rangle \mapsto \bigwedge_{i=1}^m \langle (S_{p_i}, \cdot), k \rangle
+    \langle (G, \cdot), k \rangle \mapsto \left\langle (S_{p_1}, k), (S_{p_2}, k), \dotsc, (S_{p_m}, k) \right\rangle
   \end{equation*}
   for all nilpotent groups $(G, \cdot)$ of order $n$ and all positive integers $k$, where the prime factorization of $n$ is $p_1^{e_1}p_2^{e_2}\dotsb p_m^{e_m}$ and $S_{p_i}$ is the unique $p_i$-Sylow subgroup of $G$.
   Observe that the output is correctly formatted because each of the Sylow subgroups is a $p$-group.
@@ -226,7 +225,7 @@ We start with the algebraic lemmata, then provide the necessary reductions.
   Since the length of the input is $n^2 \log n$, the prime factorization of $n$ can be computed in deterministic polynomial time with respect to the length of the input (using, for example, the general number field sieve \cite{llmp93}).
   We know that the set of Sylow subgroups exists by \autoref{lem:sylow}.
   If $n_i = n p_i^{-e_i}$ then $S_{p_i} = \{g^{n_i} \, | \, g \in G\}$ for all $i \leq m$.
-  Computing the $n_i$th power of $g$ can be computed in logarithmic space (by iteratively computing $g$, $g^2$, $g^3$, etc.)
+  The $n_i$th power of $g$ can be computed in logarithmic space (by iteratively computing $g$, $g^2$, $g^3$, etc.).
   Computing the set $S_{p_i}$ can therefore be computed in logarithmic space as well.
   Constructing the Cayley table of $S_{p_i}$ can be performed in constant space by simply looking up the appropriate entries in the Cayley table of the group $G$.
   The total number of clauses in the conjunction is $m$, which is the number of prime factors of $n$, which is bounded by a polynomial in $n^2 \log n$ because the number of prime factors of $n$ is less than $n$.
