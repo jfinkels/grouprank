@@ -51,7 +51,6 @@ We will consider specifically the complexity classes $\GC(\log^2 n, \L)$ and $\G
 
 Let $P$ and $Q$ be decision problems.
 We say \emph{$P$ is many-one reducible to $Q$} if there exists a function $f$ such that for all strings $x$, we have $x \in P$ if and only if $f(x) \in Q$.
-We say \emph{$P$ is conjunctive truth-table reducible to $Q$} if there exists a function $f$ such that for all strings $x$, we have $f(x) = \langle y_1, y_2, \dotsc, y_m \rangle$ for some positive integer $m$ and $x \in P$ if and only if for all $i \leq m$, we have $y_i \in Q$.
 
 If $(G, \cdot)$ is a finite group of order $n$, we identify the elements of the group with the indices 1, 2, \ldots, n, where 1 is the identity of the group.
 We sometimes refer to the group as $(G, \cdot)$, but will also sometimes omit the group product and just write $G$.
@@ -66,11 +65,11 @@ From group theory we know that for finite groups,
   \textsc{Cyclic} \subseteq \textsc{Elementary Abelian} \subseteq \textsc{Abelian} \subseteq \textsc{Nilpotent} \subseteq \textsc{Group},
 \end{equation*}
 \begin{equation*}
-  \textsc{p-Group} \subseteq \textsc{Nilpotent} \subseteq \textsc{Group},
+  \textsc{Elementary Abelian} \subseteq \textsc{p-Group} \subseteq \textsc{Nilpotent}
 \end{equation*}
 and
 \begin{equation*}
-  \textsc{Constant Solvability Class} \subseteq \textsc{Group}.
+  \textsc{Abelian} \subseteq \textsc{Constant Solvability Class} \subseteq \textsc{Group}.
 \end{equation*}
 
 \section{Decision problem for computing the size of the minimum generating set}
@@ -195,8 +194,133 @@ where the first inclusion follows from the fact that $\L \subseteq \NL \subseteq
 
 \subsection{In polynomial time}
 
+In \cite{at06}, the authors provide a polynomial time conjunctive truth-table reduction from \textsc{Min Gen Size(Nilpotent)} to \textsc{Min Gen Size(Elementary Abelian)} via \textsc{Min Gen Size(p-Group)}, and note that since $\textsc{Min Gen Size(Elementary Abelian)} \in \P$, the others are in \P{} as well.
+Observe that this result also implies a polynomial time algorithm for all subclasses of the the class of finite nilpotent groups.
+
+\begin{theorem}[{\cite[Theorem~7]{at06}}]
+  Each of the problems
+  \begin{itemize}
+  \item \textsc{Min Gen Size(Nilpotent)},
+  \item \textsc{Min Gen Size(p-Group)},
+  \item \textsc{Min Gen Size(Abelian)},
+  \item \textsc{Min Gen Size(Elementary Abelian)}, and
+  \item \textsc{Min Gen Size(Cyclic)}
+  \end{itemize}
+  is in \P.
+\end{theorem}
+
+A clearer presentation of the complete proof is given in \autoref{app:p}.
+
+\subsection{In constant depth circuits}
+
+For cyclic groups, the size of the minimum generating set is always 1, so the problem is uninteresting.
+
+\begin{theorem}
+  $\textsc{Min Gen Size(Cyclic)} \in \NC^0$.
+\end{theorem}
+
+\section{Searching for the exact size of the minimum generating set}
+
+Now that we know the complexity for the decision problem form of \textsc{Min Gen Size(Group)}, we wish to implement a function which computes the exact size of the minimum generating set of a group.
+For decision problems in polynomial time, the well-known binary search on $k$ between 1 and $n$, where $n$ is the order of the group, places the search problem in polynomial time as well.
+For decision problems in $\GC(\log^2 n, \L)$, however, each level of the binary search recursion tree requires an additional $O(\log^2 n)$ bits of nondeterminism.
+(The $O(\log n)$ space can still be reused at each level.)
+For this reason, the search problem corresponding to \textsc{Min Gen Size(Group)} is computable in $\GC(\log^3 n, \L)$.
+
+\begin{todo}
+  How can we perform binary search in $\GC(\log^2 n, \FOLL)$?
+\end{todo}
+
+\section{Completeness}
+
+Any decision problem in \FOLL{} (or $\FOLL^2$) cannot be hard under $\AC^0$ many-one reductions for any complexity class which contains $\textsc{Parity}$ \cite[Section~2.2]{bklm01}.
+This is true even when the circuit is augmented with a polylogarithmic number of nondeterministic gates \cite[Section~4]{ctw10}.
+This gives an immediate improvement to the upper bound of all the problems shown in the previous section to be in $\GC(\log^2 n, \FOLL)$ (or $\GC(\log^2 n, \FOLL^2)$).
+
+\begin{theorem}
+  None of the decision problems
+  \begin{itemize}
+  \item \textsc{Min Gen Size(Nilpotent)},
+  \item \textsc{Min Gen Size(p-Group)},
+  \item \textsc{Min Gen Size(Constant Solvability Class)},
+  \item \textsc{Min Gen Size(Abelian)},
+  \item \textsc{Min Gen Size(Elementary Abelian)}, or
+  \item \textsc{Min Gen Size(Cyclic)}
+  \end{itemize}
+  are hard under $\AC^0$ many-one reductions for any complexity class containing \textsc{Parity}, specifically those in the inclusion chain
+  \begin{equation*}
+    \ACC^0 \subseteq \TC^0 \subseteq \NC^1 \subseteq \L \subseteq \NL \subseteq (\LOGCFL \cup \DET).
+  \end{equation*}
+\end{theorem}
+
+\section{Future work}
+
+\autoref{fig:results} contains a summary of the results found in this work.
+\begin{todo}
+  Continually check that this table is correct.
+\end{todo}
+\begin{figure}
+\caption{A summary of the upper bounds due to this work for the problem of computing the size of the minimum generating set of a class of groups.\label{fig:results}}
+  \begin{center}
+    \begin{tabular}{l | l}
+      \multicolumn{1}{c |}{Subclass $\mathcal{G}$ of \textsc{Group}}
+      &
+      \multicolumn{1}{| c}{\textsc{Min Gen Size($\mathcal{G}$)} decision problem} \\
+      \hline
+      \hline
+      \textsc{Group} & $\GC(\log^2 n, \L)$ \\
+      \textsc{Solvable} & $\GC(\log^2 n, \L)$ \\
+      \textsc{Nilpotent} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL^2) \cap \P$ \\
+      \textsc{p-Group} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL^2) \cap \P$ \\
+      \textsc{Constant Solvability Class} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL)$ \\
+      \textsc{Abelian} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL) \cap \P$ \\
+      \textsc{Elementary Abelian} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL) \cap \P$ \\
+      \textsc{Cyclic} & $\NC^0$ \\
+      \multicolumn{2}{c}{} \\[10pt]
+      \multicolumn{1}{c |}{Subclass $\mathcal{G}$ of \textsc{Group}}
+      &
+      \multicolumn{1}{| c}{\textsc{Min Gen Size($\mathcal{G}$)} search problem} \\
+      \hline
+      \hline
+      \textsc{Group} & $\GC(\log^3 n, \L)$ \\
+      \textsc{Solvable} & $\GC(\log^3 n, \L)$ \\
+      \textsc{Nilpotent} & $\GC(\log^3 n, \L) \cap \P$ \\
+      \textsc{p-Group} & $\GC(\log^3 n, \L) \cap \P$ \\
+      \textsc{Constant Solvability Class} & $\GC(\log^3 n, \L)$ \\
+      \textsc{Abelian} & $\GC(\log^3 n, \L) \cap \P$ \\
+      \textsc{Elementary Abelian} & $\GC(\log^3 n, \L) \cap \P$ \\
+      \textsc{Cyclic} & $\NC^0$
+    \end{tabular}
+  \end{center}
+\end{figure}
+
+As noted in the introduction, the (quasi)group isomorphism problem is known to be in $\GC(\log^2 n, \FOLL)$.
+What is the relationship between this problem and the minimum generating set size problem for groups?
+
+What is the relationship between computing the size of the minimum generating set and computing the minimum generating set itself?
+
+\section{About this work}
+
+Copyright 2012 Jef{}frey Finkelstein.
+
+This work is licensed under the Creative Commons Attribution-ShareAlike License 3.0.
+Visit \mbox{\url{https://creativecommons.org/licenses/by-sa/3.0/}} to view a copy of this license.
+
+The \LaTeX{} markup which generated this document is available on the World Wide Web at \mbox{\url{https://github.com/jfinkels/ncapproximation}}.
+It is also licensed under the Creative Commons Attribution-ShareAlike License.
+
+The author can be contacted via email at \email{jeffreyf@bu.edu}.
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\appendix
+\section{Polynomial time algorithm for finite nilpotent groups}\label{app:p}
+
 At this point, we provide a clearer presentation of the proof of \cite[Theorem~7]{at06}.
 We have split up the proof into multiple parts in order to more easily analyze their complexity.
+
+We say \emph{$P$ is conjunctive truth-table reducible to $Q$} if there exists a function $f$ such that for all strings $x$, we have $f(x) = \langle y_1, y_2, \dotsc, y_m \rangle$ for some positive integer $m$ and $x \in P$ if and only if for all $i \leq m$, we have $y_i \in Q$.
 
 \begin{lemma}\label{lem:sylow}
   Suppose $(G, \cdot)$ is a finite group of order $n$, where the (unique) prime factorization of $n$ is $\Pi_{i = 1}^m p_i^{e_i}$.
@@ -345,108 +469,5 @@ We have split up the proof into multiple parts in order to more easily analyze t
   \end{equation*}
   Since $\textsc{Min Gen Size(Elementary Abelian)} \in \P$ and $\P$ is closed under polynomial time conjunctive truth table reductions, $\textsc{Min Gen Size(Nilpotent)} \in \P$.
 \end{proof}
-
-\subsection{In constant depth circuits}
-
-For cyclic groups, the size of the minimum generating set is always 1, so the problem is uninteresting.
-
-\begin{theorem}
-  $\textsc{Min Gen Size(Cyclic)} \in \NC^0$.
-\end{theorem}
-
-\section{Searching for the exact size of the minimum generating set}
-
-Now that we know the complexity for the decision problem form of \textsc{Min Gen Size(Group)}, we wish to implement a function which computes the exact size of the minimum generating set of a group.
-For decision problems in polynomial time, the well-known binary search on $k$ between 1 and $n$, where $n$ is the order of the group, places the search problem in polynomial time as well.
-For decision problems in $\GC(\log^2 n, \L)$, however, each level of the binary search recursion tree requires an additional $O(\log^2 n)$ bits of nondeterminism.
-(The $O(\log n)$ space can still be reused at each level.)
-For this reason, the search problem corresponding to \textsc{Min Gen Size(Group)} is computable in $\GC(\log^3 n, \L)$.
-
-\begin{todo}
-  How can we perform binary search in $\GC(\log^2 n, \FOLL)$?
-\end{todo}
-
-\section{Completeness}
-
-Any decision problem in \FOLL{} (or $\FOLL^2$) cannot be hard under $\AC^0$ many-one reductions for any complexity class which contains $\textsc{Parity}$ \cite[Section~2.2]{bklm01}.
-This is true even when the circuit is augmented with a polylogarithmic number of nondeterministic gates \cite[Section~4]{ctw10}.
-This gives an immediate improvement to the upper bound of all the problems shown in the previous section to be in $\GC(\log^2 n, \FOLL)$ (or $\GC(\log^2 n, \FOLL^2)$).
-
-\begin{theorem}
-  None of the decision problems
-  \begin{itemize}
-  \item \textsc{Min Gen Size(Nilpotent)},
-  \item \textsc{Min Gen Size(p-Group)},
-  \item \textsc{Min Gen Size(Constant Solvability Class)},
-  \item \textsc{Min Gen Size(Abelian)},
-  \item \textsc{Min Gen Size(Elementary Abelian)}, or
-  \item \textsc{Min Gen Size(Cyclic)}
-  \end{itemize}
-  are hard under $\AC^0$ many-one reductions for any complexity class containing \textsc{Parity}, specifically those in the inclusion chain
-  \begin{equation*}
-    \ACC^0 \subseteq \TC^0 \subseteq \NC^1 \subseteq \L \subseteq \NL \subseteq (\LOGCFL \cup \DET).
-  \end{equation*}
-\end{theorem}
-
-\section{Future work}
-
-\autoref{fig:results} contains a summary of the results found in this work.
-\begin{todo}
-  Continually check that this table is correct.
-\end{todo}
-\begin{figure}
-\caption{A summary of the upper bounds due to this work for the problem of computing the size of the minimum generating set of a class of groups.\label{fig:results}}
-  \begin{center}
-    \begin{tabular}{l | l}
-      \multicolumn{1}{c |}{Subclass $\mathcal{G}$ of \textsc{Group}}
-      &
-      \multicolumn{1}{| c}{\textsc{Min Gen Size($\mathcal{G}$)} decision problem} \\
-      \hline
-      \hline
-      \textsc{Group} & $\GC(\log^2 n, \L)$ \\
-      \textsc{Solvable} & $\GC(\log^2 n, \L)$ \\
-      \textsc{Nilpotent} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL^2) \cap \P$ \\
-      \textsc{p-Group} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL^2) \cap \P$ \\
-      \textsc{Constant Solvability Class} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL)$ \\
-      \textsc{Abelian} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL) \cap \P$ \\
-      \textsc{Elementary Abelian} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL) \cap \P$ \\
-      \textsc{Cyclic} & $\NC^0$ \\
-      \multicolumn{2}{c}{} \\[10pt]
-      \multicolumn{1}{c |}{Subclass $\mathcal{G}$ of \textsc{Group}}
-      &
-      \multicolumn{1}{| c}{\textsc{Min Gen Size($\mathcal{G}$)} search problem} \\
-      \hline
-      \hline
-      \textsc{Group} & $\GC(\log^3 n, \L)$ \\
-      \textsc{Solvable} & $\GC(\log^3 n, \L)$ \\
-      \textsc{Nilpotent} & $\GC(\log^3 n, \L) \cap \P$ \\
-      \textsc{p-Group} & $\GC(\log^3 n, \L) \cap \P$ \\
-      \textsc{Constant Solvability Class} & $\GC(\log^3 n, \L)$ \\
-      \textsc{Abelian} & $\GC(\log^3 n, \L) \cap \P$ \\
-      \textsc{Elementary Abelian} & $\GC(\log^3 n, \L) \cap \P$ \\
-      \textsc{Cyclic} & $\NC^0$
-    \end{tabular}
-  \end{center}
-\end{figure}
-
-As noted in the introduction, the (quasi)group isomorphism problem is known to be in $\GC(\log^2 n, \FOLL)$.
-What is the relationship between this problem and the minimum generating set size problem for groups?
-
-What is the relationship between computing the size of the minimum generating set and computing the minimum generating set itself?
-
-\section{About this work}
-
-Copyright 2012 Jef{}frey Finkelstein.
-
-This work is licensed under the Creative Commons Attribution-ShareAlike License 3.0.
-Visit \mbox{\url{https://creativecommons.org/licenses/by-sa/3.0/}} to view a copy of this license.
-
-The \LaTeX{} markup which generated this document is available on the World Wide Web at \mbox{\url{https://github.com/jfinkels/ncapproximation}}.
-It is also licensed under the Creative Commons Attribution-ShareAlike License.
-
-The author can be contacted via email at \email{jeffreyf@bu.edu}.
-
-\bibliographystyle{plain}
-\bibliography{references}
 
 \end{document}
