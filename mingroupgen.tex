@@ -368,9 +368,25 @@ For this reason, the search problem corresponding to \textsc{Min Gen Size(Group)
 
 \section{Completeness}
 
-\begin{todo}
-  mention that things in GC(log2 n, FOLL) cant be hard for small classes under AC0 reductions, from \cite{ctw10}.
-\end{todo}
+Any decision problem in \FOLL{} (or $\FOLL^2$) cannot be hard under $\AC^0$ many-one reductions for any complexity class which contains $\textsc{Parity}$ \cite[Section~2.2]{bklm01}.
+This is true even when the circuit is augmented with a polylogarithmic number of nondeterministic gates \cite[Section~4]{ctw10}.
+This gives an immediate improvement to the upper bound of all the problems shown in the previous section to be in $\GC(\log^2 n, \FOLL)$ (or $\GC(\log^2 n, \FOLL^2)$).
+
+\begin{theorem}
+  None of the decision problems
+  \begin{itemize}
+  \item \textsc{Min Gen Size(Nilpotent)},
+  \item \textsc{Min Gen Size(p-Group)},
+  \item \textsc{Min Gen Size(Constant Solvability Class)},
+  \item \textsc{Min Gen Size(Abelian)},
+  \item \textsc{Min Gen Size(Elementary Abelian)}, or
+  \item \textsc{Min Gen Size(Cyclic)}
+  \end{itemize}
+  are hard under $\AC^0$ many-one reductions for any complexity class containing \textsc{Parity}, specifically those in the inclusion chain
+  \begin{equation*}
+    \ACC^0 \subseteq \TC^0 \subseteq \NC^1 \subseteq \L \subseteq \NL \subseteq (\LOGCFL \cup \DET).
+  \end{equation*}
+\end{theorem}
 
 \section{Future work}
 
