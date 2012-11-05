@@ -48,9 +48,10 @@ The (inclusion) relationship between \P{} and $\L^2$ is unknown.
 $\FOLL^2$ is the same, but with $O(\log^2 \log n)$.
 Following the notation of Cai and Chen \cite{cc97}, $\GC(f(n), \mathcal{C})$ is the class of decision problems decidable by a $\mathcal{C}$ machine augmented with $O(f(n))$ nondeterministic bits.
 We will consider specifically the complexity classes $\GC(\log^2 n, \L)$ and $\GC(\log^2 n, \FOLL)$.
-\begin{todo}
-  Add definitions for many-one and conjunctive truth table reductions.
-\end{todo}
+
+Let $P$ and $Q$ be decision problems.
+We say \emph{$P$ is many-one reducible to $Q$} if there exists a function $f$ such that for all strings $x$, we have $x \in P$ if and only if $f(x) \in Q$.
+We say \emph{$P$ is conjunctive truth-table reducible to $Q$} if there exists a function $f$ such that for all strings $x$, we have $f(x) = \langle y_1, y_2, \dotsc, y_m \rangle$ for some positive integer $m$ and $x \in P$ if and only if for all $i \leq m$, we have $y_i \in Q$.
 
 If $(G, \cdot)$ is a finite group of order $n$, we identify the elements of the group with the indices 1, 2, \ldots, n, where 1 is the identity of the group.
 We sometimes refer to the group as $(G, \cdot)$, but will also sometimes omit the group product and just write $G$.
