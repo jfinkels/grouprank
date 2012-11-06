@@ -87,8 +87,7 @@ In order to study the complexity of computing the size of the minimum generating
 Since each of the other classes of groups is a subclass of \textsc{Group}, an upper bound on the complexity of \textsc{Min Gen Size(Group)} is also an upper bound on the complexity of \textsc{Min Gen Size} for all the other subclasses.
 
 Previously, the \textsc{Min Gen Size(Group)} problem was known to be in $\L^2$, the class of problems decidable by a deterministic Turing machine using at most $O(\log^2 n)$ space \cite{lsz77} (see \cite[Proposition~3]{at06} for a brief description of the algorithm; I can't find a copy of \cite{lsz77} online).
-We can improve this upper bound by a more careful analysis of the $\L^2$ algorithm.
-We require a definition of the following auxiliary problem.
+We can improve this upper bound by a more careful analysis of the $\L^2$ algorithm using the following auxiliary decision problem.
 
 \begin{definition}[\textsc{Membership($\mathcal{G}$)}]
   \mbox{}
