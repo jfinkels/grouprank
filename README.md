@@ -28,9 +28,11 @@ packages:
 
 * `amsmath`
 * `amsthm`
+* `amssymb`
 * `complexity`
 * `hyperref`
 * `thmtools`
+* `tikz`
 
 On Ubuntu 11.04, 11.10, 12.04, or 12.10, the necessary system packages which
 contain these LaTeX packages are:
@@ -38,12 +40,13 @@ contain these LaTeX packages are:
 * `texlive-base`
 * `texlive-latex-base`
 * `texlive-latex-extra`
+* `texlive-pictures`
 * `texlive-science`
 
 To install them, run
 
     sudo apt-get install texlive-base texlive-latex-base texlive-latex-extra \
-      texlive-science
+      texlive-pictures texlive-science
 
 Compiling
 ---------

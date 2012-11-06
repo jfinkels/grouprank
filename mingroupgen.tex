@@ -8,6 +8,7 @@
 \usepackage{complexity}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{tikz}
 
 \newcommand{\gen}[1]{{\langle #1 \rangle}}
 \newcommand{\email}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
@@ -61,18 +62,35 @@ We will consider all elements of $G$ to be expressed in binary, so the size of e
 If $T \subseteq G$, the set \emph{generated} by $T$, denoted $\gen{T}$, is the transitive closure of $\cdot$ on $T$.
 A \emph{generating set} for $(G, \cdot)$ is a set $T \subseteq G$ such that $\gen{T} = G$.
 
-We will also consider subclasses of the class of all finite groups: \textsc{Group}, \textsc{Constant Solvability Class}, \textsc{Nilpotent}, \textsc{Abelian}, \textsc{p-Group}, \textsc{Elementary Abelian}, and \textsc{Cyclic}, where \textsc{Group} is the class of all groups, \textsc{Constant Solvability Class} is the class of all groups of solvability class $O(1)$, etc.
-From group theory we know that for finite groups,
-\begin{equation*}
-  \textsc{Cyclic} \subseteq \textsc{Elementary Abelian} \subseteq \textsc{Abelian} \subseteq \textsc{Nilpotent} \subseteq \textsc{Group},
-\end{equation*}
-\begin{equation*}
-  \textsc{Elementary Abelian} \subseteq \textsc{p-Group} \subseteq \textsc{Nilpotent}
-\end{equation*}
-and
-\begin{equation*}
-  \textsc{Abelian} \subseteq \textsc{Constant Solvability Class} \subseteq \textsc{Group}.
-\end{equation*}
+We will also consider subclasses of the class of all \emph{finite} groups: \textsc{Group}, \textsc{Constant Solvability Class}, \textsc{Nilpotent}, \textsc{Abelian}, \textsc{p-Group}, \textsc{Elementary Abelian}, and \textsc{Cyclic}, where \textsc{Group} is the class of all finite groups, \textsc{Constant Solvability Class} is the class of all finite groups of solvability class $O(1)$, etc.
+Inclusions among these classes are given in \autoref{fig:inclusions}.
+\begin{figure}
+  \caption{Inclusions among classes of finite groups.\label{fig:inclusions}}
+  \begin{center}
+    \begin{tikzpicture}[xscale=3]
+
+      \node (e) at (0, 0) {\textsc{Elem. Abel.}};
+      \node (c) at (0, 1) {\textsc{Cyclic}};
+      \node (p) at (1, 0) {\textsc{p-Group}};
+      \node (a) at (1, 1) {\textsc{Abelian}};
+      \node (n) at (2, 0) {\textsc{Nilpotent}};
+      \node (s) at (2, 1) {\textsc{Const. Solv. Cls.}};
+      \node (g) at (3, 0) {\textsc{Group}};
+
+      \path[->]
+      (c) edge (a)
+      (e) edge (a)
+      (e) edge (p)
+
+      (a) edge (s)
+      (a) edge (n)
+      (p) edge (n)
+
+      (s) edge (g)
+      (n) edge (g);
+    \end{tikzpicture}
+  \end{center}
+\end{figure}
 
 \section{Decision problem for computing the size of the minimum generating set}
 
