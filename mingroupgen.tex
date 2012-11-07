@@ -145,10 +145,10 @@ This lemma allows us to consider, without loss of generality, only inputs $\lang
 \end{theorem}
 \begin{proof}
   The algorithm proceeds as follows on input $\langle (G, \cdot), k \rangle$, where $G$ is a group of order $n$:
-  \begin{itemize}
+  \begin{enumerate}
   \item Nondeterministically guess a subset $S \subseteq G$ of cardinality at most $k$.
   \item Accept if and only if for all $v \in G$, $\langle G, S, v \rangle \in \textsc{Membership(Group)}$.
-  \end{itemize}
+  \end{enumerate}
 
   First we prove that this algorithm uses $O(\log^2 n)$ nondeterministic bits and $O(\log n)$ space.
   The size of each group element, represented as number in binary, is $\log n$.
