@@ -132,8 +132,18 @@ Before providing the general algorithms for computing the size of the minimum ge
 \begin{lemma}\label{lem:log}
   If $(G, \cdot)$ is a finite group then the size of the minimum generating set is at most $\log n$.
 \end{lemma}
+\begin{todo}
+  Fill in the blanks in this proof.
+\end{todo}
+%% This proof is from \url{http://math.stackexchange.com/a/226938/29369}.
 \begin{proof}
-  Proof can be found at \url{http://math.stackexchange.com/a/226938/29369}, add it here.
+  Let $S$ be a \emph{minimal} generating set for $G$, where $S = \{g_1, g_2, \dotsc, g_m\}$.
+  Since $S$ is minimal, we know $e \notin S$ (because $\gen{S \cup \{e\}} = \gen{S}$) and there is at least one other element, call it $g_{m + 1}$, which is not in $S$ (because otherwise \ldots).
+  Let $S_m = \gen{S}$ and $S_{m + 1} = \gen{S \cup \{g_{m + 1}\}}$.
+  Then (at least) the two cosets $e S_m$ and $g_{m + 1} S_m$ are contained in $S_{m + 1}$.
+  Since \ldots, we have $|S_{m + 1}| \geq 2 |S_m|$.
+  By induction, we find that $|G| = |S_n| \geq 2^m$, and hence $m \leq \log |G| = \log n$.
+  We conclude that the size of any \emph{minimum} generating set for $G$ is at most $\log n$.
 \end{proof}
 
 This lemma allows us to consider, without loss of generality, only inputs $\langle (G, \cdot), k \rangle$ such that $k \leq \log n$.
