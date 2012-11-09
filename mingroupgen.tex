@@ -12,6 +12,9 @@
 
 \newcommand{\gen}[1]{{\langle #1 \rangle}}
 \newcommand{\email}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
+\newcommand{\AND}{\textsc{and}}
+\newcommand{\OR}{\textsc{or}}
+\newcommand{\NOT}{\textsc{not}}
 
 \declaretheorem[numberwithin=section]{theorem}
 \declaretheorem[numberlike=theorem]{conjecture}
@@ -285,15 +288,27 @@ Hence we have reduced the problem of computing the size of the minimum generatin
 
 \section{Searching for the exact size of the minimum generating set}
 
-Now that we know the complexity for the decision problem form of \textsc{Min Gen Size(Group)}, we wish to implement a function which computes the exact size of the minimum generating set of a group.
-For decision problems in polynomial time, the well-known binary search on $k$ between 1 and $n$, where $n$ is the order of the group, places the search problem in polynomial time as well.
+Now that we know the complexity for the decision problem form of \textsc{Min Gen Size($\mathcal{G}$)}, we wish to implement a function which computes the exact size of the minimum generating set of a group.
+As noted after \autoref{lem:log}, we need only search for a generating set of size at most $\log n$ for groups of order $n$.
+
+For the subclasses of \textsc{Group} for which the decision problem is in polynomial time, the well-known binary search on $k$ between 1 and $\log n$, places the search problem in polynomial time as well.
 For decision problems in $\GC(\log^2 n, \L)$, however, each level of the binary search recursion tree requires an additional $O(\log^2 n)$ bits of nondeterminism.
 (The $O(\log n)$ space can still be reused at each level.)
-For this reason, the search problem corresponding to \textsc{Min Gen Size(Group)} is computable in $\GC(\log^3 n, \L)$.
+Since the depth of the recursion tree is $\log \log n$, the search problem is computable in $\GC(\log^3 n, \L)$.
 
-\begin{todo}
-  How can we perform binary search in $\GC(\log^2 n, \FOLL)$?
-\end{todo}
+Now consider a decision problem in $\GC(\log^2 n, \FOLL)$.
+In order to search for the exact solution, we construct a circuit that works in two phases.
+In the first phase, we have exactly $\log n$ instances of the original \FOLL{} circuit for deciding \textsc{Min Gen Size} with the value of $k$ hardcoded; one instance has $k = 1$, one has $k = 2$, etc.
+Each of these instances has concurrent read-only access to both the group $G$ and the $\log^2 n$ bits of nondeterminism.
+Each instance will use only the first $k \log n$ nondeterministic bits, since it only needs to choose a set of size $k$ in which each element has size $\log n$.
+Each instance outputs $k$ (in binary) if $G$ has a generating set of size $k$ and outputs $\log n$ (in binary) if not.
+In the second phase we have a circuit computing the minimum of each of the $\log n$ values output from the previous phase.
+
+The minimum of $\log n$ numbers, each of length at most $\log \log n$, can be computed by an unbounded fan-in circuit over $\{\AND, \OR, \NOT\}$ of size polynomial in $\log n$ and depth $O(\log \log n)$ \cite{citationneeded} and since the depth of the circuit in the first phase is $O(\log \log n)$, the overall depth remains $O(\log \log n)$.
+The first phase contributes a $O(\log n)$ multiplicative factor to the size of the circuit, so the circuit remains polynomial in $n$.
+We conclude that if the decision form of \textsc{Min Gen Size} is in $\GC(\log^2 n, \FOLL)$, so is the search form.
+
+The same argument applies to decision problems in $\GC(\log^2 n, \FOLL^2)$, and essentially the same argument (with the exception of the nondeterminism) applies to those in \NC.
 
 \section{Completeness}
 
@@ -346,11 +361,11 @@ This gives an immediate improvement to the upper bound of all the problems shown
       \hline
       \textsc{Group} & $\GC(\log^3 n, \L)$ \\
       \textsc{Solvable} & $\GC(\log^3 n, \L)$ \\
-      \textsc{Nilpotent} & $\GC(\log^3 n, \L) \cap \P$ \\
-      \textsc{p-Group} & $\GC(\log^3 n, \L) \cap \P$ \\
-      \textsc{Constant Solvability Class} & $\GC(\log^3 n, \L)$ \\
-      \textsc{Abelian} & $\GC(\log^3 n, \L) \cap \P$ \\
-      \textsc{Elementary Abelian} & $\GC(\log^3 n, \L) \cap \ldots$ \\
+      \textsc{Nilpotent} & $\GC(\log^3 n, \L) \cap \GC(\log^2 n, \FOLL^2) \cap \P$ \\
+      \textsc{p-Group} & $\GC(\log^3 n, \L) \cap \GC(\log^2 n, \FOLL^2) \cap \P$ \\
+      \textsc{Constant Solvability Class} & $\GC(\log^3 n, \L) \cap \GC(\log^2 n, \FOLL)$ \\
+      \textsc{Abelian} & $\GC(\log^3 n, \L) \cap \GC(\log^2 n, \FOLL) \cap \P$ \\
+      \textsc{Elementary Abelian} & $\GC(\log^3 n, \L) \cap \GC(\log^2 n, \FOLL) \cap \NC$ \\
       \textsc{Cyclic} & $\NC^0$
     \end{tabular}
   \end{center}
