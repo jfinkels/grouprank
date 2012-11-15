@@ -209,7 +209,7 @@ where the first inclusion follows from the fact that $\L \subseteq \NL \subseteq
   \item
     We know that the membership problem for each of these classes of groups is in \FOLL{} by \cite[Section~3]{bklm01}.
     A slight modification of the algorithm from \autoref{thm:mingengc} can be used to show that each of these problems is in $\GC(\log^2 n, \FOLL)$.
-    After nondeterministically guessing a set $S$, instead of iterating over each element of the group in logarithmic space, we use $n$ instances of the \FOLL{} circuit which decides the membership problem and compute the conjunction of the output of each of the instances for one additional layer of depth and a $O(n)$ increase in the size of the circuit.
+    After nondeterministically guessing a set $S$, instead of iterating over each element of the group in logarithmic space, we use in parallel $n$ instances of the \FOLL{} circuit which decides the membership problem and compute the conjunction of the output of each of the instances for one additional layer of depth and a $O(n)$ increase in the size of the circuit.
     Since the size of the circuit remains polynomial in $n$ and the depth remains $O(\log \log n)$, we have shown $\textsc{Min Gen Size(Cyclic)} \in \GC(\log^2 n, \FOLL)$.
   \item The same argument applies, except using the fact that the membership problem for nilpotent groups is in $\FOLL^2$ \cite[Corollary~3.12]{bklm01}. \qedhere
   \end{enumerate}
