@@ -265,7 +265,7 @@ Hence we have reduced the problem of computing the size of the minimum generatin
   The function $f(n) = m$, where $n = p^m$, $n$ is given in unary, $p$ is a prime, and $m$ is a non-negative integer is computable by an \NC{} circuit family.
 \end{lemma}
 \begin{proof}
-  The following algorithm computes $m$ from the (unary) input $1^n$ where $n = p^m$ for some $p$ and $m$.
+  The following algorithm computes $m$ from the (unary) input $1^n$ where $n = p^m$ for some prime $p$ and some integer $m$.
   Here, \textsc{Unary Primes} is the set of all prime numbers expressed as unary integers.
   \begin{enumerate}
   \item Nondeterministically choose an $m'$ between 0 and $\log n$, expressed in unary.
