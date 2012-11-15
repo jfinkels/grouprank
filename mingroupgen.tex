@@ -300,13 +300,13 @@ Since the depth of the recursion tree is $\log \log n$, the search problem is co
 
 Now consider a decision problem in $\GC(\log^2 n, \FOLL)$.
 In order to search for the exact solution, we construct a circuit that works in two phases.
-In the first phase, we have exactly $\log n$ instances of the original \FOLL{} circuit for deciding \textsc{Min Gen Size} with the value of $k$ hardcoded; one instance has $k = 1$, one has $k = 2$, etc.
+In the first phase, we use in parallel exactly $\log n$ instances of the original \FOLL{} circuit for deciding \textsc{Min Gen Size} with the value of $k$ hardcoded; one instance has $k = 1$, one has $k = 2$, etc.
 Each of these instances has concurrent read-only access to both the group $G$ and the $\log^2 n$ bits of nondeterminism.
 Each instance will use only the first $k \log n$ nondeterministic bits, since it only needs to choose a set of size $k$ in which each element has size $\log n$.
 Each instance outputs $k$ (in binary) if $G$ has a generating set of size $k$ and outputs $\log n$ (in binary) if not.
 In the second phase we have a circuit computing the minimum of each of the $\log n$ values output from the previous phase.
 
-The minimum of $\log n$ numbers, each of length at most $\log \log n$, can be computed by an unbounded fan-in circuit over $\{\AND, \OR, \NOT\}$ of size polynomial in $\log n$ and depth $O(\log \log n)$ \cite{citationneeded} and since the depth of the circuit in the first phase is $O(\log \log n)$, the overall depth remains $O(\log \log n)$.
+The minimum of $\log n$ numbers, each of length at most $\log \log n$, can be computed by an unbounded fan-in circuit over $\{\AND, \OR, \NOT\}$ of size polynomial in $\log n$ and depth $O(\log \log n)$ and since the depth of the circuit in the first phase is $O(\log \log n)$, the overall depth remains $O(\log \log n)$.
 The first phase contributes a $O(\log n)$ multiplicative factor to the size of the circuit, so the circuit remains polynomial in $n$.
 We conclude that if the decision form of \textsc{Min Gen Size} is in $\GC(\log^2 n, \FOLL)$, so is the search form.
 
