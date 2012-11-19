@@ -35,11 +35,32 @@
 In this work we study the problem of computing the size of the minimum generating set of a group when given as a Cayley table, as well as the restriction of this problem to restricted classes of groups.
 Previously, the best upper bound for this problem was $\L^2$ (also known as $\DSPACE(\log^2 n)$), due to \cite{lsz77} (also described in \cite[Proposition~3]{at06}).
 The more recent work by many authors on ``bounded nondeterminism'' (in which an algorithm is allowed to nondeterministically guess a limited amount of bits and then verify the guess deterministically) as well as improved algorithms for deciding group membership due to \cite{bm89} and \cite{bklm01} allow us to improve this upper bound to $\GC(\log^2 n, \L)$ (defined in \autoref{sec:prelim}) using a more careful analysis of the original $\L^2$ algorithm.
+\autoref{fig:results} contains a summary of the results found in this work.
+
+\begin{figure}
+\caption{A summary of the upper bounds due to this work for the problem of computing the size of the minimum generating set of a class of groups.\label{fig:results}}
+  \begin{center}
+    \begin{tabular}{l | l}
+      \multicolumn{1}{c |}{Subclass $\mathcal{G}$ of \textsc{Group}}
+      &
+      \multicolumn{1}{| c}{\textsc{Min Gen Size($\mathcal{G}$)} decision problem} \\
+      \hline
+      \hline
+      \textsc{Group} & $\GC(\log^2 n, \L)$ \\
+      \textsc{Solvable} & $\GC(\log^2 n, \L)$ \\
+      \textsc{Nilpotent} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL^2) \cap \P$ \\
+      \textsc{p-Group} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL^2) \cap \P$ \\
+      \textsc{Constant Solvability Class} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL)$ \\
+      \textsc{Abelian} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL) \cap \P$ \\
+      \textsc{Elementary Abelian} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL) \cap \NC$ \\
+      \textsc{Cyclic} & $\NC^0$
+    \end{tabular}
+  \end{center}
+\end{figure}
 
 The related problem of deciding group membership was placed in $\L^2$ by \cite{lsz77}, and later improved to \SL{} by \cite{bm89}.
 In \cite{bklm01}, the group membership problem for several restricted classes of groups was placed in \FOLL, a class similar to $\AC^0$ but with $O(\log \log n)$ depth.
 The more recent proof that $\SL = \L$ \cite{reingold08} places the membership problem for general groups (and thus for restricted classes of groups) squarely in \L.
-
 Also related is the problem of deciding whether two given groups are isomorphic.
 A series of works improved the upper bound for the \emph{quasi}group isomorphism problem (and hence the group isomorphism problem) from $\GC(\log^2 n, \P)$ \cite{py96} to $\GC(\log^2 n, \NC^2)$ \cite{wolf94} to $\GC(\log^2 n, \SAC^1)$ \cite{wagner10} to $\GC(\log^2 n, \FOLL)$ \cite{ctw10}.
 
@@ -288,30 +309,6 @@ From the discussion preceding the lemma, we immediately get the following theore
   $\textsc{Min Gen Size(Elementary Abelian)} \in \NC$.
 \end{theorem}
 
-\section{Searching for the exact size of the minimum generating set}
-
-Now that we know the complexity for the decision problem form of \textsc{Min Gen Size($\mathcal{G}$)}, we wish to implement a function which computes the exact size of the minimum generating set of a group.
-As noted after \autoref{lem:log}, we need only search for a generating set of size at most $\log n$ for groups of order $n$.
-
-For the subclasses of \textsc{Group} for which the decision problem is in polynomial time, the well-known binary search on $k$ between 1 and $\log n$, places the search problem in polynomial time as well.
-For decision problems in $\GC(\log^2 n, \L)$, however, each level of the binary search recursion tree requires an additional $O(\log^2 n)$ bits of nondeterminism.
-(The $O(\log n)$ space can still be reused at each level.)
-Since the depth of the recursion tree is $\log \log n$, the search problem is computable in $\GC(\log^3 n, \L)$.
-
-Now consider a decision problem in $\GC(\log^2 n, \FOLL)$.
-In order to search for the exact solution, we construct a circuit that works in two phases.
-In the first phase, we use in parallel exactly $\log n$ instances of the original \FOLL{} circuit for deciding \textsc{Min Gen Size} with the value of $k$ hardcoded; one instance has $k = 1$, one has $k = 2$, etc.
-Each of these instances has concurrent read-only access to both the group $G$ and the $\log^2 n$ bits of nondeterminism.
-Each instance will use only the first $k \log n$ nondeterministic bits, since it only needs to choose a set of size $k$ in which each element has size $\log n$.
-Each instance outputs $k$ (in binary) if $G$ has a generating set of size $k$ and outputs $\log n$ (in binary) if not.
-In the second phase we have a circuit computing the minimum of each of the $\log n$ values output from the previous phase.
-
-The minimum of $\log n$ numbers, each of length at most $\log \log n$, can be computed by an unbounded fan-in circuit over $\{\AND, \OR, \NOT\}$ of size polynomial in $\log n$ and depth $O(\log \log n)$ and since the depth of the circuit in the first phase is $O(\log \log n)$, the overall depth remains $O(\log \log n)$.
-The first phase contributes a $O(\log n)$ multiplicative factor to the size of the circuit, so the circuit remains polynomial in $n$.
-We conclude that if the decision form of \textsc{Min Gen Size} is in $\GC(\log^2 n, \FOLL)$, so is the search form.
-
-The same argument applies to decision problems in $\GC(\log^2 n, \FOLL^2)$, and essentially the same argument (with the exception of the nondeterminism) applies to those in \NC.
-
 \section{Completeness}
 
 Any decision problem in \FOLL{} (or $\FOLL^2$) cannot be hard under $\AC^0$ many-one reductions for any complexity class which contains $\textsc{Parity}$ \cite[Section~2.2]{bklm01}.
@@ -335,43 +332,6 @@ This gives an immediate improvement to the upper bound of all the problems shown
 \end{theorem}
 
 \section{Future work}
-
-\autoref{fig:results} contains a summary of the results found in this work.
-
-\begin{figure}
-\caption{A summary of the upper bounds due to this work for the problem of computing the size of the minimum generating set of a class of groups.\label{fig:results}}
-  \begin{center}
-    \begin{tabular}{l | l}
-      \multicolumn{1}{c |}{Subclass $\mathcal{G}$ of \textsc{Group}}
-      &
-      \multicolumn{1}{| c}{\textsc{Min Gen Size($\mathcal{G}$)} decision problem} \\
-      \hline
-      \hline
-      \textsc{Group} & $\GC(\log^2 n, \L)$ \\
-      \textsc{Solvable} & $\GC(\log^2 n, \L)$ \\
-      \textsc{Nilpotent} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL^2) \cap \P$ \\
-      \textsc{p-Group} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL^2) \cap \P$ \\
-      \textsc{Constant Solvability Class} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL)$ \\
-      \textsc{Abelian} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL) \cap \P$ \\
-      \textsc{Elementary Abelian} & $\GC(\log^2 n, \L) \cap \GC(\log^2 n, \FOLL) \cap \NC$ \\
-      \textsc{Cyclic} & $\NC^0$ \\
-      \multicolumn{2}{c}{} \\[10pt]
-      \multicolumn{1}{c |}{Subclass $\mathcal{G}$ of \textsc{Group}}
-      &
-      \multicolumn{1}{| c}{\textsc{Min Gen Size($\mathcal{G}$)} search problem} \\
-      \hline
-      \hline
-      \textsc{Group} & $\GC(\log^3 n, \L)$ \\
-      \textsc{Solvable} & $\GC(\log^3 n, \L)$ \\
-      \textsc{Nilpotent} & $\GC(\log^3 n, \L) \cap \GC(\log^2 n, \FOLL^2) \cap \P$ \\
-      \textsc{p-Group} & $\GC(\log^3 n, \L) \cap \GC(\log^2 n, \FOLL^2) \cap \P$ \\
-      \textsc{Constant Solvability Class} & $\GC(\log^3 n, \L) \cap \GC(\log^2 n, \FOLL)$ \\
-      \textsc{Abelian} & $\GC(\log^3 n, \L) \cap \GC(\log^2 n, \FOLL) \cap \P$ \\
-      \textsc{Elementary Abelian} & $\GC(\log^3 n, \L) \cap \GC(\log^2 n, \FOLL) \cap \NC$ \\
-      \textsc{Cyclic} & $\NC^0$
-    \end{tabular}
-  \end{center}
-\end{figure}
 
 As noted in the introduction, the (quasi)group isomorphism problem is known to be in $\GC(\log^2 n, \FOLL)$.
 What is the relationship between this problem and the minimum generating set size problem for groups?
