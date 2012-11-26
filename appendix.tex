@@ -57,6 +57,9 @@ We say \emph{$P$ is conjunctive truth-table reducible to $Q$} if there exists a 
 \begin{lemma}\label{lem:factorgroup}
   If $(G, \cdot)$ is a group of order $n$ given by its Cayley table and $H < G$ then the function $\langle (G, \cdot), H \rangle \mapsto G / H$ is computable in polynomial time.
 \end{lemma}
+\begin{todo}
+  Fill in the gaps in this proof.
+\end{todo}
 \begin{proof}
   The elements of $G / H$ can be computed by iteratively computing $g H$ for each $g \in G$.
   There are $O(n)$ such iterations, each of which requires $O(n)$ multiplications, where each multiplication requires constant time (by lookup in the Cayley table).
