@@ -122,21 +122,6 @@ We say \emph{$P$ is conjunctive truth-table reducible to $Q$} if there exists a 
   This concludes the proof.
 \end{proof}
 
-\begin{lemma}
-  $\textsc{Min Gen Size(Elementary Abelian)} \in \P$.
-\end{lemma}
-\begin{proof}
-  Every elementary abelian group is isomorphic to $(\mathbb{Z} / p\mathbb{Z})^m$ where $p$ is a prime number and $m$ is a non-negative integer.
-  The minimum generating set for $\mathbb{Z} / p\mathbb{Z}$ is $\{1\}$, so the minimum generating set for $(\mathbb{Z} / p\mathbb{Z})^m$ is
-  \[
-  \{(1, 0, \dotsc, 0), (0, 1, 0, \dotsc, 0), \dotsc, (0, \dotsc, 0, 1)\}.
-  \]
-  Therefore the size of the minimum generating set for every elementary abelian group is $m$.
-
-  On input $\langle (G, \cdot), k \rangle$, the polynomial time algorithm computes $m$, then compares that with $k$.
-  To compute $m$, determine the order of the group $n$ and compute its factorization, which can be done in polynomial time when the input is given as a Cayley table (using, for example, the general number field sieve \cite{llmp93}).
-\end{proof}
-
 \begin{theorem}
   $\textsc{Min Gen Size(Nilpotent)} \in \P$.
 \end{theorem}
@@ -153,5 +138,5 @@ We say \emph{$P$ is conjunctive truth-table reducible to $Q$} if there exists a 
   \begin{equation*}
     \textsc{Min Gen Size(Nilpotent)} \leq_{ctt}^P \textsc{Min Gen Size(Elementary Abelian)}.
   \end{equation*}
-  Since $\textsc{Min Gen Size(Elementary Abelian)} \in \P$ and $\P$ is closed under polynomial time conjunctive truth table reductions, $\textsc{Min Gen Size(Nilpotent)} \in \P$.
+  Since $\textsc{Min Gen Size(Elementary Abelian)}$ is in \NC{}, a subset of \P, by \autoref{thm:eainnc} and $\P$ is closed under polynomial time conjunctive truth table reductions, $\textsc{Min Gen Size(Nilpotent)} \in \P$.
 \end{proof}
