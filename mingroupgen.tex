@@ -296,7 +296,7 @@ Hence we have reduced the problem of computing the size of the minimum generatin
   \end{enumerate}
   The first step requires $\log n$ bits of nondeterminism.
   In the second step, computing the $m'$th root of $n$ can be done in \NC{}, since the input is given in unary.
-  In the third step, deciding if a number is prime can be done in \NC{}, again since the input is given in unary, and using an efficient deterministic polynomial time algorithm like the AKS primality test \cite{aks04}.
+  In the third step, deciding if a number is prime can be done in \NC{}, again since the input is given in unary, by using an efficient deterministic polynomial time algorithm like the AKS primality test \cite{aks04}.
   If the input is properly formatted (that is, if it is a prime power), then there will be exactly one $p'$ which is a prime number, by the Fundamental Theorem of Arithmetic.
   Therefore this algorithm will certainly halt and output an $m'$ such that $n = {p'}^{m'}$.
   Hence this is a correct \NC{} algorithm which computes $m$ and $p$ from $p^m$ using $O(\log n)$ bits of nondeterminism.
