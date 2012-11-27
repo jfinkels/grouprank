@@ -2,11 +2,15 @@
 
 At this point, we provide a clearer presentation of the proof of \cite[Theorem~7]{at06}.
 We have split up the proof into multiple parts in order to more easily analyze their complexity.
+First we recall some definitions from group theory.
 
-We say \emph{$P$ is conjunctive truth-table reducible to $Q$} if there exists a function $f$ such that for all strings $x$, we have $f(x) = \langle y_1, y_2, \dotsc, y_m \rangle$ for some positive integer $m$ and $x \in P$ if and only if for all $i \leq m$, we have $y_i \in Q$.
+If $H \subseteq G$ and $\odot$ is the restriction of $\cdot$ to $H$, we say $H$ is a \emph{subgroup} of $G$ if $(H, \odot)$ is itself a group.
+We denote the subgroup relation by $H < G$.
+If $H$ is a subgroup of $G$ and $g \in G$ then the \emph{left} coset of $H$ under $g$, denoted $gH$, is the set $\{ g \cdot h | h \in H\}$; the right coset is defined analogously.
+The subgroup $H$ is \emph{normal} in $G$, denoted $H \triangleleft G$, if $gH = Hg$ for all $g \in G$.
 
 \begin{lemma}\label{lem:sylow}
-  Suppose $(G, \cdot)$ is a finite group of order $n$, where the (unique) prime factorization of $n$ is $\Pi_{i = 1}^m p_i^{e_i}$.
+  Suppose $G$ is a finite group of order $n$, where the (unique) prime factorization of $n$ is $\Pi_{i = 1}^m p_i^{e_i}$.
   Then $G$ is nilpotent if and only if $G \cong S_{p_1} \times S_{p_2} \times \dotsb \times S_{p_m}$ where each $S_{p_i}$ is the unique $p_i$-Sylow subgroup of $G$.
 \end{lemma}
 
@@ -14,6 +18,9 @@ We say \emph{$P$ is conjunctive truth-table reducible to $Q$} if there exists a 
 %%   Suppose $(G, \cdot)$ and $(H, \circ)$ are groups such that $G \cong H$ and $k$ is a non-negative integer.
 %%   $G$ has a generating set of size $k$ if and only if $H$ has a generating set of size $k$.
 %% \end{lemma}
+
+In order to show that a decision problem is in $\P$ it suffices to show a polynomial time reduction to another decision problem in $\P$.
+If $P$ and $Q$ are decision problems, we say \emph{$P$ is conjunctive truth-table reducible to $Q$} if there exists a function $f$ such that for all strings $x$, we have $f(x) = \langle y_1, y_2, \dotsc, y_m \rangle$ for some positive integer $m$ and $x \in P$ if and only if for all $i \leq m$, we have $y_i \in Q$.
 
 \begin{proposition}
   \begin{equation*}
@@ -23,9 +30,9 @@ We say \emph{$P$ is conjunctive truth-table reducible to $Q$} if there exists a 
 \begin{proof}
   Define the reduction by
   \begin{equation*}
-    \langle (G, \cdot), k \rangle \mapsto \left\langle (S_{p_1}, k), (S_{p_2}, k), \dotsc, (S_{p_m}, k) \right\rangle
+    \pair{G}{k} \mapsto \left\langle \pair{S_{p_1}}{k}, \pair{S_{p_2}}{k}, \dotsc, \pair{S_{p_m}}{k} \right\rangle
   \end{equation*}
-  for all nilpotent groups $(G, \cdot)$ of order $n$ and all positive integers $k$, where the prime factorization of $n$ is $p_1^{e_1}p_2^{e_2}\dotsb p_m^{e_m}$ and $S_{p_i}$ is the unique $p_i$-Sylow subgroup of $G$.
+  for all nilpotent groups $G$ of order $n$ and all positive integers $k$, where the prime factorization of $n$ is $p_1^{e_1}p_2^{e_2}\dotsb p_m^{e_m}$ and $S_{p_i}$ is the unique $p_i$-Sylow subgroup of $G$.
   Observe that the output is correctly formatted because each of the Sylow subgroups is a $p$-group.
 
   First we show that this reduction is computable in deterministic polynomial time.
@@ -39,9 +46,9 @@ We say \emph{$P$ is conjunctive truth-table reducible to $Q$} if there exists a 
   Hence the reduction is polynomial time computable.
 
   Next we show that the reduction is correct.
-  Suppose first that $\langle (G, \cdot), k \rangle \in \textsc{Min Gen Size(Nilpotent)}$, so there exists a subset of $G$, say $\{g_1, g_2, \dotsc, g_k\}$, such that $\gen{g_1, g_2, \dotsc, g_k} = G$.
+  Suppose first that $\pair{G}{k} \in \textsc{Min Gen Size(Nilpotent)}$, so there exists a subset of $G$, say $\{g_1, g_2, \dotsc, g_k\}$, such that $\gen{g_1, g_2, \dotsc, g_k} = G$.
   If $n_i = n p_i^{-e_i}$, as defined above, then the set $\{g_1^{n_i}, g_2^{n_i}, \dotsc, g_k^{n_i} \}$ is a generating set for $S_{p_i}$.
-  So for each $i$ with $1 \leq i \leq m$, we have $\langle (S_{p_i}, \cdot), k \rangle \in \textsc{Min Gen Size(p-Group)}$.
+  So for each $i$ with $1 \leq i \leq m$, we have $\pair{S_{p_i}}{k} \in \textsc{Min Gen Size(p-Group)}$.
   For the converse, suppose that each $S_{p_i}$ has a generating set of size $k$, say $\{g_{i, 1}, g_{i, 2}, \dotsc, g_{i, k}\}$.
   Let $g_j = \Pi_{i = 1}^m g_{i, j}$ for all $j$ with $1 \leq j \leq k$.
   In other words, $g_j$ is the product of all the $j$th elements in the generating sets of $S_{p_1}$, $S_{p_2}, \dotsc, S_{p_m}$.
@@ -51,11 +58,11 @@ We say \emph{$P$ is conjunctive truth-table reducible to $Q$} if there exists a 
 \end{proof}
 
 \begin{lemma}\label{lem:decompose}
-  If $(G, \cdot)$ is a finite abelian group, then there exists a finite set of cyclic groups $\{H_1, H_2, \dotsc, H_t\}$ such that $G \cong H_1 \times H_2 \times \dotsb \times H_t$.
+  If $G$ is a finite abelian group, then there exists a finite set of cyclic groups $\{H_1, H_2, \dotsc, H_t\}$ such that $G \cong H_1 \times H_2 \times \dotsb \times H_t$.
 \end{lemma}
 
 \begin{lemma}\label{lem:factorgroup}
-  If $(G, \cdot)$ is a group of order $n$ given by its Cayley table and $H < G$ then the function $\langle (G, \cdot), H \rangle \mapsto G / H$ is computable in polynomial time.
+  If $G$ is a group of order $n$ given by its Cayley table and $H < G$ then the function $\pair{G}{H} \mapsto G / H$ is computable in polynomial time.
 \end{lemma}
 \begin{todo}
   Fill in the gaps in this proof.
@@ -67,12 +74,12 @@ We say \emph{$P$ is conjunctive truth-table reducible to $Q$} if there exists a 
 \end{proof}
 
 \begin{definition}
-  Suppose $(G, \cdot)$ is a group.
+  Suppose $G$ is a group.
   The \emph{Frattini subgroup} of $G$, denoted $\Phi(G)$, is the intersection of all maximal subgroups of $G$.
 \end{definition}
 
 \begin{lemma}\label{lem:frattinip}
-  Let $(G, \cdot)$ be a finite $p$-group.
+  Let $G$ be a finite $p$-group.
   Then the function $G \mapsto \Phi(G)$ is computable in polynomial time.
 \end{lemma}
 \begin{proof}
@@ -106,16 +113,16 @@ We say \emph{$P$ is conjunctive truth-table reducible to $Q$} if there exists a 
 \begin{proof}
   Define the reduction by
   \begin{equation*}
-    \langle (G, \cdot), k \rangle \mapsto \langle (G / \Phi(G), \cdot), k \rangle
+    \pair{G}{k} \mapsto \pair{G / \Phi(G)}{k}
   \end{equation*}
   for all $p$-groups $G$ of order $n$ and all positive integers $k$, where $\Phi(G)$ is the Frattini subgroup of $G$.
   By \autoref{lem:frattinip}, the Cayley table of $\Phi(G)$ is computable in polynomial time.
   By \autoref{lem:factorgroup}, the Cayley table of $G / \Phi(G)$ is computable in polynomial time.
   Hence the reduction is polynomial time computable.
 
-  Suppose $\langle (G, \cdot), k \rangle \in \textsc{Min Gen Size(p-Group)}$, so $G$ has a generating set of size at most $k$, say $\{g_1, g_2, \dotsc, g_k\}$.
+  Suppose $\pair{G}{k} \in \textsc{Min Gen Size(p-Group)}$, so $G$ has a generating set of size at most $k$, say $\{g_1, g_2, \dotsc, g_k\}$.
   Then $\{g_1\Phi(G), g_2\Phi(G), \dotsc, g_k\Phi(G)\}$ is a generating set for $G / \Phi(G)$ of size at most $k$.
-  For the converse suppose $\langle (G / \Phi(G), \cdot), k \rangle \in \textsc{Min Gen Size(Elementary Abelian)}$, so $G / \Phi(G)$ has a generating set of size at most $k$, say $\{g_1\Phi(G), g_2\Phi(G), \dotsc, g_k\Phi(G)\}$.
+  For the converse suppose $\pair{G / \Phi(G)}{k} \in \textsc{Min Gen Size(Elementary Abelian)}$, so $G / \Phi(G)$ has a generating set of size at most $k$, say $\{g_1\Phi(G), g_2\Phi(G), \dotsc, g_k\Phi(G)\}$.
   If we let $H = \gen{g_1, g_2, \dotsc, g_k}$, then $H \Phi(G) = G$.
   Since $\Phi(G)$ is a set containing only nongenerators for $G$, we have $H = G$.
   Therefore $G$ has a generating set of size at most $k$.
