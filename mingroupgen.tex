@@ -332,7 +332,9 @@ This gives an immediate improvement to the upper bound of all the problems shown
 As noted in the introduction, the (quasi)group isomorphism problem is known to be in $\GC(\log^2 n, \FOLL)$.
 What is the relationship between this problem and the minimum generating set size problem for groups?
 
-What is the relationship between computing the size of the minimum generating set and computing the minimum generating set itself?
+What is the precise relationship between computing the minimum generating set and computing the size of the minimum generating set?
+An efficient function which computes the minimum generating set implies an efficient function which computes the size of the minimum generating set (compute the set, then compute its cardinality), so we know that the former must be at least as hard as the latter.
+On the other hand, it seems unlikely that knowing the size of a minimum generating set would yield any information about the contents of such a set.
 
 \section{About this work}
 
