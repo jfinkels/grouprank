@@ -84,6 +84,7 @@ A \emph{group} is a set $G$ with a binary operation $\cdot$ (the \emph{group pro
 The \emph{product} of two elements $g$ and $h$ in $G$ is denoted $g \cdot h$, or more simply, $gh$.
 A group is denoted by the pair $(G, \cdot)$, but we often just write $G$ when the group operation is clear from context or unnecessary for the current discussion.
 If $T \subseteq G$, the set \emph{generated} by $T$, denoted $\gen{T}$, is the transitive closure of the group product on $T$.
+We also abuse this notation and write $\gen{T_1, \dotsc, T_k , x_1, \dotsc, x_r}$ when we mean $\gen{T_1 \cup \dotsb \cup T_k \cup \{x_1, \dotsc, x_r\}}$.
 A \emph{generating set} for the group $G$ is a set $T \subseteq G$ such that $\gen{T} = G$.
 If $(G, \cdot)$ and $(H, \odot)$ are groups and there exists a bijective function $\phi \colon G \to H$ such that $\phi(u \cdot v) = \phi(u) \odot \phi(v)$ for all $u$ and $v$ in $G$, we say $G$ is \emph{isomorphic} to $H$ and denote this relation by $G \cong H$.
 
@@ -160,20 +161,23 @@ Upper bounds on the complexity of \textsc{Membership($\mathcal{G}$)} for several
 Before providing the general algorithms for computing the size of the minimum generating set for classes of groups, we require one algebraic lemma which bounds the size of the minimum generating set of any finite group.
 
 \begin{lemma}\label{lem:log}
-  If $G$ is a finite group of order $n$ then the size of the minimum generating set is at most $\log n$.
+  If $G$ is a finite group of order $n$ then the minimum size of a generating set is at most $\log n$.
 \end{lemma}
-\begin{todo}
-  Fill in the blanks in this proof.
-\end{todo}
-%% This proof is from \url{http://math.stackexchange.com/a/226938/29369}.
+%% The previous attempted proof was from
+%% \url{http://math.stackexchange.com/a/226938/29369}. This proof is from
+%% \url{http://www.imsc.res.in/~arvind/notes.pdf}.
 \begin{proof}
-  Let $S$ be a \emph{minimal} generating set for $G$, where $S = \{g_1, g_2, \dotsc, g_m\}$.
-  Since $S$ is minimal, we know $e \notin S$ (because $\gen{S \cup \{e\}} = \gen{S}$) and there is at least one other element, call it $g_{m + 1}$, which is not in $S$ (because otherwise \ldots).
-  Let $S_m = \gen{S}$ and $S_{m + 1} = \gen{S \cup \{g_{m + 1}\}}$.
-  Then (at least) the two cosets $e S_m$ and $g_{m + 1} S_m$ are contained in $S_{m + 1}$.
-  Since \ldots, we have $|S_{m + 1}| \geq 2 |S_m|$.
-  By induction, we find that $|G| = |S_n| \geq 2^m$, and hence $m \leq \log |G| = \log n$.
-  We conclude that the size of any \emph{minimum} generating set for $G$ is at most $\log n$.
+  Suppose $m$ is the size of the minimum generating set.
+  Let $H_0 = \gen{e}$, where $e$ is the identity element in $G$.
+  For each $i \in \{1, \dotsc, m\}$, let $H_i = \gen{H_{i - 1}, x_i}$ where $x_i \in (G \setminus H_{i - 1})$.
+  Such an $x_i$ must exist for each $i$ because otherwise we would have some set $H_j$, of size less than $m$, which generates the group $G$; this violates the hypothesis that $m$ is the minimum size of a generating set for $G$.
+
+  Now, for each $i \in \{1, \dotsc, m\}$, we have $x_i \neq e$, by construction.
+  Furthermore, the cosets $x_i \gen{H_{i - 1}}$ and $e \gen{H_{i - 1}}$ are disjoint.
+  If we suppose to the contrary that there is some element $y \in e \gen{H_{i - 1}} \cap x_i \gen{H_{i - 1}}$, then $y = x_i h$ for some $h \in \gen{H_{i - 1}}$, which implies $x_i = yh^{-1}$, and hence $x_i \in H_{i - 1}$.
+  This is a contradiction with the hypothesis that $x_i \in (G \setminus H_{i - 1})$.
+  Therefore $|\gen{H_i}| \geq 2 |\gen{H_{i - 1}}|$.
+  By induction, $|G| = |\gen{H_m}| \geq 2^m$, which implies $m \leq \log |G| = \log n$.
 \end{proof}
 
 This lemma allows us to consider, without loss of generality, only inputs $\pair{G}{k}$ such that $k \leq \log n$.
