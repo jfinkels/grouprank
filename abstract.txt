@@ -1,0 +1,10 @@
+In this work we study the problem of computing the size of the minimum
+generating set of a finite group when given as a Cayley table using the lens of
+"bounded nondeterminism". By determining exactly the amount of nondeterminism
+required to solve a computational problem (as opposed to requiring, for
+example, any polynomial amount), we can improve upper bounds for the problem.
+Previously, the best upper bound for the minimum size generating set problem
+for general finite groups was O(log^2 n) space. We show how to improve this to
+O(log n) space augmented with O(log^2 n) nondeterminism. For restricted classes
+of finite groups, such as nilpotent groups and p-groups, we can prove even
+better upper bounds.
