@@ -233,7 +233,12 @@ In the last inclusion we use Savitch's Theorem and the fact that $\GC(\log^d n, 
     \item \textsc{Min Gen Size(Cyclic)}
     \end{itemize}
     is in $\GC(\log^2 n, \FOLL)$.
-  \item $\textsc{Min Gen Size(Nilpotent)} \in \GC(\log^2 n, \FOLL^2)$.
+  \item Each of the problems
+    \begin{itemize}
+    \item \textsc{Min Gen Size(Nilpotent)} and
+    \item \textsc{Min Gen Size($p$-Group)}
+    \end{itemize}
+    is in $\GC(\log^2 n, \FOLL^2)$.
   \end{enumerate}
 \end{theorem}
 \begin{proof}
@@ -244,7 +249,9 @@ In the last inclusion we use Savitch's Theorem and the fact that $\GC(\log^d n, 
     A slight modification of the algorithm from \autoref{thm:mingengc} can be used to show that each of these problems is in $\GC(\log^2 n, \FOLL)$.
     After nondeterministically guessing a set $S$, instead of iterating over each element of the group in logarithmic space, we use in parallel $n$ instances of the \FOLL{} circuit which decides the membership problem and compute the conjunction of the output of each of the instances for one additional layer of depth and a $O(n)$ increase in the size of the circuit.
     Since the size of the circuit remains polynomial in $n$ and the depth remains $O(\log \log n)$, we have shown that the problem is in $\GC(\log^2 n, \FOLL)$.
-  \item The same argument applies, except using the fact that the membership problem for nilpotent groups is in $\FOLL^2$ \cite[Corollary~3.12]{bklm01}. \qedhere
+  \item
+    The same argument applies, except using the fact that the membership problem for nilpotent groups is in $\FOLL^2$ \cite[Corollary~3.12]{bklm01}.
+    Also, every finite $p$-group is nilpotent. \qedhere
   \end{enumerate}
 \end{proof}
 %% Observe that even though, for example, $\textsc{Membership(Cyclic)} \in \L \cap \FOLL$, we show that \textsc{Min Gen Size(Cyclic)} is in
