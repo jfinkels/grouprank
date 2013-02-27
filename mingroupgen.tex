@@ -179,10 +179,10 @@ Before providing the general algorithms for computing the size of the minimum ge
 
   Now, for each $i \in \{1, \dotsc, m\}$, we have $x_i \neq e$, by construction.
   Furthermore, the cosets $x_i \gen{H_{i - 1}}$ and $e \gen{H_{i - 1}}$ are disjoint.
-  If we suppose to the contrary that there is some element $y \in e \gen{H_{i - 1}} \cap x_i \gen{H_{i - 1}}$, then $y = x_i h$ for some $h \in \gen{H_{i - 1}}$, which implies $x_i = yh^{-1}$, and hence $x_i \in H_{i - 1}$.
+  If we suppose to the contrary that there is some element $y \in e \gen{H_{i - 1}} \cap x_i \gen{H_{i - 1}}$, then $y = x_i h$ for some $h \in H_{i - 1}$, which implies $x_i = yh^{-1}$, and hence $x_i \in H_{i - 1}$ since both $y$ and $h$ are in $H_{i - 1}$.
   This is a contradiction with the hypothesis that $x_i \in (G \setminus H_{i - 1})$.
-  Therefore $|\gen{H_i}| \geq 2 |\gen{H_{i - 1}}|$.
-  By induction, $|G| = |\gen{H_m}| \geq 2^m$, which implies $m \leq \log |G| = \log n$.
+  Therefore $|H_i| \geq 2 |H_{i - 1}|$.
+  By induction, $|G| = |H_m| \geq 2^m$, which implies $m \leq \log |G| = \log n$.
 \end{proof}
 
 This lemma allows us to consider, without loss of generality, only inputs $\pair{G}{k}$ such that $k \leq \log n$.
