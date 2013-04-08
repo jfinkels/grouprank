@@ -202,7 +202,7 @@ This lemma allows us to consider, without loss of generality, only inputs $\pair
   \end{enumerate}
 
   First we prove that this algorithm uses $O(\log^2 n)$ nondeterministic bits and $O(\log n)$ space.
-  The size of each group element, represented as number in binary, is $\log n$.
+  The size of each group element, represented as a number in binary, is $\log n$.
   By \autoref{lem:log}, we assume without loss of generality that the size of the minimum generating set for a group of order $n$ is at most $\log n$, so $k$ must be at most $\log n$.
   Therefore the total number of nondeterministic bits required to guess $S$ is $O(\log^2 n)$.
   Iterating over all elements of $G$ requires $O(\log n)$ space to keep track of the current element in the iteration.
