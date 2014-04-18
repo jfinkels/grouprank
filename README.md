@@ -1,76 +1,59 @@
-Complexity of Minimum Group Generating Set
-==========================================
+# Computing Group Rank with Limited Nondeterminism #
 
-Complexity of Minimum Group Generating Set.
-
-This file was last updated on 29 October 2012.
+This file was last updated on 18 April 2014.
 
 Downloading
 -----------
 
-This paper can be found at https://github.com/jfinkels/mingroupgen.
+The markup is available from GitHub.
 
-To download the paper using [Git][1], run
+    git clone git@github.com:jfinkels/grouprank
 
-    git clone git@github.com:jfinkels/mingroupgen.git
-
-[1]: http://git-scm.com
-
-A somewhat recent version of this work should be available at
-https://github.com/jfinkels/mingroupgen/downloads, but I can't guarantee that
-that will always be up to date, since I compile and upload it manually.
+A somewhat recent version of the compiled document should be available at
+https://cs-people.bu.edu/jeffreyf/static/pdf/grouprank.pdf, but I can't
+guarantee that that will always be up to date, since I compile and upload it
+manually.
 
 Compilation dependencies
 ------------------------
 
-Besides `pdflatex`, compile-time dependencies include the following LaTeX
-packages:
+Compilation requires `pdflatex`, `biber`, and the following LaTeX packages:
 
 * `amsmath`
 * `amsthm`
-* `amssymb`
+* `babel`
+* `biblatex`
 * `complexity`
+* `csquotes`
 * `hyperref`
 * `thmtools`
-* `tikz`
 
-On Ubuntu 11.04, 11.10, 12.04, or 12.10, the necessary system packages which
-contain these LaTeX packages are:
-
-* `texlive-base`
-* `texlive-latex-base`
-* `texlive-latex-extra`
-* `texlive-pictures`
-* `texlive-science`
-
-To install them, run
+To install these packages on Ubuntu 11.04 through 14.04:
 
     sudo apt-get install texlive-base texlive-latex-base texlive-latex-extra \
-      texlive-pictures texlive-science
+      texlive-science biber
 
 Compiling
 ---------
 
 To compile the document, run
 
-    pdflatex mingroupgen
-    bibtex mingroupgen
-    pdflatex mingroupgen
-    pdflatex mingroupgen
+    pdflatex grouprank
+    biber grouprank
+    pdflatex grouprank
 
-The output is `mingroupgen.pdf`, and can be viewed with any PDF reader.
+The output is `grouprank.pdf`, and can be viewed with any PDF reader.
 
 Copyright
 ---------
 
-Copyright 2012 Jeffrey Finkelstein.
+Copyright 2014 Jeffrey Finkelstein.
 
-Except where otherwise noted, both the LaTeX markup and the content of both the
-article and the poster are made available under the terms of the Creative
-Commons Attribution-ShareAlike 3.0 license,
-https://creativecommons.org/licenses/by-sa/3.0/.
+Both the LaTeX markup and the content of this article are made available under
+the terms of the Creative Commons Attribution-ShareAlike 4.0 International
+License, https://creativecommons.org/licenses/by-sa/4.0/.
 
 Contact
 -------
 
-Jeffrey Finkelstein <jeffrey.finkelstein@gmail.com>
+Jeffrey Finkelstein <jeffreyf@bu.edu>

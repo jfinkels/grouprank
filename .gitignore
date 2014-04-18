@@ -1,5 +1,8 @@
-mingroupgen.pdf
+grouprank.pdf
+*.bcf
+*.xml
 *~
+
 *.aux
 *.bbl
 *.blg
