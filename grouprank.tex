@@ -22,7 +22,7 @@
 
 \newcommand{\email}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
 
-\title{Computing group rank with limited nondeterminism}
+\title{Computing group rank \\ with limited nondeterminism}
 \author{Jeffrey~Finkelstein}
 %\date{\today}
 
@@ -135,6 +135,9 @@ However, the relationship between \FOLL{} and \L{} remains unknown (the best inc
 %% \bAC^1 \subseteq \bNC^2 \subseteq \L^2.
 %% $$
 %% (In the last inclusion we use the fact that $\bNC^2 \subseteq \L^2$ \cite[Lemma~3.1]{wolf94}.)
+
+The complexity of \textsc{Group Rank} contrasts with the related problem of computing the rank of a subgroup of a free group.
+That problem is \P-complete, so is not even in \NC{} unless $\NC = \P$ \autocite[Theorem~4.9]{am84} (see also \autocite[Problem~A.8.11]{ghr95}).
 
 \begin{proof}[Proof of \autoref{cor:grouprank}]
   Since a group is a quasigroup, \textsc{Group Rank} is in $\bFOLL$ because \textsc{Quasigroup Rank} is.
