@@ -13,6 +13,7 @@
 \usepackage{csquotes}
 \usepackage[backend=biber]{biblatex}
 \usepackage{complexity}
+\usepackage{tikz}
 
 \addbibresource{references.bib}
 
@@ -44,7 +45,7 @@ A \emph{parenthesization} $P$ of a sequence of quasigroup elements $(g_0, \dotsc
 The \emph{parenthesized product} of a sequence of quasigroup elements $(g_0, \dotsc, g_k)$ with parenthesization $P$, denoted $P(g_0, \dotsc, g_k)$, is the quasigroup element that results from performing the quasigroup product in the order indicated by the parenthesization.
 A \emph{generating sequence of size $k + 1$} of a quasigroup $G$ is a finite sequence $(g_0, \dotsc, g_k)$ with a corresponding parenthesization $P$ such that
 $$
-G = \left\{P\left(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k}\right) \, \middle| \, \epsilon_i \in \{0, 1\} \text{ for each } i \right\}
+G = \left\{P(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k}) \, \middle| \, \epsilon_i \in \{0, 1\} \text{ for each } i \right\}
 $$
 The \emph{rank} of a quasigroup is the length of a minimum generating sequence.
 If the quasigroup is a group, the operation is associative, so the parenthesization is superfluous, and the rank is simply the size of a minimum generating set.
@@ -93,23 +94,47 @@ $\L^2$ is the class of languages decidable by a deterministic Turing machine usi
   \textsc{Group Rank} is in $\bFOLL \cap \bL$.
 \end{corollary}
 
-This is an improvement because
-\begin{align*}
-  (\bFOLL \cap \bL) & \subseteq \bL \subseteq \NL \subseteq \AC^1 \subseteq \bAC^1, \\ %\subseteq \bNC^2 \subseteq \L^2,
-  (\bFOLL \cap \bL) & \subseteq \bFOLL \subseteq \bAC^1, %\subseteq \bNC^2 \subseteq \L^2.
-\end{align*}
-and
-$$
-\bAC^1 \subseteq \bNC^2 \subseteq \L^2.
-$$
-(In the last inclusion we use the fact that $\bNC^2 \subseteq \L^2$ \cite[Lemma~3.1]{wolf94}.)
-
+\autoref{fig:inclusions} shows the chain of inclusions that demonstrates how great an improvement this is.
 This also immediately improves the result of \cite[Theorem~7]{at06}, which shows \textsc{Nilpotent Group Rank} is in \P, since
 $$
 (\bFOLL \cap \bL) \subseteq \NL \subseteq \P.
 $$
-
 However, the relationship between \FOLL{} and \L{} remains unknown (the best inclusion known is the uninteresting inclusion $\FOLL \subseteq \AC^1$), so the relationship between $\bFOLL$ and $\bL$ is unknown as well.
+
+\begin{figure}
+  \caption{\label{fig:inclusions}$\bFOLL \cap \bL$ is a much smaller complexity class than $\L^2$.}
+  \begin{center}
+    \begin{tikzpicture}
+      \node at (0, 6) (g) {$\L^2$};
+      \node at (0, 5) (f) {$\bNC^2$};
+      \node at (0, 4) (e) {$\bAC^1$};
+      \node at (1, 3) (d) {$\AC^1$};
+      \node at (1, 2) (c) {$\NL$};
+      \node at (1, 1) (b) {$\bL$};
+      \node at (-1, 2) (x) {$\bFOLL$};
+      \node at (0, 0) (a) {$\bFOLL \cap \bL$};
+      \draw (a) to (b);
+      \draw (b) to (c);
+      \draw (c) to (d);
+      \draw (d) to (e);
+      \draw (e) to (f);
+      \draw (f) to (g);
+      \draw (a) to (x);
+      \draw (x) to (e);
+    \end{tikzpicture}
+  \end{center}
+\end{figure}
+
+%% This is an improvement because
+%% \begin{align*}
+%%   (\bFOLL \cap \bL) & \subseteq \bL \subseteq \NL \subseteq \AC^1 \subseteq \bAC^1, \\ %\subseteq \bNC^2 \subseteq \L^2,
+%%   (\bFOLL \cap \bL) & \subseteq \bFOLL \subseteq \bAC^1, %\subseteq \bNC^2 \subseteq \L^2.
+%% \end{align*}
+%% and
+%% $$
+%% \bAC^1 \subseteq \bNC^2 \subseteq \L^2.
+%% $$
+%% (In the last inclusion we use the fact that $\bNC^2 \subseteq \L^2$ \cite[Lemma~3.1]{wolf94}.)
 
 \begin{proof}[Proof of \autoref{cor:grouprank}]
   Since a group is a quasigroup, \textsc{Group Rank} is in $\bFOLL$ because \textsc{Quasigroup Rank} is.

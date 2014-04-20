@@ -27,11 +27,12 @@ Compilation requires `pdflatex`, `biber`, and the following LaTeX packages:
 * `csquotes`
 * `hyperref`
 * `thmtools`
+* `tikz`
 
 To install these packages on Ubuntu 11.04 through 14.04:
 
     sudo apt-get install texlive-base texlive-latex-base texlive-latex-extra \
-      texlive-science biber
+      texlive-science texlive-pictures biber
 
 Compiling
 ---------
