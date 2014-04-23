@@ -44,16 +44,17 @@ Using limited nondeterminism and restrictive models of computation as verifiers 
 \section{Preliminaries}
 
 \L{} is the class of languages decidable by a deterministic Turing machine that uses $O(\log n)$ space on inputs of length $n$.
-%$\L^2$ is the class of languages decidable in $O(\log^2 n)$ space.
-\NL{} is the class of languages decidable by a nondeterministic Turing machine using $O(\log^2 n)$ space.
+$\L^2$ is the class of languages decidable by a deterministic Turing machine that uses $O(\log^2 n)$ space.
+\NL{} is the class of languages decidable by a nondeterministic Turing machine that uses $O(\log n)$ space.
 $\bL$ is the subclass of \NL{} in which the nondeterministic Turing machine uses at most $O(\log^2 n)$ nondeterministic bits.
 \FOLL{} is the class of languages decidable by a \L-uniform family of circuits with polynomial size, unbounded fan-in, and $O(\log \log n)$ depth.
 $\bFOLL$ is the class of languages decidable by \FOLL{} circuits that have been augmented with $O(\log^2 n)$ nondeterministic bits (gates with no inputs and one output).
+In general, the class $\beta_2 \mathcal{C}$ is the class of languages decidable by $\mathcal{C}$ machines augmented with $O(\log^2 n)$ bits of nondeterminism.
 %%$\NC^2$ is the class of languages decidable by a \L-uniform family of circuits with polynomial size, fan-in 2, and $O(\log^2 n)$ depth.
 
 A \emph{quasigroup} is a set $G$ with a binary operation $\cdot$ such that for each $a$ and $b$ in $G$ there exist unique elements $x$ and $y$ in $G$ such that $a \cdot x = b$ and $y \cdot a = b$.
 (In other words, each quasigroup element appears exactly once in each row and each column of the multiplication table of $G$.)
-If the quasigroup is nonempty and associative, then it is a \emph{group}
+If the quasigroup is nonempty and associative, then it is a \emph{group}.
 A \emph{parenthesization} $P$ of a sequence of quasigroup elements $(g_0, \dotsc, g_k)$ is a binary tree that has the quasigroup elements as its leaves (in the order indicated by the sequence).
 The \emph{parenthesized product} of a sequence of quasigroup elements $(g_0, \dotsc, g_k)$ with parenthesization $P$, denoted $P(g_0, \dotsc, g_k)$, is the quasigroup element that results from performing the quasigroup product in the order indicated by the parenthesization.
 A \emph{generating sequence of size $k + 1$} of a quasigroup $G$ is a finite sequence $(g_0, \dotsc, g_k)$ with a corresponding parenthesization $P$ such that
@@ -70,8 +71,9 @@ The \textsc{Quasigroup Rank} problem is defined as follows.
 Given the multiplication table of a quasigroup and an integer $k$ in binary, decide whether the rank of the quasigroup is $k$ or less.
 The \textsc{Group Rank} problem is defined similarly.
 
-The \textsc{Quasigroup Isomorphism} problem is in $\bFOLL$ \autocite[Theorem~3.4]{ctw13}.
-Implicit in the algorithm there is a $\bFOLL$ algorithm for \textsc{Quasigroup Rank}.
+The \textsc{Quasigroup Isomorphism} problem is the problem of determining whether there is a bijection between two quasigroups (again, given as multiplication tables) that preserves the quasigroup operation.
+This problem is in $\bFOLL$ \autocite[Theorem~3.4]{ctw13}.
+Implicit in that algorithm is a $\bFOLL$ algorithm for \textsc{Quasigroup Rank}.
 
 \begin{theorem}[{Implicit in \autocite[Theorem~3.4]{ctw13}}]
   \textsc{Quasigroup Rank} is in $\bFOLL$.
@@ -103,7 +105,7 @@ Implicit in the algorithm there is a $\bFOLL$ algorithm for \textsc{Quasigroup R
 \end{proof}
 
 This theorem gives an immediate improvement over the previous best upper bound for \textsc{Group Rank}, which was $\L^2$ \cite{lsz77} (see \cite[Proposition~3]{at06} for a brief description of the algorithm).
-$\L^2$ is the class of languages decidable by a deterministic Turing machine using $O(\log^2 n)$ space.
+%$\L^2$ is the class of languages decidable by a deterministic Turing machine using $O(\log^2 n)$ space.
 
 \begin{corollary}\label{cor:grouprank}
   \textsc{Group Rank} is in $\bFOLL \cap \bL$.
@@ -117,9 +119,10 @@ $$
 However, the relationship between \FOLL{} and \L{} remains unknown (the best inclusion known is the uninteresting inclusion $\FOLL \subseteq \AC^1$), so the relationship between $\bFOLL$ and $\bL$ is unknown as well.
 
 \begin{figure}
-  \caption{\label{fig:inclusions}$\bFOLL \cap \bL$ is a much smaller complexity class than $\L^2$.}
+  \caption{\label{fig:inclusions}$\bFOLL \cap \bL$ is much smaller than both $\L^2$ and \P.}
   \begin{center}
     \begin{tikzpicture}
+      \node at (2, 4) (h) {$\P$};
       \node at (0, 6) (g) {$\L^2$};
       \node at (0, 5) (f) {$\bNC^2$};
       \node at (0, 4) (e) {$\bAC^1$};
@@ -136,6 +139,7 @@ However, the relationship between \FOLL{} and \L{} remains unknown (the best inc
       \draw (f) to (g);
       \draw (a) to (x);
       \draw (x) to (e);
+      \draw (d) to (h);
     \end{tikzpicture}
   \end{center}
 \end{figure}
