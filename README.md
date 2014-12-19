@@ -1,6 +1,17 @@
 # Computing Group Rank with Limited Nondeterminism #
 
-This file was last updated on 18 April 2014.
+This file was last updated on 19 December 2014.
+
+Elsevier article class
+----------------------
+
+The document `grouprank.tex` uses a modified `elsarticle` document class. The
+class was modified as described [here][0] in order to allow usage with
+BibLaTeX. The modified class file can be found in `elsarticlenonatbib`. It is
+distributed under the LaTeX Project Public License; for more information, see
+the header comments in that file.
+
+[0]: https://hopstat.wordpress.com/2014/10/09/biblatex-with-elsarticle/
 
 Downloading
 -----------

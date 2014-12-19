@@ -1,0 +1,4 @@
+- We improve the best known upper bound for computing the rank of a group.
+- We give one algorithm using a small circuit augmented with limited nondeterminism.
+- We give another algorithm using both limited space and limited nondeterminism.
+- Our upper bound implies a polynomial time algorithm for the problem.
