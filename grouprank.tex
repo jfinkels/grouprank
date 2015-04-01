@@ -1,6 +1,6 @@
 %% grouprank.tex - Computing group rank with limited nondeterminsm
 %%
-%% Copyright 2014 Jeffrey Finkelstein.
+%% Copyright 2014, 2015 Jeffrey Finkelstein.
 %%
 %% This LaTeX markup document is made available under the terms of the Creative
 %% Commons Attribution-ShareAlike 4.0 International License,
@@ -30,6 +30,8 @@
 \usepackage{textcomp}
 \usepackage{tikz}
 
+\usetikzlibrary{trees}
+
 \LoadMicrotypeFile{cmr}
 \SetProtrusion
     [load=lmr-T1]
@@ -58,6 +60,7 @@
 
 %% Declare theorem-like environments.
 \declaretheorem[]{theorem}
+\declaretheorem[numberlike=theorem,style=definition]{example}
 \declaretheorem[numberlike=theorem]{corollary}
 
 %% Custom commands are declared here.
@@ -78,7 +81,7 @@
 \maketitle
 
 \symbolfootnote{%
-  Copyright 2014 Jeffrey~Finkelstein \email{jeffreyf@bu.edu}.
+  Copyright 2014, 2015 Jeffrey~Finkelstein \email{jeffreyf@bu.edu}.
 
   This document is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License, which is available at \mbox{\url{https://creativecommons.org/licenses/by-sa/4.0/}}.
   The \LaTeX{} markup that generated this document can be downloaded from its website at \mbox{\url{https://github.com/jfinkels/grouprank}}.
@@ -115,8 +118,55 @@ In general, the class $\beta_2 \mathcal{C}$ is the class of languages decidable 
 A \emph{quasigroup} is a set $G$ with a binary operation $\cdot$ such that for each $a$ and $b$ in $G$ there exist unique elements $x$ and $y$ in $G$ such that $a \cdot x = b$ and $y \cdot a = b$.
 (In other words, each quasigroup element appears exactly once in each row and each column of the multiplication table of $G$.)
 If the quasigroup is nonempty and associative, then it is a \emph{group}.
+
+\begin{example}\label{ex:quasigroup}
+  The smallest quasigroup that is not also a group has three elements, $\{a, b, c\}$.
+  Its multiplication table is
+  \begin{equation*}
+    \begin{array}{c | c c c}
+      \cdot & a & b & c \\
+      \hline
+      a & a & b & c \\
+      b & c & a & b \\
+      c & b & c & a \\
+    \end{array}
+  \end{equation*}
+  This quasigroup is not associative because $b \cdot (a \cdot b) = b \cdot b = a$ but $(b \cdot a) \cdot b = c \cdot b = c$.
+  Also, it has a left identity, $a$, but no right identity.
+\end{example}
+
 A \emph{parenthesization} $P$ of a sequence of quasigroup elements $(g_0, \dotsc, g_k)$ is a binary tree that has the quasigroup elements as its leaves (in the order indicated by the sequence).
 The \emph{parenthesized product} of a sequence of quasigroup elements $(g_0, \dotsc, g_k)$ with parenthesization $P$, denoted $P(g_0, \dotsc, g_k)$, is the quasigroup element that results from performing the quasigroup product in the order indicated by the parenthesization.
+
+\begin{example}
+  Consider $(a, c, a, b)$, a sequence of four elements from the quasigroup defined in \autoref{ex:quasigroup}.
+  One parenthesization of this sequence is
+  \begin{equation*}
+    \begin{tikzpicture}[xscale=0.5, yscale=0.3]
+      \node[minimum size=0pt, inner sep=0pt] {}
+      child {
+        child {
+          child {node {$a$}}
+          child[color=white] {}
+        }
+        child[color=white] {}
+      }
+      child {
+        child {
+          child {node {$c$}}
+          child {node {$a$}}
+        }
+        child {
+          child[color=white] {}
+          child {node {$b$}}
+        }
+      };
+    \end{tikzpicture}
+  \end{equation*}
+  which corresponds to the parenthesized product $a \cdot ((c \cdot a) \cdot b)$.
+  According to the multiplication table, this product equals $a$.
+\end{example}
+
 A \emph{generating sequence of size $k + 1$} of a quasigroup $G$ is a finite sequence $(g_0, \dotsc, g_k)$ with a corresponding parenthesization $P$ such that
 $$
 G = \left\{P(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k}) \, \middle| \, \epsilon_i \in \{0, 1\} \text{ for each } i \right\}
