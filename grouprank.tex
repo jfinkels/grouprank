@@ -59,7 +59,7 @@
 \addbibresource{grouprank.bib}
 
 %% Declare theorem-like environments.
-\declaretheorem[]{theorem}
+\declaretheorem[numberwithin=section]{theorem}
 \declaretheorem[numberlike=theorem,style=definition]{example}
 \declaretheorem[numberlike=theorem]{lemma}
 \declaretheorem[numberlike=theorem]{corollary}
@@ -96,7 +96,7 @@
 
 \todo{add information about complexity of the problem when groups (or quasigroups) are provided as presentations instead of full multiplication tables}
 
-\todo{restate the results given here in terms of a nondeterministic reduction to quasigroup membership; once we've done that, see if we can generalize to other algebraic structures using their membership problems}
+\todo{once we've done that, see if we can generalize to other algebraic structures using their membership problems}
 
 \todo{show probability of success of a randomized reduction to (quasi)group membership}
 
@@ -106,7 +106,7 @@ We reduced the best upper bound on the complexity of the group rank problem and 
 This paper proves that with very short certificates of correctness, the group rank problem can be verified by highly restricted models of computation.
 
 We prove that the problem of deciding whether the rank of a finite group, given as a multiplication table, is smaller than a specified number is decidable not only by a circuit of depth $O(\log \log n)$ augmented with $O(\log^2 n)$ nondeterministic bits, but also by a Turing machine using $O(\log n)$ space and $O(\log^2 n)$ bits of nondeterminism.
-These models of computation are extremely limited in computational power, and hence can be simulated by a deterministic Turing machine in polynomial time.
+These models of computation are extremely limited in computational power, and the latter can be simulated by a deterministic Turing machine in polynomial time.
 Using limited nondeterminism and restrictive models of computation as verifiers may also be useful in examining other algebraic problems.
 
 The limited nondeterminism lens suggests some opportunities for further research in computational algebra.
@@ -116,14 +116,47 @@ Finally, is the problem of computing a minimum generating sequence for a quasigr
 
 \section{Preliminaries}
 
-\L{} is the class of languages decidable by a deterministic Turing machine that uses $O(\log n)$ space on inputs of length $n$.
+\subsection{Complexity}
+
+$\L$ is the class of languages decidable by a deterministic Turing machine that uses $O(\log n)$ space on inputs of length $n$.
 $\L^2$ is the class of languages decidable by a deterministic Turing machine that uses $O(\log^2 n)$ space.
-\NL{} is the class of languages decidable by a nondeterministic Turing machine that uses $O(\log n)$ space.
-$\bL$ is the subclass of \NL{} in which the nondeterministic Turing machine uses at most $O(\log^2 n)$ nondeterministic bits.
-\FOLL{} is the class of languages decidable by a \L-uniform family of circuits with polynomial size, unbounded fan-in, and $O(\log \log n)$ depth.
-$\bFOLL$ is the class of languages decidable by \FOLL{} circuits that have been augmented with $O(\log^2 n)$ nondeterministic bits (gates with no inputs and one output).
+$\NL$ is the class of languages decidable by a nondeterministic Turing machine that uses $O(\log n)$ space.
+$\bL$ is the subclass of $\NL$ in which the nondeterministic Turing machine uses at most $O(\log^2 n)$ nondeterministic bits.
+$\FOLL$ is the class of languages decidable by a $\L$-uniform family of circuits with polynomial size, unbounded fan-in, and $O(\log \log n)$ depth.
+$\bFOLL$ is the class of languages decidable by $\FOLL$ circuits that have been augmented with $O(\log^2 n)$ nondeterministic bits (gates with no inputs and one output).
+$\AC_0$ and $\bAC_0$ are the restrictions of $\FOLL$ and $\bFOLL$, respectively, to depth $O(1)$.
 In general, the class $\beta_2 \mathcal{C}$ is the class of languages decidable by $\mathcal{C}$ machines augmented with $O(\log^2 n)$ bits of nondeterminism.
-%%$\NC^2$ is the class of languages decidable by a \L-uniform family of circuits with polynomial size, fan-in 2, and $O(\log^2 n)$ depth.
+
+If $L_1$ and $L_2$ are languages, there is a \emph{$\bAC_0$ conjunctive truth-table reduction} from $L_1$ to $L_2$, denoted $L_1 \leq^{\bAC_0}_{ctt} L_2$, if there is a function $f$ computable in $\bAC_0$ such that $x \in L_1$ if and only if $f(x) \in L_2$.
+
+\begin{lemma}\label{lem:ctt}
+  Suppose $L_1$ and $L_2$ are languages and $L_1 \leq^{\bAC_0}_{ctt} L_2$.
+  \begin{enumerate}
+  \item If $L_2$ is in $\FOLL$, then $L_1$ is in $\bFOLL$.
+  \item If $L_2$ is in $\L$, then $L_1$ is in $\bL$.
+  \end{enumerate}
+\end{lemma}
+\begin{proof}
+  Let $f$ be the $\bAC_0$ circuit computing the reduction and let $q$ be the polynomial bounding the length of its output.
+  First, suppose $L_2$ is in $\FOLL$.
+  Let $M_2$ be the $\FOLL$ circuit that decides $L_2$.
+  To decide $L_1$, define the $\bFOLL$ circuit $M_1$ by
+  \begin{equation*}
+    M_1(x, w) = \bigwedge_{i = 1}^{q(n)} M_2(y_i),
+  \end{equation*}
+  where $|x| = n$ and $(y_1, \dotsc, y_{q(n)})$ is the output of $f(x, w)$.
+  The depth of $M_1$ circuit is dominated by the depth of $M_2$, which is $O(\log \log n)$.
+  The number of nondeterministic bits required by $M_1$ is the same as the number of nondeterministic bits required by $f$, which is $O(\log^2 n)$.
+  The circuit is polynomial in size because $f$ is polynomial in size, $M_2$ is polynomial in size, and there are a polynomial number of parallel instances of the circuit $M_2$.
+  The correctness of the circuit follows from the correctness of $f$ and $M_2$.
+
+  The proof is similar if $L_2$ is in $\L$.
+  The only difference is that instead of a circuit computing the conjunction of $q(n)$ bits, we loop over each $y_i$ and check if each one causes $M_2$ to accept.
+  Since there are a polynomial number of them, indexing them requires only logarithmic space.
+  We also require the fact that logarithmic space computable functions compose.
+\end{proof}
+
+\subsection{Algebra}
 
 A \emph{quasigroup} is a set $G$ with a binary operation $\cdot$ such that for each $a$ and $b$ in $G$ there exist unique elements $x$ and $y$ in $G$ such that $a \cdot x = b$ and $y \cdot a = b$.
 (In other words, each quasigroup element appears exactly once in each row and each column of the multiplication table of $G$.)
@@ -177,11 +210,11 @@ The \emph{parenthesized product} of a sequence of quasigroup elements $(g_0, \do
   According to the multiplication table, this product equals $a$.
 \end{example}
 
-If $(g_0, \dotsc, g_k)$ is a finite sequence of quasigroup elements denoted $\mathbf{g}$ and $P$ is a parenthesization of that sequence, then the \emph{cube of $\mathbf{g}$ with respect to $P$}, denoted $\cube(\mathbf{g}, P)$, is defined
+If $(g_0, \dotsc, g_k)$ is a finite sequence of quasigroup elements denoted $S$ and $P$ is a parenthesization of that sequence, then the \emph{cube of $S$ with respect to $P$}, denoted $\cube_P(S)$, is defined
 \begin{equation*}
-  \cube_P(\mathbf{g}) = \left\{P(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k}) \, \middle| \, \epsilon_i \in \{0, 1\} \text{ for each } i \right\}.
+  \cube_P(S) = \left\{P(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k}) \, \middle| \, \epsilon_i \in \{0, 1\} \text{ for each } i \right\}.
 \end{equation*}
-(This is called a ``cube'' because each vertex of the $k$-dimensional hypercube, when interpreted as a binary string $\epsilon_1 \dotsb \epsilon_k$, yields a quasigroup element.)
+(This is called a ``cube'' because each vertex of the $k$-dimensional Boolean hypercube, when interpreted as a binary string $\epsilon_1 \dotsb \epsilon_k$, yields a quasigroup element.)
 If $\cube_P(G) = G$, then $g$ is called a \emph{cube generating sequence of size $k + 1$} for the quasigroup $G$.
 The \emph{rank of a quasigroup} is the minimum size of a cube generating sequence.
 \footnote{
@@ -197,21 +230,51 @@ If $\gen{S} = G$, then $S$ is called a \emph{generating set for $G$}.
 The \emph{rank of a group} is the minimum cardinality of a generating set.
 Contrast the rank of a group with the rank of a quasigroup: the former is the size of a set, the latter the size of a sequence.
 
-\todo{Example of a generating set for a group.}
+\begin{example}
+  Consider the elementary abelian $2$-group, $(\mathbb{Z} / 2 \mathbb{Z})^k$, for some positive integer $k$.
+  Let $n$ denote the order of this group, so $n = 2^k$.
+  The minimum generating set for this group is $\{e_1, \dotsc, e_k\}$, where $e_i$ is the $k$-tuple with a one in the $i$th position and a zero in each other position.
+  Thus the group has a minimum generating set of size $k$, which is $\log n$.
+\end{example}
 
-\section{Efficient computation of cube membership}
+Quasigroups have small cube generating sequences, and groups have small generating sets.
+The first lemma can be proven by the probabilistic method, and the second by inductively considering cosets of increasing size.
+
+\begin{lemma}[{\autocite[Theorem~3.3]{ctw13}}]\label{lem:small}
+  Each finite quasigroup with $n$ elements has a cube generating sequence of size $O(\log n)$ with a parenthesization of depth $O(\log \log n)$.
+\end{lemma}
+
+\begin{lemma}\label{lem:log}
+  If $G$ is a finite group of order $n$ then the minimum size of a generating set is at most $\log n$, with equality when the group is a finite elementary abelian $2$-group.
+\end{lemma}
+%% %% This proof is from \url{http://www.imsc.res.in/~arvind/notes.pdf}.
+%% \begin{proof}
+%%   Suppose $m$ is the size of the minimum generating set.
+%%   Let $H_0 = \gen{e}$, where $e$ is the identity element in $G$.
+%%   For each $i \in \{1, \dotsc, m\}$, let $H_i = \gen{H_{i - 1}, x_i}$ where $x_i \in (G \setminus H_{i - 1})$.
+%%   Such an $x_i$ must exist for each $i$ because otherwise we would have some set $H_j$, of size less than $m$, which generates the group $G$; this violates the hypothesis that $m$ is the minimum size of a generating set for $G$.
+
+%%   Now, for each $i \in \{1, \dotsc, m\}$, we have $x_i \neq e$, by construction.
+%%   Furthermore, the cosets $x_i \gen{H_{i - 1}}$ and $e \gen{H_{i - 1}}$ are disjoint.
+%%   If we suppose to the contrary that there is some element $y \in e \gen{H_{i - 1}} \cap x_i \gen{H_{i - 1}}$, then $y = x_i h$ for some $h \in H_{i - 1}$, which implies $x_i = yh^{-1}$, and hence $x_i \in H_{i - 1}$ since both $y$ and $h$ are in $H_{i - 1}$.
+%%   This is a contradiction with the hypothesis that $x_i \in (G \setminus H_{i - 1})$.
+%%   Therefore $|H_i| \geq 2 |H_{i - 1}|$.
+%%   By induction, $|G| = |H_m| \geq 2^m$, which implies $m \leq \log |G| = \log n$.
+%% \end{proof}
+
+\section{Efficient computation of membership}
 
 \todo{Introduction and summary paragraph here.}
 
 The \textsc{Cube Membership} problem is defined as follows.
-The inputs are a quasigroup $G$ given as a multiplication table, a quasigroup element $h$, a finite sequence of quasigroup elements $\mathbf{g}$, and a parenthesization $P$ for that sequence.
-The problem is to decide whether $h \in \cube_P(\mathbf{g})$.
+The inputs are a quasigroup $G$ given as a multiplication table, a quasigroup element $h$, a finite sequence of quasigroup elements $S$, and a parenthesization $P$ for that sequence.
+The problem is to decide whether $h \in \cube_P(S)$.
 
 How does a circuit access a multiplication table for a quasigroup of order $n$?
 \footnote{This work avoids representing problems using first-order logic, as in the original definition of $\FOLL$ from \autocite{bklm01}, though the logic definition may provide a more natural representation of this sort of information.}
 One way for a circuit to compute the product of two quasigroup elements using the multiplication table is via a multiplexer.
 In the multiplexer, each input has $O(\log n)$ bits, since each quasigroup element can be represented with $O(\log n)$ bits and each input is a pair of quasigroup elements.
-A multiplexer that selects from $n^2$ inputs, each of length $O(\log n)$, can be implemented by an \emph{unbounded fan-in} circuit of constant depth and size $O(n^2 \log n)$.
+A multiplexer that selects from $n^2$ inputs, each of length $O(\log n)$, can be implemented by an \emph{unbounded fan-in} circuit of depth $O(1)$ and size $O(n^2 \log n)$.
 
 \begin{lemma}[{Implicit in \autocite[Theorem~3.4]{ctw13}}]\label{lem:cubemem}
   \textsc{Cube Membership} is decidable by an $\L$-uniform family of unbounded fan-in circuits with size $O(2^k k n^2 \log n)$ and depth $O(d)$, where $n$ is the order of the quasigroup, $k$ is the size of the generating sequence, and $d$ is the depth of the parenthesization.
@@ -219,9 +282,9 @@ A multiplexer that selects from $n^2$ inputs, each of length $O(\log n)$, can be
   In particular, if $k$ is in $O(\log n)$ and $d$ is in $O(\log \log n)$, then the circuit is of size polynomial in $n$ and of depth $O(\log \log n)$.
 \end{lemma}
 \begin{proof}
-  The input to the circuit is the multiplication table for a quasigroup, a quasigroup element $h$, a generating sequence $\mathbf{g}$, and a parenthesization $P$.
-  Suppose $\mathbf{g} = (g_0, \dotsc, g_k)$ for some positive integer $k$.
-  Since the circuit needs to determine if $h$ is in $\cube_P(\mathbf{g})$, the circuit accepts if and only if there is some sequence of bits $(\epsilon_1, \dotsc, \epsilon_k)$ such that $h = P(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k})$.
+  The input to the circuit is the multiplication table for a quasigroup, a quasigroup element $h$, a generating sequence $S$, and a parenthesization $P$.
+  Suppose $S = (g_0, \dotsc, g_k)$ for some positive integer $k$.
+  Since the circuit needs to determine if $h$ is in $\cube_P(S)$, the circuit accepts if and only if there is some sequence of bits $(\epsilon_1, \dotsc, \epsilon_k)$ such that $h = P(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k})$.
   Thus the circuit consists of $2^k$ subcircuits joined to a single \textsc{or} gate, each subcircuit deciding whether one of the $2^k$ possible $k$-bit sequences $(\epsilon_1, \dotsc, \epsilon_k)$ produces $h$ under the given parenthesization.
 
   The subcircuit corresponding to binary sequence $(\epsilon_1, \dotsc, \epsilon_k)$ computes the parenthesized product $P(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k})$.
@@ -243,7 +306,7 @@ The problem is to decide whether $h \in \gen{S}$.
   The problem is in $\SL$ \autocite[Section~3]{bm89}, and $\SL = \L$ \cite{reingold08}.
 \end{proof}
 
-\section{Efficient computation of quasigroup rank}
+\section{Efficient computation of rank}
 
 \todo{foreword and summary here}
 
@@ -253,40 +316,66 @@ The \textsc{Group Rank} problem is defined similarly.
 
 The \textsc{Quasigroup Isomorphism} problem is the problem of determining whether there is a bijection between two quasigroups (again, given as multiplication tables) that preserves the quasigroup operation.
 This problem is in $\bFOLL$ \autocite[Theorem~3.4]{ctw13}.
-Implicit in that algorithm is a $\bFOLL$ algorithm for \textsc{Quasigroup Rank}.
+Implicit in that algorithm is the following reduction.
 
-\begin{theorem}[{Implicit in \autocite[Theorem~3.4]{ctw13}}]
+\begin{lemma}\label{lem:qranktomem}
+  $\textsc{Quasigroup Rank} \leq^{\bAC_0}_{ctt} \textsc{Cube Membership}$.
+\end{lemma}
+\begin{proof}
+  By \autoref{lem:small}, it suffices to consider inputs to \textsc{Quasigroup Rank} in which $k$ is in $O(\log n)$ and inputs to \textsc{Cube Membership} in which $P$ is of depth $O(\log \log n)$.
+
+  Let $g_1, \dotsc, g_n$ denote the elements of a quasigroup of order $n$.
+  The reduction proceeds as follows.
+  On input $(G, k)$, where $G$ is a quasigroup of order $n$ given as its multiplication table and $k$ is a positive integer given in binary, nondeterministically choose a sequence $S$ of $k$ quasigroup elements and a parenthesization $P$ of depth $O(\log \log n)$.
+  Output $((g_1, S, P), \dotsc, (g_n, S, P))$.
+
+  Since each quasigroup element can be represented by $O(\log n)$ bits, the number of nondeterministic bits used is $O(\log^2 n)$.
+  The correctness of this reduction follows from the fact stated at the beginning of this proof.
+\end{proof}
+
+\begin{theorem}\label{thm:qrank}
   \textsc{Quasigroup Rank} is in $\bFOLL$.
 \end{theorem}
 \begin{proof}
-  By \autocite[Theorem~3.3]{ctw13}, each finite quasigroup with $n$ elements has a generating sequence of size $O(\log n)$ with a parenthesization of depth $O(\log \log n)$.
-  The $\bFOLL$ algorithm works as follows on input quasigroup $G$ with $n$ elements (given as a multiplication table) and integer $k$, guaranteed to be in $O(\log n)$.
-  \begin{enumerate}
-  \item Nondeterministically choose a sequence $\mathbf{g}$ of $k + 1$ quasigroup elements and a parenthesization $P$ of depth $O(\log k)$.
-  \item Accept if and only if $h \in \cube_P(\mathbf{g})$ for each $h \in G$.
-  \end{enumerate}
-  Since each quasigroup element can be represented using $O(\log n)$ bits, and since $k$ is in $O(\log n)$, this algorithm uses $O(\log^2 n)$ bits of nondeterminism to guess the generating sequence and parenthesization in the first step.
-  By \autoref{lem:cubemem}, checking membership in $\cube_P(\mathbf{g})$ for each element (in parallel) can be implemented by an unbounded fan-in circuit of size polynomial in $n$ and depth $O(\log \log n)$.
-  The correctness of this circuit follows from the correctness of the cube membership circuit.
-  We conclude that \textsc{Quasigroup Rank} is in $\bFOLL$.
+  Follows from \autoref{lem:cubemem}, \autoref{lem:qranktomem}, and \autoref{lem:ctt}.
 \end{proof}
 
-This theorem gives an immediate improvement over the previous best upper bound for \textsc{Group Rank}, which was $\L^2$ \cite{lsz77} (see \cite[Proposition~3]{at06} for a brief description of the algorithm).
-%$\L^2$ is the class of languages decidable by a deterministic Turing machine using $O(\log^2 n)$ space.
+The reduction from \textsc{Group Rank} to \textsc{Subgroup Membership} is essentially identical to the reduction from \textsc{Quasigroup Rank} to \textsc{Cube Membership}.
 
-\begin{corollary}\label{cor:grouprank}
+\begin{lemma}\label{lem:ranktomem}
+  $\textsc{Group Rank} \leq^{\bAC_0}_{ctt} \textsc{Subgroup Membership}$.
+\end{lemma}
+\begin{proof}
+  By \autoref{lem:log}, each finite group with $n$ elements has a generating set of size $\log n$.
+  Thus it suffices to consider inputs to \textsc{Group Rank} in which $k$ is in $O(\log n)$.
+
+  Let $g_1, \dotsc, g_n$ denote the elements of a group of order $n$.
+  The reduction proceeds as follows.
+  On input $(G, k)$, where $G$ is a group of order $n$ given as its multiplication table and $k$ is a positive integer given in binary, nondeterministically choose a set $S$ of $k$ group elements.
+  Output $((g_1, S), \dotsc, (g_n, S))$.
+
+  Since each group element can be represented by $O(\log n)$ bits, the number of nondeterministic bits used is $O(\log^2 n)$.
+  The correctness of this reduction follows from the fact stated at the beginning of this proof.
+\end{proof}
+
+\begin{theorem}
   \textsc{Group Rank} is in $\bFOLL \cap \bL$.
-\end{corollary}
+\end{theorem}
+\begin{proof}
+  The inclusion in $\bFOLL$ follows from \autoref{thm:qrank} and the fact that a group is a quasgroup.
+  The inclusion in $\bL$ follows from \autoref{lem:subgroupmem}, \autoref{lem:ranktomem}, and \autoref{lem:ctt}.
+\end{proof}
 
-\autoref{fig:inclusions} shows the chain of inclusions that demonstrates how great an improvement this is.
-This also immediately improves the result of \cite[Theorem~7]{at06}, which shows \textsc{Nilpotent Group Rank} is in \P, since
+This theorem improves the previous best upper bound for \textsc{Group Rank}, which was $\L^2$ \cite{lsz77} (see \cite[Proposition~3]{at06} for a brief description of the algorithm).
+\autoref{fig:inclusions} shows the chain of complexity class inclusions that demonstrates how great an improvement this is.
+This also improves the result of \cite[Theorem~7]{at06}, which shows that \textsc{Group Rank} restricted to nilpotent groups is in $\P$, since
 \begin{equation*}
   (\bFOLL \cap \bL) \subseteq \NL \subseteq \P.
 \end{equation*}
-However, the relationship between \FOLL{} and \L{} remains unknown (the best inclusion known is the uninteresting inclusion $\FOLL \subseteq \AC^1$), so the relationship between $\bFOLL$ and $\bL$ is unknown as well.
+However, the relationship between $\FOLL$ and $\L$ remains unknown (the best inclusion known is the uninteresting inclusion $\FOLL \subseteq \AC^1$), so the relationship between $\bFOLL$ and $\bL$ is unknown as well.
 
 \begin{figure}
-  \caption{\label{fig:inclusions}$\bFOLL \cap \bL$ is much smaller than both $\L^2$ and \P.}
+  \caption{\label{fig:inclusions}$\bFOLL \cap \bL$ is much smaller than both $\L^2$ and $\P$.}
   \begin{center}
     \begin{tikzpicture}
       \node at (2, 4) (h) {$\P$};
@@ -322,29 +411,13 @@ However, the relationship between \FOLL{} and \L{} remains unknown (the best inc
 %% $$
 %% (In the last inclusion we use the fact that $\bNC^2 \subseteq \L^2$ \cite[Lemma~3.1]{wolf94}.)
 
-The complexity of \textsc{Group Rank} contrasts with the related problem of computing the rank of a subgroup of a free group.
-That problem is \P-complete, so is not even in \NC{} unless $\NC = \P$ \autocite[Theorem~4.9]{am84} (see also \autocite[Problem~A.8.11]{ghr95}).
-
-\begin{proof}[Proof of \autoref{cor:grouprank}]
-  Since a group is a quasigroup, \textsc{Group Rank} is in $\bFOLL$ because \textsc{Quasigroup Rank} is.
-  Thus, it suffices to show a $\bL$ algorithm for \textsc{Group Rank}.
-  As in the previous theorem, a group has a generating set of size $O(\log n)$.
-  The algorithm proceeds as follows on input group $G$ of order $n$ given as a multiplication table and integer $k$ guaranteed to be in $O(\log n)$.
-  \begin{enumerate}
-  \item Nondeterministically choose a set $S$ of $k$ group elements.
-  \item Accept if and only if $h \in \gen{S}$ for each $h \in G$.
-  \end{enumerate}
-  This algorithm uses $O(\log^2 n)$ bits of nondeterminism in step 1, since each group element can be represented using $O(\log n)$ bits, and $k$ is in $O(\log n)$.
-  In step 2, enumerating each $h$ requires only $O(\log n)$ bits of space, since the space can be reused after each iteration.
-  By \autoref{lem:subgroupmem}, checking membership in $\gen{S}$ can be decided by a Turing machine using $O(\log n)$ space.
-  The correctness of this algorithm follows from the correctness of the subgroup membership algorithm.
-  Therefore this is a correct algorithm for deciding \textsc{Group Rank} in $\bL$.
-\end{proof}
+Contrast the complexity of \textsc{Group Rank} with the complexity of computing the rank of a subgroup of a free group.
+The latter problem is $\P$-complete, so is not even in $\NC$ unless $\NC = \P$ \autocite[Theorem~4.9]{am84} (see also \autocite[Problem~A.8.11]{ghr95}).
 
 Although the precise relationship between $\FOLL$ and $\L$ is unknown, $\FOLL$ does not contain any class containing the \textsc{Parity} problem.
 Since \textsc{Parity} is in $\L$, we know $\FOLL$ does not contain $\L$.
 Stated in a slightly more general way, $\FOLL$ cannot be hard under $\AC^0$ many-one reductions for any complexity class that contains \textsc{Parity} \cite[Proposition~2.1]{bklm01}.
-This is true even when the circuit is augmented with a polylogarithmic number of nondeterministic gates \cite[Section~4]{ctw13}.
+This is true even when the circuit is augmented with a polylogarithmic number of nondeterministic bits \cite[Section~4]{ctw13}.
 This gives an immediate improvement to the upper bound of the \textsc{Quasigroup Rank} problem.
 
 \begin{theorem}
