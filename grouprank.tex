@@ -326,6 +326,8 @@ Implicit in that algorithm is the following reduction.
 
   Let $g_1, \dotsc, g_n$ denote the elements of a quasigroup of order $n$.
   The reduction proceeds as follows.
+  %% TODO k should be given in unary, so it is easier to construct the circuit
+  %% for it.
   On input $(G, k)$, where $G$ is a quasigroup of order $n$ given as its multiplication table and $k$ is a positive integer given in binary, nondeterministically choose a sequence $S$ of $k$ quasigroup elements and a parenthesization $P$ of depth $O(\log \log n)$.
   Output $((g_1, S, P), \dotsc, (g_n, S, P))$.
 
