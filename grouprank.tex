@@ -71,6 +71,7 @@
 \newcommand{\ceil}[1]{\lceil #1 \rceil}
 \DeclareMathOperator{\cube}{cube}
 \DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\Path}{Path}
 
 %% Redefine the footnote environment so it has no reference and no number.
 \long\def\symbolfootnote#1{\begingroup%
@@ -146,7 +147,7 @@ If $L_1$ and $L_2$ are languages, there is a \emph{$\bAC_0$ conjunctive truth-ta
     M_1(x, w) = \bigwedge_{i = 1}^{q(n)} M_2(y_i),
   \end{equation*}
   where $|x| = n$ and $(y_1, \dotsc, y_{q(n)})$ is the output of $f(x, w)$.
-  The depth of $M_1$ circuit is dominated by the depth of $M_2$, which is $O(\log \log n)$.
+  The depth of the $M_1$ circuit is dominated by the depth of $M_2$, which is $O(\log \log n)$.
   The number of nondeterministic bits required by $M_1$ is the same as the number of nondeterministic bits required by $f$, which is $O(\log^2 n)$.
   The circuit is polynomial in size because $f$ is polynomial in size, $M_2$ is polynomial in size, and there are a polynomial number of parallel instances of the circuit $M_2$.
   The correctness of the circuit follows from the correctness of $f$ and $M_2$.
@@ -155,6 +156,26 @@ If $L_1$ and $L_2$ are languages, there is a \emph{$\bAC_0$ conjunctive truth-ta
   The only difference is that instead of a circuit computing the conjunction of $q(n)$ bits, we loop over each $y_i$ and check if each one causes $M_2$ to accept.
   Since there are a polynomial number of them, indexing them requires only logarithmic space.
   We also require the fact that logarithmic space computable functions compose.
+\end{proof}
+
+\begin{lemma}\label{lem:dtt}
+  Suppose $L_1$ and $L_2$ are languages and $L_1 \leq^{\NAC_0}_{dtt} L_2$.
+  If $L_2$ is in $\NL$, then $L_1$ is in $\NL$.
+\end{lemma}
+\begin{proof}
+  Let $f$ be the $\NAC_0$ circuit computing the reduction and let $q$ be the polynomial bounding the length of its output.
+  Suppose $L_2$ is in $\NL$.
+  Let $M_2$ be the nondeterministic Turing machine that decides $L_2$ with logarithmic space.
+  To decide $L_1$, define the nondeterministic Turing machine $M_1$ as follows.
+  On input $x$ of length $n$,
+  \begin{enumerate}
+  \item nondeterministically choose a binary string $w$ and a binary integer $i$ in $\{1, \dotsc, q(n)\}$,
+  \item simulate $f(x, w)$ to produce $(y_1, \dotsc, y_{q(n)})$,
+  \item accept if and only if $M_2(y_i)$ accepts.
+  \end{enumerate}
+
+  This machine requires only logarithmic space because it can simulate $f$ in logarithmic space and $M_2$ in logarithmic space (since functions computable in logarithmic space compose).
+  The correctness of the machine follows from the correctness of $f$ and $M_2$.
 \end{proof}
 
 \subsection{Algebra}
@@ -296,8 +317,37 @@ A multiplexer that selects from $n^2$ inputs, each of length $O(\log n)$, can be
   We conclude that the overall size of the circuit is $O(2^k k n^2 \log n)$ and the overall depth of the circuit is $O(d)$.
 \end{proof}
 
+\todo{define semigroups}
+The \textsc{Subsemigroup Membership} problem is defined as follows.
+The inputs are a semigroup $G$ given as a multiplication table, a semigroup element $h$, and a finite set $S$ of semigroup elements.
+The problem is to decide whether $h \in \gen{S}$.
+
+\todo{rename multiplication table to Cayley table}
+\begin{lemma}\label{lem:subsemigroupmem}
+  \textsc{Subsemigroup Membership} is in $\NL$.
+\end{lemma}
+\begin{proof}
+  \todo{define disjunctive truth-table reduction}
+  We will show a logarithmic space disjunctive truth-table reduction from \textsc{Subsemigroup Membership} to \textsc{Directed Path}.
+  Since the latter problem is in $\NL$ and $\NL$ is closed under this type of reduction, we conclude that the former problem is in $\NL$ as well.
+
+  Suppose $G$ is the semigroup, $h$ is the semigroup element, and $S$ is the set of subsemigroup generators described in the problem definition.
+  The multiplication table induces an edge-labeled directed multigraph $\Gamma$ with self-loops: the vertices of the graph are the semigroup elements, and for each semigroup element $a$, $b$, and $c$, there is an edge labeled $b$ from $a$ to $c$ if $a \cdot b = c$.
+  Consider the subgraph $\Gamma_S$ induced by those edges whose labels are in $S$.
+  The element $h$ is in $\gen{S}$ if and only if there is a path from some vertex in $S$ to $h$.
+  In other words, if $S = \{s_1, \dotsc, s_m\}$ for some natural number $m$ and $\Path(\Gamma_S, h, s_i)$ is a proposition that is true exactly when there is a directed path from $h$ to $s_i$ in $\Gamma_S$,
+  \begin{equation*}
+    h \in \gen{S} \iff \bigvee_{i = 1}^m \Path(\Gamma_S, h, s_i).
+  \end{equation*}
+  Therefore we choose the reduction to be $(G, h, S) \mapsto ((\Gamma_S, h, s_1), \dotsc, (\Gamma_S, h, s_m))$.
+
+  Computing the adjacency matrix of $\Gamma_S$ from the multiplication table of $G$ and the set $S$ can be done in logarithmic space by setting each entry $(x, y)$ in the multiplication table to be zero if $y$ is not in $S$.
+  Iterating over all edges in the adjacency matrix requires logarithmic space, and enumerating each of the $m$ outputs requires space logarithmic in $m$, which is logarithmic in $n$ because $m \leq n$.
+  We conclude that the reduction is a correct logarithmic space disjunctive truth-table reduction.
+\end{proof}
+
 The \textsc{Subgroup Membership} problem is defined as follows.
-The inputs are a group $G$ given as a multiplication table, a group element $h$ and a finite set $S$ of group elements.
+The inputs are a group $G$ given as a multiplication table, a group element $h$, and a finite set $S$ of group elements.
 The problem is to decide whether $h \in \gen{S}$.
 
 \begin{lemma}\label{lem:subgroupmem}
@@ -322,33 +372,46 @@ Implicit in that algorithm is the following reduction.
 \begin{lemma}\label{lem:ranktomem}
   \mbox{}
   \begin{enumerate}
+  \item $\textsc{Semigroup Rank} \leq^{\NAC_0}_{ctt} \textsc{Subsemigroup Membership}$.
+    \todo{define semigroup rank}
   \item $\textsc{Quasigroup Rank} \leq^{\bAC_0}_{ctt} \textsc{Cube Membership}$.
   \item $\textsc{Group Rank} \leq^{\bAC_0}_{ctt} \textsc{Subgroup Membership}$.
-
   \end{enumerate}
 \end{lemma}
 \begin{proof}
-  We first prove the lemma for quasigroups.
-  By \autoref{lem:small}, it suffices to consider inputs to \textsc{Quasigroup Rank} in which $k$ is in $O(\log n)$ and inputs to \textsc{Cube Membership} in which $P$ is of depth $O(\log \log n)$.
+  First, consider the problem for semigroups.
+  Unlike for quasigroups (\autoref{lem:small}), we have no general upper bound on the size of a minimal generating set \todo{except those given in ``The minimal number of generators of a finite semgroup''}.
+  Thus, the best we can do is nondeterministically choose a set of $k$ generators and determine if that set generates the semigroup, where $k$ can be as large as the order of the semigroup.
 
-  Let $g_1, \dotsc, g_n$ denote the elements of a quasigroup of order $n$.
+  Let $g_1, \dotsc, g_n$ denote the elements of a semigroup of order $n$.
   The reduction proceeds as follows.
-  %% TODO k should be given in unary, so it is easier to construct the circuit
-  %% for it.
-  On input $(G, k)$, where $G$ is a quasigroup of order $n$ given as its multiplication table and $k$ is a positive integer given in binary, nondeterministically choose a sequence $S$ of $k$ quasigroup elements and a parenthesization $P$ of depth $O(\log \log n)$.
-  Output $((g_1, S, P), \dotsc, (g_n, S, P))$.
+  On input $(G, k)$, where $G$ is a semigroup of order $n$ given as its multiplication table and $k$ is a positive integer given in binary,
+  \todo{$k$ should be given in unary, so it is easier to construct the circuit for it.}
+  nondeterministically choose a sequence $S$ of $k$ quasigroup elements.
+  Output $((G, g_1, S), \dotsc, (G, g_n, S))$.
 
-  Since each quasigroup element can be represented by $O(\log n)$ bits, the number of nondeterministic bits used is $O(\log^2 n)$.
-  By the fact stated at the beginning of this proof,
+  Since each semigroup element can be represented by $O(\log n)$ bits, the number of nondeterministic bits used is $O(n \log n)$.
+  By definition of rank,
+  \begin{equation*}
+    \rank(G) \leq k \iff \bigwedge_{i = 1}^n g_i \in \gen{S},
+  \end{equation*}
+  so the reduction is a correct conjunctive truth-table reduction.
+
+  For quasigroups, the only differences are that we need to nondeterministically choose a parenthesization as well as a generating sequence, and that we have an upper bound on the size of the sequence and the parenthesization.
+  By \autoref{lem:small}, it suffices to consider inputs to \textsc{Quasigroup Rank} in which $k$ is in $O(\log n)$ and inputs to \textsc{Cube Membership} in which $P$ is of depth $O(\log \log n)$.
+  The reduction therefore must nondeterministically choose a sequence $S$ of $k$ quasigroup elements and a parenthesization $P$ of depth $O(\log \log n)$.
+  The output of the reduction is $((G, g_1, S, P), \dotsc, (G, g_n, S, P))$.
+  Now the number of nondeterministic bits used is $O(\log^2 n)$, since $S$ is a set of $O(\log n)$ strings, each of length $O(\log n)$.
+  By \autoref{lem:small},
   \begin{equation*}
     \rank(G) \leq k \iff \bigwedge_{i = 1}^n g_i \in \cube_P(S),
   \end{equation*}
   so the reduction is a correct conjunctive truth-table reduction.
 
-  The proof for groups is similar.
-  Instead of \autoref{lem:small}, we invoke \autoref{lem:log}, which states that any group has a generating set of size at most $\log n$.
+  The proof for groups is again similar.
+  Instead of \autoref{lem:small}, we invoke \autoref{lem:log}, which states that any group of order $n$ has a generating set of size at most $\log n$.
   Also, we don't need to guess a parenthesization (although we still use $O(\log^2 n)$ nondeterministic bits to guess the generating set).
-  Therefore, the reduction will output $((g_1, S), \dotsc, (g_n, S))$, and the proof concludes with the fact that
+  Therefore, the reduction will output $((G, g_1, S), \dotsc, (G, g_n, S))$, and the proof concludes with the fact that
   \begin{equation*}
     \rank(G) \leq k \iff \bigwedge_{i = 1}^n g_i \in \gen{S}.
     \qedhere
@@ -358,14 +421,22 @@ Implicit in that algorithm is the following reduction.
 \begin{theorem}\label{thm:rank}
   \mbox{}
   \begin{enumerate}
+  \item \textsc{Semigroup Rank} is in $\NL$.
   \item \textsc{Quasigroup Rank} is in $\bFOLL$.
   \item \textsc{Group Rank} is in $\bFOLL \cap \bL$.
   \end{enumerate}
 \end{theorem}
 \begin{proof}
-  The former inclusion follows from \autoref{lem:ctt}, \autoref{lem:cubemem}, and \autoref{lem:ranktomem}.
-  For the latter, we know the problem is in $\bFOLL$ because a group is a quasigroup and so the previous inclusion applies.
-  The inclusion in $\bL$ follows from \autoref{lem:ctt}, \autoref{lem:subgroupmem}, and \autoref{lem:ranktomem}.
+  \mbox{}
+  \begin{enumerate}
+  \item
+    Follows from \autoref{lem:dtt}, \autoref{lem:subsemigroupmem}, and \autoref{lem:ranktomem}.
+  \item
+    Follows from \autoref{lem:ctt}, \autoref{lem:cubemem}, and \autoref{lem:ranktomem}.
+  \item
+    The previous item implies the inclusion in $\bFOLL$ because a group is a quasigroup.
+    The inclusion in $\bL$ follows from \autoref{lem:ctt}, \autoref{lem:subgroupmem}, and \autoref{lem:ranktomem}.
+  \end{enumerate}
 \end{proof}
 
 This theorem improves the previous best upper bound for \textsc{Group Rank}, which was $\L^2$ \cite{lsz77} (see \cite[Proposition~3]{at06} for a brief description of the algorithm), since
