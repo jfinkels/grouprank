@@ -1,4 +1,4 @@
-%% grouprank.tex - Computing group rank with limited nondeterminsm
+%% grouprank.tex - Computing rank with limited nondeterminsm
 %%
 %% Copyright 2014, 2015 Jeffrey Finkelstein.
 %%
@@ -53,7 +53,7 @@
 \SetWatermarkFontSize{3.5cm}
 
 %% Set the title and author of the PDF file.
-\hypersetup{pdftitle={Computing group rank with limited nondeterminism}, pdfauthor={Jeffrey Finkelstein}}
+\hypersetup{pdftitle={Computing rank of finite algebraic structures with limited nondeterminism}, pdfauthor={Jeffrey Finkelstein}}
 
 %% Declare the bibliography file.
 \addbibresource{grouprank.bib}
@@ -79,7 +79,7 @@
 
 %% Define the author, title, and date for the document.
 \author{Jeffrey~Finkelstein\\ Computer Science Department, Boston University}
-\title{Computing group rank \\ with limited nondeterminism}
+\title{Computing rank of finite algebraic structures \\ with limited nondeterminism}
 %\date{\today}
 
 \begin{document}
@@ -96,11 +96,7 @@
 
 \section{Introduction}
 
-\todo{add information about complexity of the problem when groups (or quasigroups) are provided as presentations instead of full multiplication tables}
-
-\todo{generalize this strategy to other algebraic structures using their membership problems; for semigroups, it seems the rank can be computed from the complicated formulas in ``The minimal number of generators of a finite semigroup'', though I don't see any obvious way to compute semigroup membership faster than simply solving st-connectivity.}
-
-\todo{use probabilistic method to show existence of a short generating set for semigroups?}
+\todo{add information about complexity of the problem when the structures are provided as presentations instead of full Cayley tables}
 
 \todo{show probability of success of a randomized reduction to (quasi)group membership}
 
@@ -109,7 +105,7 @@ Before now, the best algorithm for computing the rank of a group required a poly
 We reduced the best upper bound on the complexity of the group rank problem and provide a theoretically efficient algorithm for it.
 This paper proves that with very short certificates of correctness, the group rank problem can be verified by highly restricted models of computation.
 
-We prove that the problem of deciding whether the rank of a finite group, given as a multiplication table, is smaller than a specified number is decidable not only by a circuit of depth $O(\log \log n)$ augmented with $O(\log^2 n)$ nondeterministic bits, but also by a Turing machine using $O(\log n)$ space and $O(\log^2 n)$ bits of nondeterminism.
+We prove that the problem of deciding whether the rank of a finite group, given as a Cayley table, is smaller than a specified number is decidable not only by a circuit of depth $O(\log \log n)$ augmented with $O(\log^2 n)$ nondeterministic bits, but also by a Turing machine using $O(\log n)$ space and $O(\log^2 n)$ bits of nondeterminism.
 These models of computation are extremely limited in computational power, and the latter can be simulated by a deterministic Turing machine in polynomial time.
 Using limited nondeterminism and restrictive models of computation as verifiers may also be useful in examining other algebraic problems.
 
@@ -119,6 +115,8 @@ Is there a reduction between the problem of computing the rank of a quasigroup a
 Finally, is the problem of computing a minimum generating sequence for a quasigroup strictly more difficult than the problem of computing the rank of a quasigroup?
 
 \section{Preliminaries}
+
+In this work, $\log n$ denotes the base two logarithm of $n$, for any natural number $n$.
 
 \subsection{Complexity}
 
@@ -131,7 +129,12 @@ $\bFOLL$ is the class of languages decidable by $\FOLL$ circuits that have been 
 $\AC_0$ and $\bAC_0$ are the restrictions of $\FOLL$ and $\bFOLL$, respectively, to depth $O(1)$.
 In general, the class $\beta_2 \mathcal{C}$ is the class of languages decidable by $\mathcal{C}$ machines augmented with $O(\log^2 n)$ bits of nondeterminism.
 
-If $L_1$ and $L_2$ are languages, there is a \emph{$\bAC_0$ conjunctive truth-table reduction} from $L_1$ to $L_2$, denoted $L_1 \leq^{\bAC_0}_{ctt} L_2$, if there is a function $f$ computable in $\bAC_0$ such that $x \in L_1$ if and only if $f(x) \in L_2$.
+If $L_1$ and $L_2$ are languages, there is a \emph{$\bAC_0$ conjunctive truth-table reduction} from $L_1$ to $L_2$, denoted $L_1 \leq^{\bAC_0}_{ctt} L_2$, if there is a function $f$ and a polynomial $p$ such that
+\begin{itemize}
+\item $f$ is computable in $\bAC_0$,
+\item $f(x)$ outputs $(y_1, \dotsc, y_{p(n)})$ where $n$ is the length of $x$,
+\item $x \in L_1$ if and only if $\bigwedge_{i = 1}^{p(n)} y_i \in L_2$.
+\end{itemize}
 
 \begin{lemma}\label{lem:ctt}
   Suppose $L_1$ and $L_2$ are languages and $L_1 \leq^{\bAC_0}_{ctt} L_2$.
@@ -160,6 +163,13 @@ If $L_1$ and $L_2$ are languages, there is a \emph{$\bAC_0$ conjunctive truth-ta
   We also require the fact that logarithmic space computable functions compose.
 \end{proof}
 
+There is a \emph{$\NAC_0$ disjunctive truth-table reduction} from $L_1$ to $L_2$, denoted $L_1 \leq^{\NAC_0}_{dtt} L_2$, if there is a function $f$ and a polynomial $p$ such that
+\begin{itemize}
+\item $f$ is computable in $\NAC_0$,
+\item $f(x)$ outputs $(y_1, \dotsc, y_{p(n)})$ where $n$ is the length of $x$,
+\item $x \in L_1$ if and only if $\bigvee_{i = 1}^{p(n)} y_i \in L_2$.
+\end{itemize}
+
 \begin{lemma}\label{lem:dtt}
   Suppose $L_1$ and $L_2$ are languages and $L_1 \leq^{\NAC_0}_{dtt} L_2$.
   If $L_2$ is in $\NL$, then $L_1$ is in $\NL$.
@@ -182,13 +192,19 @@ If $L_1$ and $L_2$ are languages, there is a \emph{$\bAC_0$ conjunctive truth-ta
 
 \subsection{Algebra}
 
-A \emph{quasigroup} is a set $G$ with a binary operation $\cdot$ such that for each $a$ and $b$ in $G$ there exist unique elements $x$ and $y$ in $G$ such that $a \cdot x = b$ and $y \cdot a = b$.
-(In other words, each quasigroup element appears exactly once in each row and each column of the multiplication table of $G$.)
-If the quasigroup is nonempty and associative, then it is a \emph{group}.
+An \emph{magma} is a set $G$ with a binary operation $\cdot$ that is closed on $G$.
+Unless otherwise stated, we will only consider \emph{finite magmas}, in which $G$ is a finite set.
+The \emph{Cayley table} of a magma with $n$ elements is the $n \times n$ table whose rows and columns are indexed by the elements of $G$ and where entry $(a, b)$ has value $c$ if $a \cdot b = c$.
+If the binary operation is associative, the magma is called a \emph{semigroup}.
+If the binary operation has the property that for each $a$ and $b$ in $G$ there are unique elements $x$ and $y$ in $G$ such that $a \cdot x = b$ and $y \cdot a = b$, the magma is called a \emph{quasigroup}.
+(In other words, each quasigroup element appears exactly once in each row and each column of the Cayley table of $G$, or the Cayley table is a \emph{Latin square}.)
+If a quasigroup is nonempty and associative, then it is a \emph{group}.
+Alternately, if a semigroup has an identity and inverses, then it is a group.
+%% Thus if a magma is nonempty, a semigroup, and a quasigroup, it is a group.
 
 \begin{example}\label{ex:quasigroup}
-  The smallest quasigroup that is not also a group has three elements, $\{a, b, c\}$.
-  Its multiplication table is
+  The smallest nonempty quasigroup that is not also a group has three elements, $\{a, b, c\}$.
+  Its Cayley table is
   \begin{equation*}
     \begin{array}{c | c c c}
       \cdot & a & b & c \\
@@ -198,8 +214,44 @@ If the quasigroup is nonempty and associative, then it is a \emph{group}.
       c & b & c & a \\
     \end{array}
   \end{equation*}
+  Examining the table reveals that there is exactly one of each quasigroup element in each row and column.
   This quasigroup is not associative because $b \cdot (a \cdot b) = b \cdot b = a$ but $(b \cdot a) \cdot b = c \cdot b = c$.
   Also, it has a left identity, $a$, but no right identity.
+\end{example}
+
+\begin{example}
+  The \emph{right zero semigroup} is the semigroup in which each element is a right zero.
+  Its Cayley table is
+  \begin{equation*}
+    \begin{array}{c | c c c}
+      \cdot & a & b & c \\
+      \hline
+      a & a & b & c \\
+      b & a & b & c \\
+      c & a & b & c \\
+    \end{array}
+  \end{equation*}
+  The associativity of this semigroup can be determined by examining all possible triples $(x, y, z)$ in $G^3$ and checking that $(x \cdot y) \cdot z = x \cdot (y \cdot z)$.
+  Each element of this semigroup is a left identity and a right zero, but there are no right identities, so it is not a group.
+
+  Unlike for the Latin square property in the previous example, there is no obvious way to tell whether a binary operation is associative simply by scanning the rows and columns.
+  In other words, given only its Cayley table, determining whether a magma is a quasigroup \emph{seems} easier than determining whether a magma is a semigroup.
+  However, there is a polynomial time algorithm, attributed to F.~W.~Light, for deciding whether a magma is associative; it is simply the naïve algorithmic implementation of the associativity condition.
+\end{example}
+
+\begin{example}
+  There is a unique (up to isomorphism) group on three elements $\{a, b, c\}$.
+  Its Cayley table is
+  \begin{equation*}
+    \begin{array}{c | c c c}
+      \cdot & a & b & c \\
+      \hline
+      a & a & b & c \\
+      b & b & c & a \\
+      c & c & a & b \\
+    \end{array}
+  \end{equation*}
+  This is both a semigroup and a quasigroup.
 \end{example}
 
 A \emph{parenthesization} $P$ of a sequence of quasigroup elements $(g_0, \dotsc, g_k)$ is a binary tree that has the quasigroup elements as its leaves (in the order indicated by the sequence).
@@ -231,7 +283,7 @@ The \emph{parenthesized product} of a sequence of quasigroup elements $(g_0, \do
     \end{tikzpicture}
   \end{equation*}
   which corresponds to the parenthesized product $a \cdot ((c \cdot a) \cdot b)$.
-  According to the multiplication table, this product equals $a$.
+  According to the Cayley table, this product equals $a$.
 \end{example}
 
 If $(g_0, \dotsc, g_k)$ is a finite sequence of quasigroup elements denoted $S$ and $P$ is a parenthesization of that sequence, then the \emph{cube of $S$ with respect to $P$}, denoted $\cube_P(S)$, is defined
@@ -246,13 +298,17 @@ The \emph{rank of a quasigroup $G$}, denoted $\rank(G)$, is the minimum size of 
   Elsewhere, the rank of a quasigroup is the number of blocks in the partition of the quasigroup into conjugacy classes according to the action of the quasigroup on itself.
 }
 
-\todo{Example of a cube generating sequence for a quasigroup.}
+\begin{example}
+  \todo{Example of a cube generating sequence for a quasigroup.}
+\end{example}
 
-If the quasigroup $G$ is a group, then the operation is associative, so the parenthesization is superfluous (that is, for any parenthesization $P$ and any sequence $(g_0, \dotsc, g_k)$, we have $P(g_0, \dotsc, g_k) = g_0 \cdot \dotsb \cdot g_k$).
-If $S$ is a subset of group elements, the \emph{subgroup generated by $S$}, denoted $\gen{S}$, is the closure of $S$ under the group operation.
+If $G$ is a semigroup, the operation is associative, so the parenthesization is superfluous (that is, for any parenthesization $P$ and any sequence $(g_0, \dotsc, g_k)$, we have $P(g_0, \dotsc, g_k) = g_0 \cdot \dotsb \cdot g_k$).
+If $S$ is a subset of semigroup elements, the \emph{subsemigroup generated by $S$}, denoted $\gen{S}$, is the closure of $S$ under the group operation.
 If $\gen{S} = G$, then $S$ is called a \emph{generating set for $G$}.
-The \emph{rank of a group $G$}, denoted $\rank(G)$, is the minimum cardinality of a generating set.
-Contrast the rank of a group with the rank of a quasigroup: the former is the size of a set, the latter the size of a sequence.
+The \emph{rank of a semigroup $G$}, denoted $\rank(G)$, is the minimum cardinality of a generating set.
+Contrast the rank of a semigroup with the rank of a quasigroup: the former is the size of a set, the latter the size of a sequence.
+
+If $G$ is a group, then it is a semigroup (and a quasigroup) so the same definitions and terminology apply.
 
 \begin{example}
   Consider the elementary abelian $2$-group, $(\mathbb{Z} / 2 \mathbb{Z})^k$, for some positive integer $k$.
@@ -262,7 +318,12 @@ Contrast the rank of a group with the rank of a quasigroup: the former is the si
 \end{example}
 
 Quasigroups have small cube generating sequences, and groups have small generating sets.
-The first lemma can be proven by the probabilistic method, and the second by inductively considering cosets of increasing size.
+As of this publication, upper bounds on the size of generating sets for semigroups remain the subject of research \autocite{gray14}.
+An upper bound for quasigroups can be proven by the probabilistic method, and an upper bound for groups can be proven inductively considering cosets of increasing size.
+
+\todo{use probabilistic method to show existence of a short generating set for semigroups?}
+
+\todo{for semigroups, it seems the rank can be computed from the complicated formulas in \autocite{gray14}; what upper bound does this give for arbitrary finite semigroups?}
 
 \begin{lemma}[{\autocite[Theorem~3.3]{ctw13}}]\label{lem:small}
   Each finite quasigroup with $n$ elements has a cube generating sequence of size $O(\log n)$ with a parenthesization of depth $O(\log \log n)$.
@@ -271,6 +332,7 @@ The first lemma can be proven by the probabilistic method, and the second by ind
 \begin{lemma}\label{lem:log}
   If $G$ is a finite group of order $n$ then the minimum size of a generating set is at most $\log n$, with equality when the group is a finite elementary abelian $2$-group.
 \end{lemma}
+\todo{Should I include the proof here?}
 %% %% This proof is from \url{http://www.imsc.res.in/~arvind/notes.pdf}.
 %% \begin{proof}
 %%   Suppose $m$ is the size of the minimum generating set.
@@ -291,12 +353,12 @@ The first lemma can be proven by the probabilistic method, and the second by ind
 \todo{Introduction and summary paragraph here.}
 
 The \textsc{Cube Membership} problem is defined as follows.
-The inputs are a quasigroup $G$ given as a multiplication table, a quasigroup element $h$, a finite sequence of quasigroup elements $S$, and a parenthesization $P$ for that sequence.
+The inputs are a quasigroup $G$ given as a Cayley table, a quasigroup element $h$, a finite sequence of quasigroup elements $S$, and a parenthesization $P$ for that sequence.
 The problem is to decide whether $h \in \cube_P(S)$.
 
-How does a circuit access a multiplication table for a quasigroup of order $n$?
+How does a circuit access a Cayley table for a quasigroup of order $n$?
 \footnote{This work avoids representing problems using first-order logic, as in the original definition of $\FOLL$ from \autocite{bklm01}, though the logic definition may provide a more natural representation of this sort of information.}
-One way for a circuit to compute the product of two quasigroup elements using the multiplication table is via a multiplexer.
+One way for a circuit to compute the product of two quasigroup elements using the Cayley table is via a multiplexer.
 In the multiplexer, each input has $O(\log n)$ bits, since each quasigroup element can be represented with $O(\log n)$ bits and each input is a pair of quasigroup elements.
 A multiplexer that selects from $n^2$ inputs, each of length $O(\log n)$, can be implemented by an \emph{unbounded fan-in} circuit of depth $O(1)$ and size $O(n^2 \log n)$.
 
@@ -306,7 +368,7 @@ A multiplexer that selects from $n^2$ inputs, each of length $O(\log n)$, can be
   In particular, if $k$ is in $O(\log n)$ and $d$ is in $O(\log \log n)$, then the circuit is of size polynomial in $n$ and of depth $O(\log \log n)$.
 \end{lemma}
 \begin{proof}
-  The input to the circuit is the multiplication table for a quasigroup, a quasigroup element $h$, a generating sequence $S$, and a parenthesization $P$.
+  The input to the circuit is the Cayley table for a quasigroup, a quasigroup element $h$, a generating sequence $S$, and a parenthesization $P$.
   Suppose $S = (g_0, \dotsc, g_k)$ for some positive integer $k$.
   Since the circuit needs to determine if $h$ is in $\cube_P(S)$, the circuit accepts if and only if there is some sequence of bits $(\epsilon_1, \dotsc, \epsilon_k)$ such that $h = P(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k})$.
   Thus the circuit consists of $2^k$ subcircuits joined to a single \textsc{or} gate, each subcircuit deciding whether one of the $2^k$ possible $k$-bit sequences $(\epsilon_1, \dotsc, \epsilon_k)$ produces $h$ under the given parenthesization.
@@ -321,20 +383,20 @@ A multiplexer that selects from $n^2$ inputs, each of length $O(\log n)$, can be
 
 \todo{define semigroups}
 The \textsc{Subsemigroup Membership} problem is defined as follows.
-The inputs are a semigroup $G$ given as a multiplication table, a semigroup element $h$, and a finite set $S$ of semigroup elements.
+The inputs are a semigroup $G$ given as a Cayley table, a semigroup element $h$, and a finite set $S$ of semigroup elements.
 The problem is to decide whether $h \in \gen{S}$.
 
-\todo{rename multiplication table to Cayley table}
+\todo{Is there a cleverer way of computing subsemigroup membership faster than simply solving st-connectivity?}
+
 \begin{lemma}\label{lem:subsemigroupmem}
   \textsc{Subsemigroup Membership} is in $\NL$.
 \end{lemma}
 \begin{proof}
-  \todo{define disjunctive truth-table reduction}
   We will show a logarithmic space disjunctive truth-table reduction from \textsc{Subsemigroup Membership} to \textsc{Directed Path}.
   Since the latter problem is in $\NL$ and $\NL$ is closed under this type of reduction, we conclude that the former problem is in $\NL$ as well.
 
   Suppose $G$ is the semigroup, $h$ is the semigroup element, and $S$ is the set of subsemigroup generators described in the problem definition.
-  The multiplication table induces an edge-labeled directed multigraph $\Gamma$ with self-loops: the vertices of the graph are the semigroup elements, and for each semigroup element $a$, $b$, and $c$, there is an edge labeled $b$ from $a$ to $c$ if $a \cdot b = c$.
+  The Cayley table induces an edge-labeled directed multigraph $\Gamma$ with self-loops: the vertices of the graph are the semigroup elements, and for each semigroup element $a$, $b$, and $c$, there is an edge labeled $b$ from $a$ to $c$ if $a \cdot b = c$.
   Consider the subgraph $\Gamma_S$ induced by those edges whose labels are in $S$.
   The element $h$ is in $\gen{S}$ if and only if there is a path from some vertex in $S$ to $h$.
   In other words, if $S = \{s_1, \dotsc, s_m\}$ for some natural number $m$ and $\Path(\Gamma_S, h, s_i)$ is a proposition that is true exactly when there is a directed path from $h$ to $s_i$ in $\Gamma_S$,
@@ -343,20 +405,20 @@ The problem is to decide whether $h \in \gen{S}$.
   \end{equation*}
   Therefore we choose the reduction to be $(G, h, S) \mapsto ((\Gamma_S, h, s_1), \dotsc, (\Gamma_S, h, s_m))$.
 
-  Computing the adjacency matrix of $\Gamma_S$ from the multiplication table of $G$ and the set $S$ can be done in logarithmic space by setting each entry $(x, y)$ in the multiplication table to be zero if $y$ is not in $S$.
+  Computing the adjacency matrix of $\Gamma_S$ from the Cayley table of $G$ and the set $S$ can be done in logarithmic space by setting each entry $(x, y)$ in the Cayley table to be zero if $y$ is not in $S$.
   Iterating over all edges in the adjacency matrix requires logarithmic space, and enumerating each of the $m$ outputs requires space logarithmic in $m$, which is logarithmic in $n$ because $m \leq n$.
   We conclude that the reduction is a correct logarithmic space disjunctive truth-table reduction.
 \end{proof}
 
 The \textsc{Subgroup Membership} problem is defined as follows.
-The inputs are a group $G$ given as a multiplication table, a group element $h$, and a finite set $S$ of group elements.
+The inputs are a group $G$ given as a Cayley table, a group element $h$, and a finite set $S$ of group elements.
 The problem is to decide whether $h \in \gen{S}$.
 
 \begin{lemma}\label{lem:subgroupmem}
   \textsc{Subgroup Membership} is in $\L$.
 \end{lemma}
 \begin{proof}
-  The problem is in $\SL$ \autocite[Section~3]{bm89}, and $\SL = \L$ \cite{reingold08}.
+  The problem is in $\SL$ by a reduction to \textsc{Undirected Path} \autocite[Section~3]{bm89}, and $\SL = \L$ \cite{reingold08}.
 \end{proof}
 
 \section{Efficient computation of rank}
@@ -364,10 +426,10 @@ The problem is to decide whether $h \in \gen{S}$.
 \todo{foreword and summary here}
 
 The \textsc{Quasigroup Rank} problem is defined as follows.
-Given the multiplication table of a quasigroup and an integer $k$ in binary, decide whether the rank of the quasigroup is $k$ or less.
+Given the Cayley table of a quasigroup and an integer $k$ in binary, decide whether the rank of the quasigroup is $k$ or less.
 The \textsc{Group Rank} problem is defined similarly.
 
-The \textsc{Quasigroup Isomorphism} problem is the problem of determining whether there is a bijection between two quasigroups (again, given as multiplication tables) that preserves the quasigroup operation.
+The \textsc{Quasigroup Isomorphism} problem is the problem of determining whether there is a bijection between two quasigroups (again, given as Cayley tables) that preserves the quasigroup operation.
 This problem is in $\bFOLL$ \autocite[Theorem~3.4]{ctw13}.
 Implicit in that algorithm is the following reduction.
 
@@ -387,7 +449,7 @@ Implicit in that algorithm is the following reduction.
 
   Let $g_1, \dotsc, g_n$ denote the elements of a semigroup of order $n$.
   The reduction proceeds as follows.
-  On input $(G, k)$, where $G$ is a semigroup of order $n$ given as its multiplication table and $k$ is a positive integer given in binary,
+  On input $(G, k)$, where $G$ is a semigroup of order $n$ given as its Cayley table and $k$ is a positive integer given in binary,
   \todo{$k$ should be given in unary, so it is easier to construct the circuit for it.}
   nondeterministically choose a sequence $S$ of $k$ quasigroup elements.
   Output $((G, g_1, S), \dotsc, (G, g_n, S))$.
