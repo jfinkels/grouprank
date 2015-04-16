@@ -381,7 +381,6 @@ A multiplexer that selects from $n^2$ inputs, each of length $O(\log n)$, can be
   We conclude that the overall size of the circuit is $O(2^k k n^2 \log n)$ and the overall depth of the circuit is $O(d)$.
 \end{proof}
 
-\todo{define semigroups}
 The \textsc{Subsemigroup Membership} problem is defined as follows.
 The inputs are a semigroup $G$ given as a Cayley table, a semigroup element $h$, and a finite set $S$ of semigroup elements.
 The problem is to decide whether $h \in \gen{S}$.
@@ -437,14 +436,13 @@ Implicit in that algorithm is the following reduction.
   \mbox{}
   \begin{enumerate}
   \item $\textsc{Semigroup Rank} \leq^{\NAC_0}_{ctt} \textsc{Subsemigroup Membership}$.
-    \todo{define semigroup rank}
   \item $\textsc{Quasigroup Rank} \leq^{\bAC_0}_{ctt} \textsc{Cube Membership}$.
   \item $\textsc{Group Rank} \leq^{\bAC_0}_{ctt} \textsc{Subgroup Membership}$.
   \end{enumerate}
 \end{lemma}
 \begin{proof}
   First, consider the problem for semigroups.
-  Unlike for quasigroups (\autoref{lem:small}), we have no general upper bound on the size of a minimal generating set \todo{except those given in ``The minimal number of generators of a finite semgroup''}.
+  Unlike for quasigroups (\autoref{lem:small}), we have no general upper bound on the size of a minimal generating set \todo{except those given in \autocite{gray14}}.
   Thus, the best we can do is nondeterministically choose a set of $k$ generators and determine if that set generates the semigroup, where $k$ can be as large as the order of the semigroup.
 
   Let $g_1, \dotsc, g_n$ denote the elements of a semigroup of order $n$.
