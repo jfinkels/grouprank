@@ -219,7 +219,7 @@ Alternately, if a semigroup has an identity and inverses, then it is a group.
   Also, it has a left identity, $a$, but no right identity.
 \end{example}
 
-\begin{example}
+\begin{example}\label{ex:zero}
   The \emph{right zero semigroup} is the semigroup in which each element is a right zero.
   Its Cayley table is
   \begin{equation*}
@@ -321,10 +321,6 @@ Quasigroups have small cube generating sequences, and groups have small generati
 As of this publication, upper bounds on the size of generating sets for semigroups remain the subject of research \autocite{gray14}.
 An upper bound for quasigroups can be proven by the probabilistic method, and an upper bound for groups can be proven inductively considering cosets of increasing size.
 
-\todo{use probabilistic method to show existence of a short generating set for semigroups?}
-
-\todo{for semigroups, it seems the rank can be computed from the complicated formulas in \autocite{gray14}; what upper bound does this give for arbitrary finite semigroups?}
-
 \begin{lemma}[{\autocite[Theorem~3.3]{ctw13}}]\label{lem:small}
   Each finite quasigroup with $n$ elements has a cube generating sequence of size $O(\log n)$ with a parenthesization of depth $O(\log \log n)$.
 \end{lemma}
@@ -347,6 +343,14 @@ An upper bound for quasigroups can be proven by the probabilistic method, and an
 %%   Therefore $|H_i| \geq 2 |H_{i - 1}|$.
 %%   By induction, $|G| = |H_m| \geq 2^m$, which implies $m \leq \log |G| = \log n$.
 %% \end{proof}
+
+In contrast to groups and quasigroups, a semigroup $S$ on $n$ elements could have a minimum generating set of size $n$.
+Consider the right zero semigroup on $n$ elements, an example of which is given in \autoref{ex:zero}: since $x \cdot y = y$ for each $x$ and $y$, no subset can generate more elements than are in that subset.
+
+\todo{
+  Are there subclasses of semigroups that have logarithmic size generating sets, possibly by a non-constructive existential proof via the probablistic method?
+  For semigroups, it seems the rank can be computed from the complicated formulas in \autocite{gray14}.
+}
 
 \section{Efficient computation of membership}
 
