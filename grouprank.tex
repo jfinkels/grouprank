@@ -424,13 +424,13 @@ The problem is to decide whether $h \in \gen{S}$.
 
 \todo{foreword and summary here}
 
-The \textsc{Quasigroup Rank} problem is defined as follows.
-Given the Cayley table of a quasigroup and an integer $k$ in binary, decide whether the rank of the quasigroup is $k$ or less.
-The \textsc{Group Rank} problem is defined similarly.
+The \textsc{Group Rank} problem is defined as follows.
+Given the Cayley table of a group and an integer $k$ in unary, decide whether the rank of the group is $k$ or less.
+The \textsc{Quasigroup Rank} and \textsc{Semigroup Rank} problems are defined similarly.
+The integer $k$ is given in unary in order to facilitate the construction of uniform circuit families that decide the problem; since the size of the Cayley table is $n^2 \log n$ and $k$ is always at most $n$, encoding the integer in unary does not cause an exponential increase in the size of the input to the problems.
 
-The \textsc{Quasigroup Isomorphism} problem is the problem of determining whether there is a bijection between two quasigroups (again, given as Cayley tables) that preserves the quasigroup operation.
-This problem is in $\bFOLL$ \autocite[Theorem~3.4]{ctw13}.
-Implicit in that algorithm is the following reduction.
+The reductions in the following lemma are implicit in \autocite[Theorem~3.4]{ctw13}.
+That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigroups are isomorphic, and the first part of that algorithm determines whether a given sequence of quasigroup elements with a parenthesization is a cube generating sequence.
 
 \begin{lemma}\label{lem:ranktomem}
   \mbox{}
@@ -447,9 +447,7 @@ Implicit in that algorithm is the following reduction.
 
   Let $g_1, \dotsc, g_n$ denote the elements of a semigroup of order $n$.
   The reduction proceeds as follows.
-  On input $(G, k)$, where $G$ is a semigroup of order $n$ given as its Cayley table and $k$ is a positive integer given in binary,
-  \todo{$k$ should be given in unary, so it is easier to construct the circuit for it.}
-  nondeterministically choose a sequence $S$ of $k$ quasigroup elements.
+  On input $(G, k)$, where $G$ is a semigroup of order $n$ given as its Cayley table and $k$ is a positive integer given in unary, nondeterministically choose a sequence $S$ of $k$ quasigroup elements.
   Output $((G, g_1, S), \dotsc, (G, g_n, S))$.
 
   Since each semigroup element can be represented by $O(\log n)$ bits, the number of nondeterministic bits used is $O(n \log n)$.
