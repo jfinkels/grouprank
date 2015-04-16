@@ -95,24 +95,46 @@
 }
 
 \section{Introduction}
+% Foreword
+%
+% context (focus on anyone) why now? - current situation, and why the need is so important
+An efficient algorithm computing the rank of an algebraic structure (that is, the minimum number of elements required to generate all other elements) benefits mathematicians, who use numerical algebra systems for research, cryptographers, who rely on algebraic systems for proofs of security, and theoretical computer scientists, who seek to understand which problems can be solved in a particular model of computation.
+% need (focus on readers) why you? - why this is relevant to the reader, and why something needed to be done
+%%% relevant existing work, given as part of the need
+For groups, the previous best algorithm for computing the rank requires a polylogarithmic amount of space, which induces a superpolynomial time (hence, inefficient) algorithm.
+\todo{Add information about the complexity of the problem when the structure is provided as a presentation (that is, a set of generators and a set of relations) instead of the full Cayley table.}
+% task (focus on author) why me? - what was undertaken to address the need
+We reduce the best upper bound on the complexity of the rank problem for semigroups, quasigroups, and groups and provide a theoretically efficient algorithm for the latter two.
+% object (focus on document) why this document - what the document covers
+This paper proves that with short certificates of correctness, the rank problem for quasigroups and groups can be verified by highly restricted models of computation.
 
-\todo{add information about complexity of the problem when the structures are provided as presentations instead of full Cayley tables}
-
-\todo{show probability of success of a randomized reduction to (quasi)group membership}
-
-An efficient algorithm computing the rank of a group (that is, the size of a minimum generating subset) benefits mathematicians, who use numerical algebra systems for research, cryptographers, who rely on algebraic systems for proofs of security, and theoretical computer scientists, who seek to understand which problems can be solved in a particular model of computation.
-Before now, the best algorithm for computing the rank of a group required a polylogarithmic amount of space, which induces a superpolynomial (hence, inefficient) algorithm.
-We reduced the best upper bound on the complexity of the group rank problem and provide a theoretically efficient algorithm for it.
-This paper proves that with very short certificates of correctness, the group rank problem can be verified by highly restricted models of computation.
-
-We prove that the problem of deciding whether the rank of a finite group, given as a Cayley table, is smaller than a specified number is decidable not only by a circuit of depth $O(\log \log n)$ augmented with $O(\log^2 n)$ nondeterministic bits, but also by a Turing machine using $O(\log n)$ space and $O(\log^2 n)$ bits of nondeterminism.
-These models of computation are extremely limited in computational power, and the latter can be simulated by a deterministic Turing machine in polynomial time.
+% Summary
+%
+% findings (focus on author) what? - what the work revealed when performing the task
+We prove that the problem of deciding whether the rank of a finite quasigroup, given as a Cayley table, is smaller than a specified number is decidable by a circuit of depth $O(\log \log n)$ augmented with $O(\log^2 n)$ nondeterministic bits.
+Furthermore, if the quasigroup is a group the problem is also decidable by a Turing machine using $O(\log n)$ space and $O(\log^2 n)$ bits of nondeterminism.
+For semigroups, we prove that the problem is in $\NL$, a weaker upper bound.
+\autoref{tab:summary} summarizes these improvements.
+% conclusion (focus on readers) so what? - what the findings mean for the audience
+These models of computation are extremely limited in computational power, and the latter two can be simulated by a deterministic Turing machine in polynomial time.
+% perspective (focus on anyone) what now? - what should be done next
 Using limited nondeterminism and restrictive models of computation as verifiers may also be useful in examining other algebraic problems.
 
+\begin{table}
+  \caption{\label{tab:summary}We improve algorithms for computing rank of finite algebraic structures.}
+  \begin{center}
+    \begin{tabular}{r l l}
+      quasigroup & $\bP$ \autocite{py96} & $\bFOLL$ \\
+      semigroup & $\NP$ & $\NL$ \\
+      group & $\L^2$ \autocite{lsz77} & $\bFOLL \cap \bL$
+    \end{tabular}
+  \end{center}
+\end{table}
+
 The limited nondeterminism lens suggests some opportunities for further research in computational algebra.
-Is computing the rank of a quasigroup, a problem more general than computing the rank of a group, in $\bL$ as well?
-Is there a reduction between the problem of computing the rank of a quasigroup and the problem of deciding whether two quasigroups are isomorphism?
-Finally, is the problem of computing a minimum generating sequence for a quasigroup strictly more difficult than the problem of computing the rank of a quasigroup?
+Can computing the rank of a quasigroup, a problem more general than computing the rank of a group, also be computed by a logarithmic space Turing machine using $O(\log^2 n)$ nondeterminism?
+Is there a reduction between the problem of computing the rank of a quasigroup and the problem of deciding whether two quasigroups are isomorphic?
+Finally, is the problem of computing the shortest generating sequence for a quasigroup strictly more difficult than the problem of computing the rank of a quasigroup?
 
 \section{Preliminaries}
 
@@ -482,6 +504,8 @@ That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigro
   \end{equation*}
 \end{proof}
 
+\todo{Show the probability of success for a randomized reduction to the membership problem for each of these algebraic structures.}
+
 \begin{theorem}\label{thm:rank}
   \mbox{}
   \begin{enumerate}
@@ -503,14 +527,14 @@ That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigro
   \end{enumerate}
 \end{proof}
 
-This theorem improves the previous best upper bound for \textsc{Group Rank}, which was $\L^2$ \cite{lsz77} (see \cite[Proposition~3]{at06} for a brief description of the algorithm), since
+This theorem improves the previous best upper bounds for these problems.
+Previously, the best upper bound for \textsc{Quasigroup Rank} was $\bP$ \autocite[Section~5]{py96} and for \textsc{Group Rank} was $\L^2$ \autocite{lsz77} (see also \cite[Proposition~6]{at06} for a brief description of the algorithm).
+We could not find an explicit upper bound for \textsc{Semigroup Rank}, but other papers have hinted that the problem is in $\NP$.
+Our theorem is an improvement because
 \begin{equation*}
-  (\bFOLL \cap \bL) \subseteq \NL \subseteq \L^2.
+  (\bFOLL \cap \bL) \subseteq \NL \subseteq (\L^2 \cap \P).
 \end{equation*}
-This also improves the result of \cite[Theorem~7]{at06}, which shows that \textsc{Group Rank} restricted to nilpotent groups is in $\P$, since
-\begin{equation*}
-  (\bFOLL \cap \bL) \subseteq \NL \subseteq \P.
-\end{equation*}
+This also improves the result of \cite[Theorem~7]{at06}, which shows that \textsc{Group Rank} restricted to nilpotent groups is in $\P$.
 \autoref{fig:inclusions} shows the chain of complexity class inclusions that demonstrates how great an improvement this is.
 However, the relationship between $\FOLL$ and $\L$ remains unknown (the best inclusion known is the uninteresting inclusion $\FOLL \subseteq \AC^1$), so the relationship between $\bFOLL$ and $\bL$ is unknown as well.
 
@@ -518,6 +542,7 @@ However, the relationship between $\FOLL$ and $\L$ remains unknown (the best inc
   \caption{\label{fig:inclusions}$\bFOLL \cap \bL$ is much smaller than both $\L^2$ and $\P$.}
   \begin{center}
     \begin{tikzpicture}
+      \node at (2, 6) (i) {$\bP$};
       \node at (2, 4) (h) {$\P$};
       \node at (0, 6) (g) {$\L^2$};
       \node at (0, 5) (f) {$\bNC^2$};
@@ -536,6 +561,8 @@ However, the relationship between $\FOLL$ and $\L$ remains unknown (the best inc
       \draw (a) to (x);
       \draw (x) to (e);
       \draw (d) to (h);
+      \draw (f) to (i);
+      \draw (h) to (i);
     \end{tikzpicture}
   \end{center}
 \end{figure}
