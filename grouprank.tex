@@ -14,7 +14,6 @@
 %% This is strongly recommended by biblatex.
 \usepackage[english]{babel}
 \usepackage[backend=biber]{biblatex}
-\usepackage{enumitem}
 \usepackage[T1]{fontenc}
 %% This must come before csquotes.
 \usepackage[utf8]{inputenc}
@@ -116,6 +115,40 @@ We prove that the problem of deciding whether the rank of a finite quasigroup, g
 Furthermore, if the quasigroup is a group the problem is also decidable by a Turing machine using $O(\log n)$ space and $O(\log^2 n)$ bits of nondeterminism.
 For semigroups, we prove that the problem is in $\NL$, a weaker upper bound.
 \autoref{tab:summary} summarizes these improvements, and \autoref{fig:inclusions} demonstrates graphically why these improvements are so significant.
+
+
+-------------
+
+\todo{incorporate these paragraphs in the summary somewhere}
+
+This theorem improves the previous best upper bounds for these problems.
+Previously, the best upper bound for \textsc{Quasigroup Rank} was $\bP$ \autocite[Section~5]{py96} and for \textsc{Group Rank} was $\L^2$ \autocite{lsz77} (see also \cite[Proposition~6]{at06} for a brief description of the algorithm).
+We could not find an explicit upper bound for \textsc{Semigroup Rank}, but other papers have hinted that the problem is in $\NP$.
+Our theorem is an improvement because
+\begin{equation*}
+  (\bFOLL \cap \bL) \subseteq \NL \subseteq (\L^2 \cap \P).
+\end{equation*}
+This also improves the result of \cite[Theorem~7]{at06}, which shows that \textsc{Group Rank} restricted to nilpotent groups is in $\P$.
+%% \autoref{fig:inclusions} shows the chain of complexity class inclusions that demonstrates how great an improvement this is.
+However, the relationship between $\FOLL$ and $\L$ remains unknown (the best inclusion known is the uninteresting inclusion $\FOLL \subseteq \AC^1$), so the relationship between $\bFOLL$ and $\bL$ is unknown as well.
+
+%% This is an improvement because
+%% \begin{align*}
+%%   (\bFOLL \cap \bL) & \subseteq \bL \subseteq \NL \subseteq \AC^1 \subseteq \bAC^1, \\ %\subseteq \bNC^2 \subseteq \L^2,
+%%   (\bFOLL \cap \bL) & \subseteq \bFOLL \subseteq \bAC^1, %\subseteq \bNC^2 \subseteq \L^2.
+%% \end{align*}
+%% and
+%% $$
+%% \bAC^1 \subseteq \bNC^2 \subseteq \L^2.
+%% $$
+%% (In the last inclusion we use the fact that $\bNC^2 \subseteq \L^2$ \cite[Lemma~3.1]{wolf94}.)
+
+Contrast the complexity of \textsc{Group Rank} with the complexity of computing the rank of a subgroup of a free group.
+The latter problem is $\P$-complete, so is not even in $\NC$ unless $\NC = \P$ \autocite[Theorem~4.9]{am84} (see also \autocite[Problem~A.8.11]{ghr95}).
+
+-------------
+
+
 % conclusion (focus on readers) so what? - what the findings mean for the audience
 These models of computation are extremely limited in computational power, and the latter two can be simulated by a deterministic Turing machine in polynomial time.
 % perspective (focus on anyone) what now? - what should be done next
@@ -126,6 +159,7 @@ Using limited nondeterminism and restrictive models of computation as verifiers 
   \begin{center}
     \begin{tabular}{r l l}
       & old & new \\[5pt]
+      magma & $\NP$ & $\NP$ \\
       quasigroup & $\bP$ \autocite{py96} & $\bFOLL$ \\
       semigroup & $\NP$ & $\NL$ \\
       group & $\L^2$ \autocite{lsz77} & $\bFOLL \cap \bL$
@@ -191,15 +225,11 @@ If $L_1$ and $L_2$ are languages, there is a \emph{$\bAC_0$ conjunctive truth-ta
 
 \begin{lemma}\label{lem:ctt}
   Suppose $L_1$ and $L_2$ are languages.
-  If $L_1 \leq^{\NAC_0}_{ctt} L_2$ and
   \begin{enumerate}
-  \item $L_2$ is in $\NP$, then $L_1$ is in $\NP$,
-  \item $L_2$ is in $\NL$, then $L_1$ is in $\NL$.
-  \end{enumerate}
-  If $L_1 \leq^{\bAC_0}_{ctt} L_2$ and
-  \begin{enumerate}[resume]
-  \item $L_2$ is in $\FOLL$, then $L_1$ is in $\bFOLL$.
-  \item $L_2$ is in $\L$, then $L_1$ is in $\bL$.
+  \item If $L_1 \leq^{\NAC_0}_{ctt} L_2$ and $L_2$ is in $\P$, then $L_1$ is in $\NP$.
+  \item If $L_1 \leq^{\NAC_0}_{ctt} L_2$ and $L_2$ is in $\NL$, then $L_1$ is in $\NL$.
+  \item If $L_1 \leq^{\bAC_0}_{ctt} L_2$ and $L_2$ is in $\FOLL$, then $L_1$ is in $\bFOLL$.
+  \item If $L_1 \leq^{\bAC_0}_{ctt} L_2$ and $L_2$ is in $\L$, then $L_1$ is in $\bL$.
   \end{enumerate}
 \end{lemma}
 \begin{proof}
@@ -233,33 +263,33 @@ If $L_1$ and $L_2$ are languages, there is a \emph{$\bAC_0$ conjunctive truth-ta
   We also require the fact that logarithmic space computable functions compose.
 \end{proof}
 
-There is a \emph{$\NAC_0$ disjunctive truth-table reduction} from $L_1$ to $L_2$, denoted $L_1 \leq^{\NAC_0}_{dtt} L_2$, if there is a function $f$ and a polynomial $p$ such that
-\begin{itemize}
-\item $f$ is computable in $\NAC_0$,
-\item $f(x)$ outputs $(y_1, \dotsc, y_{p(n)})$ where $n$ is the length of $x$,
-\item $x \in L_1$ if and only if $\bigvee_{i = 1}^{p(n)} y_i \in L_2$.
-\end{itemize}
+%% There is a \emph{$\NAC_0$ disjunctive truth-table reduction} from $L_1$ to $L_2$, denoted $L_1 \leq^{\NAC_0}_{dtt} L_2$, if there is a function $f$ and a polynomial $p$ such that
+%% \begin{itemize}
+%% \item $f$ is computable in $\NAC_0$,
+%% \item $f(x)$ outputs $(y_1, \dotsc, y_{p(n)})$ where $n$ is the length of $x$,
+%% \item $x \in L_1$ if and only if $\bigvee_{i = 1}^{p(n)} y_i \in L_2$.
+%% \end{itemize}
 
-\begin{lemma}\label{lem:dtt}
-  Suppose $L_1$ and $L_2$ are languages and $L_1 \leq^{\NAC_0}_{dtt} L_2$.
-  If $L_2$ is in $\NL$, then $L_1$ is in $\NL$.
-\end{lemma}
-\begin{proof}
-  This is essentially the same as item 2 of the previous lemma, except instead of looping over each of the $y_i$s, the machine $M_1$ can simply nondeterministically choose one $y_i$ and simulate $M_2$ on input $y_i$.
-  %% Let $f$ be the $\NAC_0$ circuit computing the reduction and let $q$ be the polynomial bounding the length of its output.
-  %% Suppose $L_2$ is in $\NL$.
-  %% Let $M_2$ be the nondeterministic Turing machine that decides $L_2$ with logarithmic space.
-  %% To decide $L_1$, define the nondeterministic Turing machine $M_1$ as follows.
-  %% On input $x$ of length $n$,
-  %% \begin{enumerate}
-  %% \item nondeterministically choose a binary string $w$ and a binary integer $i$ in $\{1, \dotsc, q(n)\}$,
-  %% \item simulate $f(x, w)$ to produce $(y_1, \dotsc, y_{q(n)})$,
-  %% \item accept if and only if $M_2(y_i)$ accepts.
-  %% \end{enumerate}
+%% \begin{lemma}\label{lem:dtt}
+%%   Suppose $L_1$ and $L_2$ are languages and $L_1 \leq^{\NAC_0}_{dtt} L_2$.
+%%   If $L_2$ is in $\NL$, then $L_1$ is in $\NL$.
+%% \end{lemma}
+%% \begin{proof}
+%%   This is essentially the same as item 2 of the previous lemma, except instead of looping over each of the $y_i$s, the machine $M_1$ can simply nondeterministically choose one $y_i$ and simulate $M_2$ on input $y_i$.
+%%   %% Let $f$ be the $\NAC_0$ circuit computing the reduction and let $q$ be the polynomial bounding the length of its output.
+%%   %% Suppose $L_2$ is in $\NL$.
+%%   %% Let $M_2$ be the nondeterministic Turing machine that decides $L_2$ with logarithmic space.
+%%   %% To decide $L_1$, define the nondeterministic Turing machine $M_1$ as follows.
+%%   %% On input $x$ of length $n$,
+%%   %% \begin{enumerate}
+%%   %% \item nondeterministically choose a binary string $w$ and a binary integer $i$ in $\{1, \dotsc, q(n)\}$,
+%%   %% \item simulate $f(x, w)$ to produce $(y_1, \dotsc, y_{q(n)})$,
+%%   %% \item accept if and only if $M_2(y_i)$ accepts.
+%%   %% \end{enumerate}
 
-  %% This machine requires only logarithmic space because it can simulate $f$ in logarithmic space and $M_2$ in logarithmic space (since functions computable in logarithmic space compose).
-  %% The correctness of the machine follows from the correctness of $f$ and $M_2$.
-\end{proof}
+%%   %% This machine requires only logarithmic space because it can simulate $f$ in logarithmic space and $M_2$ in logarithmic space (since functions computable in logarithmic space compose).
+%%   %% The correctness of the machine follows from the correctness of $f$ and $M_2$.
+%% \end{proof}
 
 \subsection{Algebra}
 
@@ -441,49 +471,46 @@ The \textsc{Submagma Membership} problem is defined as follows.
 The inputs are a magma $G$ given as a Cayley table, a magma element $h$, and a finite set of magma elements $S$.
 The problem is to decide whether $h \in \gen{S}$.
 
-\begin{lemma}\label{lem:submagmamem}
-  \textsc{Submagma Membership} is in $\NP$.
-  \todo{I suspect the problem is $\NP$-complete; see \autocite[Theorem~7]{py96} for the $\bP$-completeness of a related problem.}
+\begin{lemma}[{\autocite[Corollary~9]{jl76}}]\label{lem:submagmamem}
+  \textsc{Submagma Membership} is $\P$-complete.
 \end{lemma}
-\begin{proof}
-  Suppose the magma has $n$ elements and $h$ is the element to check for submagma membership.
-  The certificate is a sequence of $n$ elements chosen from $S$ and a parenthesization $P$ of that sequence.
-  (We choose a sequence of $n$ elements from $S$ because in the worst case, the magma is the cyclic group of order $n$, the set $S$ is the singleton set $\{1\}$, and $h$ is $1^n$.)
-  The verification procedure computes the parenthesized product and checks that it is $h$.
+%% \begin{proof}
+%%   Suppose the magma has $n$ elements and $h$ is the element to check for submagma membership.
+%%   The certificate is a sequence of $n$ elements chosen from $S$ and a parenthesization $P$ of that sequence.
+%%   (We choose a sequence of $n$ elements from $S$ because in the worst case, the magma is the cyclic group of order $n$, the set $S$ is the singleton set $\{1\}$, and $h$ is $1^n$.)
+%%   The verification procedure computes the parenthesized product and checks that it is $h$.
 
-  Each element can be represented with $O(\log n)$ bits, so a sequence of $n$ such elements can be represented with $O(n \log n)$ bits.
-  The parenthesization can be represented as a binary string of length $n$.
-  Thus the overall size of the certificate is $O(n \log n)$.
-\end{proof}
+%%   Each element can be represented with $O(\log n)$ bits, so a sequence of $n$ such elements can be represented with $O(n \log n)$ bits.
+%%   The parenthesization can be represented as a binary string of length $n$.
+%%   Thus the overall size of the certificate is $O(n \log n)$.
+%% \end{proof}
 
 The \textsc{Subsemigroup Membership} problem is defined as follows.
 The inputs are a semigroup $G$ given as a Cayley table, a semigroup element $h$, and a finite set $S$ of semigroup elements.
 The problem is to decide whether $h \in \gen{S}$.
 
-\todo{Is there a cleverer way of computing subsemigroup membership faster than simply solving st-connectivity?}
-
-\begin{lemma}\label{lem:subsemigroupmem}
-  \textsc{Subsemigroup Membership} is in $\NL$.
+\begin{lemma}[{\autocite{jll76}}]\label{lem:subsemigroupmem}
+  \textsc{Subsemigroup Membership} is $\NL$-complete.
 \end{lemma}
-\begin{proof}
-  We will show a logarithmic space disjunctive truth-table reduction from \textsc{Subsemigroup Membership} to \textsc{Directed Path}.
-  Since the latter problem is in $\NL$ and $\NL$ is closed under this type of reduction, we conclude that the former problem is in $\NL$ as well.
+%% \begin{proof}
+%%   We will show a logarithmic space disjunctive truth-table reduction from \textsc{Subsemigroup Membership} to \textsc{Directed Path}.
+%%   Since the latter problem is in $\NL$ and $\NL$ is closed under this type of reduction, we conclude that the former problem is in $\NL$ as well.
 
-  Suppose $G$ is the semigroup, $h$ is the semigroup element, and $S$ is the set of subsemigroup generators described in the problem definition.
-  The Cayley table induces an edge-labeled directed multigraph $\Gamma$ with self-loops: the vertices of the graph are the semigroup elements, and for each semigroup element $a$, $b$, and $c$, there is an edge labeled $b$ from $a$ to $c$ if $a \cdot b = c$.
-  Consider the subgraph $\Gamma_S$ induced by those edges whose labels are in $S$.
-  The element $h$ is in $\gen{S}$ if and only if there is a path from some vertex in $S$ to $h$.
-  In other words, if $S = \{s_1, \dotsc, s_m\}$ for some natural number $m$,
-  %% and $\Path(\Gamma_S, h, s_i)$ is a proposition that is true exactly when there is a directed path from $h$ to $s_i$ in $\Gamma_S$,
-  \begin{equation*}
-    h \in \gen{S} \iff \bigvee_{i = 1}^m (\Gamma_S, h, s_i) \in \textsc{Directed Path}.
-  \end{equation*}
-  Therefore we choose the reduction to be $(G, h, S) \mapsto ((\Gamma_S, h, s_1), \dotsc, (\Gamma_S, h, s_m))$.
+%%   Suppose $G$ is the semigroup, $h$ is the semigroup element, and $S$ is the set of subsemigroup generators described in the problem definition.
+%%   The Cayley table induces an edge-labeled directed multigraph $\Gamma$ with self-loops: the vertices of the graph are the semigroup elements, and for each semigroup element $a$, $b$, and $c$, there is an edge labeled $b$ from $a$ to $c$ if $a \cdot b = c$.
+%%   Consider the subgraph $\Gamma_S$ induced by those edges whose labels are in $S$.
+%%   The element $h$ is in $\gen{S}$ if and only if there is a path from some vertex in $S$ to $h$.
+%%   In other words, if $S = \{s_1, \dotsc, s_m\}$ for some natural number $m$,
+%%   %% and $\Path(\Gamma_S, h, s_i)$ is a proposition that is true exactly when there is a directed path from $h$ to $s_i$ in $\Gamma_S$,
+%%   \begin{equation*}
+%%     h \in \gen{S} \iff \bigvee_{i = 1}^m (\Gamma_S, h, s_i) \in \textsc{Directed Path}.
+%%   \end{equation*}
+%%   Therefore we choose the reduction to be $(G, h, S) \mapsto ((\Gamma_S, h, s_1), \dotsc, (\Gamma_S, h, s_m))$.
 
-  Computing the adjacency matrix of $\Gamma_S$ from the Cayley table of $G$ and the set $S$ can be done in logarithmic space by setting each entry $(x, y)$ in the Cayley table to be zero if $y$ is not in $S$.
-  Iterating over all edges in the adjacency matrix requires logarithmic space, and enumerating each of the $m$ outputs requires space logarithmic in $m$, which is logarithmic in $n$ because $m \leq n$.
-  We conclude that the reduction is a correct logarithmic space disjunctive truth-table reduction.
-\end{proof}
+%%   Computing the adjacency matrix of $\Gamma_S$ from the Cayley table of $G$ and the set $S$ can be done in logarithmic space by setting each entry $(x, y)$ in the Cayley table to be zero if $y$ is not in $S$.
+%%   Iterating over all edges in the adjacency matrix requires logarithmic space, and enumerating each of the $m$ outputs requires space logarithmic in $m$, which is logarithmic in $n$ because $m \leq n$.
+%%   We conclude that the reduction is a correct logarithmic space disjunctive truth-table reduction.
+%% \end{proof}
 
 The \textsc{Cube Membership} problem is defined as follows.
 The inputs are a quasigroup $G$ given as a Cayley table, a quasigroup element $h$, a finite \emph{sequence} of quasigroup elements $S$, and a parenthesization $P$ for that sequence.
@@ -632,43 +659,15 @@ That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigro
   \end{enumerate}
 \end{theorem}
 \begin{proof}
-  \mbox{}
+  Follows from \autoref{lem:ctt} and \autoref{lem:ranktomem}, along with
   \begin{enumerate}
-  \item
-    Follows from \autoref{lem:ctt}, \autoref{lem:submagmamem}, and \autoref{lem:ranktomem}.
-  \item
-    Follows from \autoref{lem:ctt}, \autoref{lem:subsemigroupmem}, and \autoref{lem:ranktomem}.
-  \item
-    Follows from \autoref{lem:ctt}, \autoref{lem:cubemem}, and \autoref{lem:ranktomem}.
-  \item
-    Follows from \autoref{lem:ctt}, \autoref{lem:subgroupmem}, and \autoref{lem:ranktomem}, and from the previous item, since a group is a quasigroup.
+  \item \autoref{lem:submagmamem} for magmas,
+  \item \autoref{lem:subsemigroupmem} for semigroups,
+  \item \autoref{lem:cubemem} for quasigroups,
+  \item \autoref{lem:subgroupmem} for groups.
   \end{enumerate}
+  For groups the problem is also in $\bFOLL$ since a group is a quasigroup.
 \end{proof}
-
-This theorem improves the previous best upper bounds for these problems.
-Previously, the best upper bound for \textsc{Quasigroup Rank} was $\bP$ \autocite[Section~5]{py96} and for \textsc{Group Rank} was $\L^2$ \autocite{lsz77} (see also \cite[Proposition~6]{at06} for a brief description of the algorithm).
-We could not find an explicit upper bound for \textsc{Semigroup Rank}, but other papers have hinted that the problem is in $\NP$.
-Our theorem is an improvement because
-\begin{equation*}
-  (\bFOLL \cap \bL) \subseteq \NL \subseteq (\L^2 \cap \P).
-\end{equation*}
-This also improves the result of \cite[Theorem~7]{at06}, which shows that \textsc{Group Rank} restricted to nilpotent groups is in $\P$.
-%% \autoref{fig:inclusions} shows the chain of complexity class inclusions that demonstrates how great an improvement this is.
-However, the relationship between $\FOLL$ and $\L$ remains unknown (the best inclusion known is the uninteresting inclusion $\FOLL \subseteq \AC^1$), so the relationship between $\bFOLL$ and $\bL$ is unknown as well.
-
-%% This is an improvement because
-%% \begin{align*}
-%%   (\bFOLL \cap \bL) & \subseteq \bL \subseteq \NL \subseteq \AC^1 \subseteq \bAC^1, \\ %\subseteq \bNC^2 \subseteq \L^2,
-%%   (\bFOLL \cap \bL) & \subseteq \bFOLL \subseteq \bAC^1, %\subseteq \bNC^2 \subseteq \L^2.
-%% \end{align*}
-%% and
-%% $$
-%% \bAC^1 \subseteq \bNC^2 \subseteq \L^2.
-%% $$
-%% (In the last inclusion we use the fact that $\bNC^2 \subseteq \L^2$ \cite[Lemma~3.1]{wolf94}.)
-
-Contrast the complexity of \textsc{Group Rank} with the complexity of computing the rank of a subgroup of a free group.
-The latter problem is $\P$-complete, so is not even in $\NC$ unless $\NC = \P$ \autocite[Theorem~4.9]{am84} (see also \autocite[Problem~A.8.11]{ghr95}).
 
 Although the precise relationship between $\FOLL$ and $\L$ is unknown, $\FOLL$ does not contain any class containing the \textsc{Parity} problem.
 Since \textsc{Parity} is in $\L$, we know $\FOLL$ does not contain $\L$.
