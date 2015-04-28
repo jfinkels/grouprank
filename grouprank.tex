@@ -205,7 +205,7 @@ Finally, is the problem of computing the shortest generating sequence for a quas
 
 \section{Preliminaries}
 
-In this work, $\log n$ denotes the base two logarithm of $n$, for any natural number $n$.
+Here, $\log n$ denotes the base two logarithm of $n$, for any natural number $n$.
 
 \subsection{Complexity}
 
@@ -420,7 +420,7 @@ If $(g_0, \dotsc, g_k)$ is a finite sequence of quasigroup elements denoted $S$ 
 \end{equation*}
 (This is called a ``cube'' because each vertex of the $k$-dimensional Boolean hypercube, when interpreted as a binary string $\epsilon_1 \dotsb \epsilon_k$, yields a quasigroup element.)
 If $\cube_P(S) = G$, then $g$ is called a \emph{cube generating sequence of size $k + 1$} for the quasigroup $G$.
-The \emph{rank of a quasigroup $G$}, denoted $\rank(G)$, is the minimum size of a cube generating sequence.
+The \emph{rank of a quasigroup $G$}, denoted $\rank(G)$, is the minimum size of a cube generating sequence.%
 \footnote{
   This is a nonstandard definition of ``rank'' for quasigroups.
   Elsewhere, the rank of a quasigroup is the number of blocks in the partition of the quasigroup into conjugacy classes according to the action of the quasigroup on itself.
@@ -466,8 +466,28 @@ An upper bound for groups can be proven inductively by considering cosets of inc
   For semigroups, it seems the rank can be computed from the complicated formulas in \autocite{gray14}.}
 
 \section{Computation of submagma membership}
+% Foreword
+%
+% context (focus on anyone) why now? - current situation, and why the need is so important
+As stated in the introduction, computing the rank of a magma reduces to the problem of deciding submagma membership.
+% need (focus on readers) why you? - why this is relevant to the reader, and why something needed to be done
+Thus, in order to determine an upper bound on the complexity of computing the rank, we can determine the complexity of deciding membership.
+%
+%%% relevant existing work, given as part of the need
+Fortunately, the membership problem for a submagma when the magma is given as its Cayley table is a well-studied problem.
+% task (focus on author) why me? - what was undertaken to address the need
+% object (focus on document) why this document - what the document covers
+This section reviews the complexity for the membership problem for magmas, semigroups, quasigroups, and groups.
 
-\todo{Introduction and summary paragraph here.}
+% Summary
+%
+% findings (focus on author) what? - what the work revealed when performing the task
+We recall that for magmas the membership problem, given the Cayley table, is in $\NP$ and for semigroups $\NL$.
+We prove that for quasigroups the problem is in $\FOLL$ and for groups $\L$.
+% conclusion (focus on readers) so what? - what the findings mean for the audience
+These upper bounds allow us to prove upper bounds on the rank problem in the next section.
+% perspective (focus on anyone) what now? - what should be done next
+If future work reveals more efficient algorithms for the membership problem for quasigroups or groups, we can provide improved algorithms for computing the rank of these algebraic structures.
 
 The \textsc{Submagma Membership} problem is defined as follows.
 The inputs are a magma $G$ given as a Cayley table, a magma element $h$, and a finite set of magma elements $S$.
@@ -518,7 +538,7 @@ The \textsc{Cube Membership} problem is defined as follows.
 The inputs are a quasigroup $G$ given as a Cayley table, a quasigroup element $h$, a finite \emph{sequence} of quasigroup elements $S$, and a parenthesization $P$ for that sequence.
 The problem is to decide whether $h \in \cube_P(S)$.
 
-How does a circuit access a Cayley table for a quasigroup of order $n$?
+How does a circuit access a Cayley table for a quasigroup of order $n$?%
 \footnote{This work avoids representing problems using first-order logic, as in the original definition of $\FOLL$ from \autocite{bklm01}, though the logic definition may provide a more natural representation of this sort of information.}
 One way for a circuit to compute the product of two quasigroup elements using the Cayley table is via a multiplexer.
 In the multiplexer, each input has $O(\log n)$ bits, since each quasigroup element can be represented with $O(\log n)$ bits and each input is a pair of quasigroup elements.
@@ -527,7 +547,8 @@ A multiplexer that selects from $n^2$ inputs, each of length $O(\log n)$, can be
 \begin{lemma}[{Implicit in \autocite[Theorem~3.4]{ctw13}}]\label{lem:cubemem}
   \textsc{Cube Membership} is decidable by an $\L$-uniform family of unbounded fan-in circuits with size $O(2^k k n^2 \log n)$ and depth $O(d)$, where $n$ is the order of the quasigroup, $k$ is the size of the generating sequence, and $d$ is the depth of the parenthesization.
 
-  In particular, if $k$ is in $O(\log n)$ and $d$ is in $O(\log \log n)$, then the circuit is of size polynomial in $n$ and of depth $O(\log \log n)$, that is, \textsc{Cube Membership} is in $\FOLL$.
+  %In particular, if $k$ is in $O(\log n)$ and $d$ is in $O(\log \log n)$, then the circuit is of size polynomial in $n$ and of depth $O(\log \log n)$, that is, \textsc{Cube Membership} is in $\FOLL$.
+  In particular, if $k = O(\log n)$ and $d = O(\log \log n)$, then \textsc{Cube Membership} is in $\FOLL$.
 \end{lemma}
 \begin{proof}
   The input to the circuit is the Cayley table for a quasigroup, a quasigroup element $h$, a generating sequence $S$, and a parenthesization $P$.
@@ -556,42 +577,25 @@ The problem is to decide whether $h \in \gen{S}$.
 
 \section{Computation of submagma rank}
 
-\todo{foreword and summary here}
+% Foreword
+%
+% context (focus on anyone) why now? - current situation, and why the need is so important
+Computing submagma membership is where most of the work occurs.
+% need (focus on readers) why you? - why this is relevant to the reader, and why something needed to be done
+Now we need only reduce the rank problem to the membership problem.
+% task (focus on author) why me? - what was undertaken to address the need
+We do this via a truth-table reduction of relatively low complexity.
+% object (focus on document) why this document - what the document covers
+This section uses these reductions and the results of the previous section to prove the upper bounds on the rank problem as advertised in the introduction.
 
-%% The general strategy is to reduce the problem of computing the rank of a magma to the problem of determining whether an element of the magma can be generated from a given set of elements.
-
-%% \begin{lemma}
-%%   For any class of magmas $\mathcal{G}$, there is a $\beta_{\kappa(n) \log n} \AC_0$ conjunctive truth-table reduction from \textsc{Rank($\mathcal{G}$)} to \textsc{Membership($\mathcal{G}$)}, where $\kappa(n)$ is an upper bound on the size of a generating set for magmas in $\mathcal{G}$.
-%% \end{lemma}
-%% \begin{proof}
-%%   Suppose the input to the reduction is $(G, k)$, where $G$ is a magma on $n$ elements in class $\mathcal{G}$ given as its Cayley table and $k$ is a unary integer.
-%%   Let $G = \{g_1, \dotsc, g_n\}$.
-%%   The reduction proceeds as follows.
-%%   Nondeterministically choose a sequence $S$ of $\kappa(n)$ magma elements and a parenthesization $P$ of $S$.
-%%   Output $((G, g_1, S, P), \dotsc, (G, g_n, S, P))$.
-
-%%   How many nondeterministic bits are required by this reduction?
-%%   Each magma element can be represented with $O(\log n)$ bits, so a sequence of $\kappa(n)$ such elements can be represented with $O(\kappa(n) \log n)$.
-%%   A parenthesization of $\kappa(n)$ elements can be represented as a binary string of length $\kappa(n)$, so the overall number of nondeterministic bits required remains $O(\kappa(n) \log n)$.
-%%   By definition, a magma $G$ has rank $k$ if there is a set of elements $S$ such that for each element $g$ of $G$ there is a parenthesization $P$ such that $g = \gen{S; P_i}$.
-
-%%   By definition of rank,
-%%   \begin{equation*}
-%%     \rank(G) \leq k \iff \bigwedge_{i = 1}^n g_i \in \gen{S; P_i},
-%%   \end{equation*}
-%%   so the reduction is a correct conjunctive truth-table reduction.
-
-%%   For quasigroups, the only differences are that we need to nondeterministically choose a parenthesization as well as a generating sequence, and that we have an upper bound on the size of the sequence and the parenthesization.
-%%   By \autoref{lem:small}, it suffices to consider inputs to \textsc{Quasigroup Rank} in which $k$ is in $O(\log n)$ and inputs to \textsc{Cube Membership} in which $P$ is of depth $O(\log \log n)$.
-%%   The reduction therefore must nondeterministically choose a sequence $S$ of $k$ quasigroup elements and a parenthesization $P$ of depth $O(\log \log n)$.
-%%   The output of the reduction is $((G, g_1, S, P), \dotsc, (G, g_n, S, P))$.
-%%   Now the number of nondeterministic bits used is $O(\log^2 n)$, since $S$ is a set of $O(\log n)$ strings, each of length $O(\log n)$.
-%%   By \autoref{lem:small},
-%%   \begin{equation*}
-%%     \rank(G) \leq k \iff \bigwedge_{i = 1}^n g_i \in \cube_P(S),
-%%   \end{equation*}
-%%   so the reduction is a correct conjunctive truth-table reduction.
-%% \end{proof}
+% Summary
+%
+% findings (focus on author) what? - what the work revealed when performing the task
+\autoref{thm:rank} proves that for magmas, the rank problem is in $\NP$, for semigroups $\NL$, for quasigroups $\bFOLL$, and for groups $\bFOLL \cap \bL$.
+% conclusion (focus on readers) so what? - what the findings mean for the audience
+This means that for groups and semigroups, there is a polynomial time algorithm for computing the rank, and for quasigroups the problem can be verified quickly given a very short witness.
+% perspective (focus on anyone) what now? - what should be done next
+We conjecture that for magmas and semigroups, the problems are hard for their respective complexity classes.
 
 The \textsc{Magma Rank} problem is defined as follows.
 Given the Cayley table of a magma and an integer $k$ in unary, decide whether the rank of the magma is $k$ or less.
@@ -649,6 +653,8 @@ That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigro
   \end{equation*}
 \end{proof}
 
+\todo{Does the reduction go the other way? We have $g \in \gen{S}$ if and only if $\rank(\gen{S}) = \rank(\gen{S \cup \{h\}})$}
+
 \todo{Show the probability of success for a randomized reduction to the membership problem for each of these algebraic structures.}
 
 \begin{theorem}\label{thm:rank}
@@ -671,7 +677,8 @@ That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigro
   For groups the problem is also in $\bFOLL$ since a group is a quasigroup.
 \end{proof}
 
-\todo{\autocite{py96} essentially shows that Magma Rank is complete for $\NP[k \log n]$.}
+A slight generalization of \autocite[Theorem~7]{py96} already proves that \textsc{Magma Rank} is in (and complete for) the class of problems decidable by a polynomial time Turing machine with $O(n \log n)$ nondeterministic bits.
+We have nevertheless included the fact that \textsc{Magma Rank} is in $\NP$ to highlight the general strategy for proving these upper bounds for each class of algebraic structure.
 
 Although the precise relationship between $\FOLL$ and $\L$ is unknown, $\FOLL$ does not contain any class containing the \textsc{Parity} problem.
 Since \textsc{Parity} is in $\L$, we know $\FOLL$ does not contain $\L$.
