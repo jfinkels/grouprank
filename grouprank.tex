@@ -98,62 +98,40 @@
 % Foreword
 %
 % context (focus on anyone) why now? - current situation, and why the need is so important
-An efficient algorithm computing the rank of an algebraic structure (that is, the minimum number of elements required to generate all other elements) benefits mathematicians, who use numerical algebra systems for research, cryptographers, who rely on algebraic systems for proofs of security, and theoretical computer scientists, who seek to understand which problems can be solved in a particular model of computation.
+An efficient algorithm computing the rank of a finite algebraic structure (that is, the minimum number of elements required to generate all other elements) benefits mathematicians, who use numerical algebra systems for research, cryptographers, who rely on algebraic systems for proofs of security, and theoretical computer scientists, who seek to understand which problems can be solved in a particular model of computation.
+If the structure is, for example, a finite group, then we can represent this structure in one of two reasonable ways.
+First, we can represent it as a subset of elements along with a set of equality relations demonstrating how the group operation behaves (known as a group presentation).
+Second, we can represent it as a table of values for the binary operation under each pair of input elements (known as a Cayley table or multiplication table).
+These representations offer a tradeoff between representation size and the complexity of deciding properties of the group: the latter representation may be exponentially larger than the former, so an efficient algorithm for the latter may not necessarily be efficient for the former.
+
+Consider the situation when the algebraic structure is the finite cyclic group of order $n$.
+A natural presentation of this group is $\langle a \, | \, a^n = 1 \rangle$.
+Since each element in this group can be represented by $O(\log n)$ bits, the total size of this representation is $O(\log n)$ bits.
+In contrast, the Cayley table for this group requires $O(n^2 \log n)$ bits.
+Thus, in certain cases, if $m$ represents the size of the input, an algorithm running in time $f(m)$ on inputs of the first form runs in time $O(f(\log m))$ on inputs of the second form.
+We can use this to our advantage to construct more efficient algorithms for algebraic problems.
+
 % need (focus on readers) why you? - why this is relevant to the reader, and why something needed to be done
+%
 %%% relevant existing work, given as part of the need
+For quasigroups, the previous best algorithm for computing the rank requires polynomial time in addition to a polylogarithmic amount of nondeterministic bits.
 For groups, the previous best algorithm for computing the rank requires a polylogarithmic amount of space, which induces a superpolynomial time (hence, inefficient) algorithm.
-\todo{Add information about the complexity of the problem when the structure is provided as a presentation (that is, a set of generators and a set of relations) instead of the full Cayley table.}
+Only for certain classes of finite groups was there a polynomial time algorithm.
 % task (focus on author) why me? - what was undertaken to address the need
-We reduce the best upper bound on the complexity of the rank problem for semigroups, quasigroups, and groups and provide a theoretically efficient algorithm for the latter two.
+We reduce the best upper bound on the complexity of the rank problem for quasigroups and groups and provide a theoretically efficient algorithm for the latter.
 % object (focus on document) why this document - what the document covers
-This paper proves that with short certificates of correctness, the rank problem for quasigroups and groups can be verified by highly restricted models of computation.
+This paper proves that with short certificates of correctness, the rank problem for quasigroups and groups can be verified by highly restricted models of computation, and demonstrates how the same strategy can be applied to semigroups and magmas in general.
 
 % Summary
 %
 % findings (focus on author) what? - what the work revealed when performing the task
-We prove that the problem of deciding whether the rank of a finite quasigroup, given as a Cayley table, is smaller than a specified number is decidable by a circuit of depth $O(\log \log n)$ augmented with $O(\log^2 n)$ nondeterministic bits.
-Furthermore, if the quasigroup is a group the problem is also decidable by a Turing machine using $O(\log n)$ space and $O(\log^2 n)$ bits of nondeterminism.
-For semigroups, we prove that the problem is in $\NL$, a weaker upper bound.
+We prove that the problem of deciding whether the rank of a finite quasigroup, given as a Cayley table, is smaller than a specified number is decidable by a circuit of depth $O(\log \log n)$ augmented with $O(\log^2 n)$ nondeterministic bits (the complexity class of problems decidable by such circuits is denoted $\bFOLL$).
+Furthermore, if the quasigroup is a group, then the problem is also decidable by a Turing machine using $O(\log n)$ space and $O(\log^2 n)$ bits of nondeterminism (the complexity class for problems like this is denoted $\bL$).
+The general strategy is to reduce the problem of computing rank to the problem of computing membership; we compute the rank of a group by guessing a small set of candidate generators, then deciding whether each other element in the group can be generated from that set.
+For the sake of completeness, we show how this strategy applies to semigroups and magmas in general, though the results are less interesting there because these algebraic structures lack two things that the groups and quasigroups have: small generating sets and efficient membership algorithms.
+The problem is in $\NL$ for semigroups and in $\NP$ for general magmas.
 \autoref{tab:summary} summarizes these improvements, and \autoref{fig:inclusions} demonstrates graphically why these improvements are so significant.
-
-
--------------
-
-\todo{incorporate these paragraphs in the summary somewhere}
-
-This theorem improves the previous best upper bounds for these problems.
-Previously, the best upper bound for \textsc{Quasigroup Rank} was $\bP$ \autocite[Section~5]{py96} and for \textsc{Group Rank} was $\L^2$ \autocite{lsz77} (see also \cite[Proposition~6]{at06} for a brief description of the algorithm).
-We could not find an explicit upper bound for \textsc{Semigroup Rank}, but other papers have hinted that the problem is in $\NP$.
-Our theorem is an improvement because
-\begin{equation*}
-  (\bFOLL \cap \bL) \subseteq \NL \subseteq (\L^2 \cap \P).
-\end{equation*}
-This also improves the result of \cite[Theorem~7]{at06}, which shows that \textsc{Group Rank} restricted to nilpotent groups is in $\P$.
-%% \autoref{fig:inclusions} shows the chain of complexity class inclusions that demonstrates how great an improvement this is.
-However, the relationship between $\FOLL$ and $\L$ remains unknown (the best inclusion known is the uninteresting inclusion $\FOLL \subseteq \AC^1$), so the relationship between $\bFOLL$ and $\bL$ is unknown as well.
-
-%% This is an improvement because
-%% \begin{align*}
-%%   (\bFOLL \cap \bL) & \subseteq \bL \subseteq \NL \subseteq \AC^1 \subseteq \bAC^1, \\ %\subseteq \bNC^2 \subseteq \L^2,
-%%   (\bFOLL \cap \bL) & \subseteq \bFOLL \subseteq \bAC^1, %\subseteq \bNC^2 \subseteq \L^2.
-%% \end{align*}
-%% and
-%% $$
-%% \bAC^1 \subseteq \bNC^2 \subseteq \L^2.
-%% $$
-%% (In the last inclusion we use the fact that $\bNC^2 \subseteq \L^2$ \cite[Lemma~3.1]{wolf94}.)
-
-Contrast the complexity of \textsc{Group Rank} with the complexity of computing the rank of a subgroup of a free group.
-The latter problem is $\P$-complete, so is not even in $\NC$ unless $\NC = \P$ \autocite[Theorem~4.9]{am84} (see also \autocite[Problem~A.8.11]{ghr95}).
-
--------------
-
-
-% conclusion (focus on readers) so what? - what the findings mean for the audience
-These models of computation are extremely limited in computational power, and the latter two can be simulated by a deterministic Turing machine in polynomial time.
-% perspective (focus on anyone) what now? - what should be done next
-Using limited nondeterminism and restrictive models of computation as verifiers may also be useful in examining other algebraic problems.
-
+(We could not find an explicit upper bound for magmas and semigroups, but other papers imply that the problems are in $\NP$.)
 \begin{table}
   \caption{\label{tab:summary}We improve algorithms for computing rank of finite algebraic structures.}
   \begin{center}
@@ -166,7 +144,6 @@ Using limited nondeterminism and restrictive models of computation as verifiers 
     \end{tabular}
   \end{center}
 \end{table}
-
 \begin{figure}
   \caption{\label{fig:inclusions}$\bFOLL \cap \bL$ is a much smaller complexity class than both $\L^2$ and $\P$.}
   \begin{center}
@@ -196,7 +173,32 @@ Using limited nondeterminism and restrictive models of computation as verifiers 
   \end{center}
 \end{figure}
 
-The limited nondeterminism lens suggests some opportunities for further research in computational algebra.
+% conclusion (focus on readers) so what? - what the findings mean for the audience
+These are improvements on the previous best upper bounds for these problems.
+Previously, the best upper bound for computing the rank of a quasigroup given as a Cayley table was $\bP$ \autocite[Section~5]{py96} and for groups, $\L^2$ \autocite{lsz77} (see also \cite[Proposition~6]{at06} for a brief description of the algorithm).
+Our results are an improvement because
+\begin{equation*}
+  (\bFOLL \cap \bL) \subseteq \NL \subseteq (\L^2 \cap \P).
+\end{equation*}
+%% This is an improvement because
+%% \begin{align*}
+%%   (\bFOLL \cap \bL) & \subseteq \bL \subseteq \NL \subseteq \AC^1 \subseteq \bAC^1, \\ %\subseteq \bNC^2 \subseteq \L^2,
+%%   (\bFOLL \cap \bL) & \subseteq \bFOLL \subseteq \bAC^1, %\subseteq \bNC^2 \subseteq \L^2.
+%% \end{align*}
+%% and
+%% $$
+%% \bAC^1 \subseteq \bNC^2 \subseteq \L^2.
+%% $$
+%% (In the last inclusion we use the fact that $\bNC^2 \subseteq \L^2$ \cite[Lemma~3.1]{wolf94}.)
+This also improves the result of \cite[Theorem~7]{at06}, which shows that computing the rank of a nilpotent group is in $\P$.
+However, the relationship between $\FOLL$ and $\L$ remains unknown (the best inclusion known is the uninteresting inclusion $\FOLL \subseteq \AC^1$), so the relationship between $\bFOLL$ and $\bL$ is unknown as well.
+Still, for groups, the problem is decidable by an extremely restrictive computational model, and so can be simulated by a deterministic Turing machine in polynomial time.
+Finally, contrast the complexity of the rank problem for groups with the complexity of computing the rank of a subgroup of a free group.
+The latter problem is $\P$-complete, so is not even in $\NC$ unless $\NC = \P$ \autocite[Theorem~4.9]{am84} (see also \autocite[Problem~A.8.11]{ghr95}).
+
+% perspective (focus on anyone) what now? - what should be done next
+Using limited nondeterminism and restrictive models of computation as verifiers may also be useful in examining other problems.
+The limited nondeterminism lens suggests some opportunities for further research in computational algebra specifically, though it has seen some recent success in other subfields of theoretical computer science (see \autocite{gottlob13}, for example).
 Can computing the rank of a quasigroup, a problem more general than computing the rank of a group, also be computed by a logarithmic space Turing machine using $O(\log^2 n)$ nondeterminism?
 Is there a reduction between the problem of computing the rank of a quasigroup and the problem of deciding whether two quasigroups are isomorphic?
 Finally, is the problem of computing the shortest generating sequence for a quasigroup strictly more difficult than the problem of computing the rank of a quasigroup?
@@ -214,7 +216,7 @@ $\bL$ is the subclass of $\NL$ in which the nondeterministic Turing machine uses
 $\FOLL$ is the class of languages decidable by a $\L$-uniform family of circuits with polynomial size, unbounded fan-in, and $O(\log \log n)$ depth.
 $\bFOLL$ is the class of languages decidable by $\FOLL$ circuits that have been augmented with $O(\log^2 n)$ nondeterministic bits (gates with no inputs and one output).
 $\AC_0$ and $\bAC_0$ are the restrictions of $\FOLL$ and $\bFOLL$, respectively, to depth $O(1)$.
-In general, the class $\beta_2 \mathcal{C}$ is the class of languages decidable by $\mathcal{C}$ machines augmented with $O(\log^2 n)$ bits of nondeterminism, or equivalently, the class of languages verifiable by $\mathcal{C}$ machines when given a certificate of length $O(\log^2 n)$.
+In general, the class $\beta_2 \mathcal{C}$ ($\mathsf{N} \mathcal{C}$, respectively) is the class of languages decidable by $\mathcal{C}$ machines augmented with $O(\log^2 n)$ bits (polynomial bits, respectively) of nondeterminism, or equivalently, the class of languages verifiable by $\mathcal{C}$ machines when given a certificate of length $O(\log^2 n)$ (polynomial in $n$, respectively).
 
 If $L_1$ and $L_2$ are languages, there is a \emph{$\bAC_0$ conjunctive truth-table reduction} from $L_1$ to $L_2$, denoted $L_1 \leq^{\bAC_0}_{ctt} L_2$, if there is a function $f$ and a polynomial $p$ such that
 \begin{itemize}
@@ -668,6 +670,8 @@ That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigro
   \end{enumerate}
   For groups the problem is also in $\bFOLL$ since a group is a quasigroup.
 \end{proof}
+
+\todo{\autocite{py96} essentially shows that Magma Rank is complete for $\NP[k \log n]$.}
 
 Although the precise relationship between $\FOLL$ and $\L$ is unknown, $\FOLL$ does not contain any class containing the \textsc{Parity} problem.
 Since \textsc{Parity} is in $\L$, we know $\FOLL$ does not contain $\L$.
