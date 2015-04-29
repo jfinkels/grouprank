@@ -62,6 +62,7 @@
 \declaretheorem[numberwithin=section]{theorem}
 \declaretheorem[numberlike=theorem,style=definition]{example}
 \declaretheorem[numberlike=theorem]{lemma}
+\declaretheorem[numberlike=theorem]{proposition}
 \declaretheorem[numberlike=theorem]{corollary}
 
 %% Custom commands are declared here.
@@ -266,33 +267,8 @@ If $L_1$ and $L_2$ are languages, there is a \emph{$\bAC_0$ conjunctive truth-ta
   We also require the fact that logarithmic space computable functions compose.
 \end{proof}
 
-%% There is a \emph{$\NAC_0$ disjunctive truth-table reduction} from $L_1$ to $L_2$, denoted $L_1 \leq^{\NAC_0}_{dtt} L_2$, if there is a function $f$ and a polynomial $p$ such that
-%% \begin{itemize}
-%% \item $f$ is computable in $\NAC_0$,
-%% \item $f(x)$ outputs $(y_1, \dotsc, y_{p(n)})$ where $n$ is the length of $x$,
-%% \item $x \in L_1$ if and only if $\bigvee_{i = 1}^{p(n)} y_i \in L_2$.
-%% \end{itemize}
-
-%% \begin{lemma}\label{lem:dtt}
-%%   Suppose $L_1$ and $L_2$ are languages and $L_1 \leq^{\NAC_0}_{dtt} L_2$.
-%%   If $L_2$ is in $\NL$, then $L_1$ is in $\NL$.
-%% \end{lemma}
-%% \begin{proof}
-%%   This is essentially the same as item 2 of the previous lemma, except instead of looping over each of the $y_i$s, the machine $M_1$ can simply nondeterministically choose one $y_i$ and simulate $M_2$ on input $y_i$.
-%%   %% Let $f$ be the $\NAC_0$ circuit computing the reduction and let $q$ be the polynomial bounding the length of its output.
-%%   %% Suppose $L_2$ is in $\NL$.
-%%   %% Let $M_2$ be the nondeterministic Turing machine that decides $L_2$ with logarithmic space.
-%%   %% To decide $L_1$, define the nondeterministic Turing machine $M_1$ as follows.
-%%   %% On input $x$ of length $n$,
-%%   %% \begin{enumerate}
-%%   %% \item nondeterministically choose a binary string $w$ and a binary integer $i$ in $\{1, \dotsc, q(n)\}$,
-%%   %% \item simulate $f(x, w)$ to produce $(y_1, \dotsc, y_{q(n)})$,
-%%   %% \item accept if and only if $M_2(y_i)$ accepts.
-%%   %% \end{enumerate}
-
-%%   %% This machine requires only logarithmic space because it can simulate $f$ in logarithmic space and $M_2$ in logarithmic space (since functions computable in logarithmic space compose).
-%%   %% The correctness of the machine follows from the correctness of $f$ and $M_2$.
-%% \end{proof}
+Finally, if $L$ is a language and $F$ is a function, there is a \emph{nonadaptive $\AC_0$ Turing reduction} from $L$ to $F$ if there is an $\AC_0$ function $g$ and an $\AC_0$ circuit $C$ such that $x \in L$ if and only if $C(x, F(y_1), \dotsc, F(y_m)) = 1$, where $(y_1, \dotsc, y_m)$ is the output of $g(x)$ and $m$ is bounded by a polynomial in $|x|$.
+The function $g$ is called the \emph{generator of the reduction} and the circuit $C$ is called the \emph{evaluator of the reduction}.
 
 \subsection{Algebra}
 
@@ -656,8 +632,6 @@ That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigro
   \end{equation*}
 \end{proof}
 
-\todo{Does the reduction go the other way? We have $g \in \gen{S}$ if and only if $\rank(\gen{S}) = \rank(\gen{S \cup \{h\}})$}
-
 \todo{Show the probability of success for a randomized reduction to the membership problem for each of these algebraic structures.}
 
 \begin{theorem}\label{thm:rank}
@@ -683,7 +657,27 @@ That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigro
 A slight generalization of \autocite[Theorem~7]{py96} already proves that \textsc{Magma Rank} is in (and complete for) the class of problems decidable by a polynomial time Turing machine with $O(n \log n)$ nondeterministic bits.
 We have nevertheless included the fact that \textsc{Magma Rank} is in $\NP$ to highlight the general strategy for proving these upper bounds for each class of algebraic structure.
 
-Although the precise relationship between $\FOLL$ and $\L$ is unknown, $\FOLL$ does not contain any class containing the \textsc{Parity} problem.
+We can almost show a reduction in the opposite direction of \autoref{lem:ranktomem}.
+The \textsc{Submagma Rank} problem (a search problem) is defined as follows.
+Given the Cayley table of a magma and a set of magma elements $S$, output the rank of $\gen{S}$.
+(The \textsc{Submagma Rank} problem is more general than the \textsc{Magma Rank} problem: the latter reduces to the former by choosing $S = G$.)
+
+\begin{proposition}
+  \textsc{Submagma Membership} reduces to the \textsc{Submagma Rank} function by a nonadaptive $\AC_0$ Turing reduction making exactly two queries.
+\end{proposition}
+\begin{proof}
+  We know that for any magma $G$, any magma element $h$, and any subset of magma elements $S$,
+  \begin{equation*}
+    h \in \gen{S} \iff \rank(\gen{S}) = \rank(\gen{S \cup \{h\}}).
+  \end{equation*}
+  (This is analogous to the corresponding situation in linear algebra: a vector $h$ is in the span of a set of vectors $S$ exactly when the rank of $S$ does not increase when $h$ is added to $S$.)
+  Thus the generator of the reduction is the function $(G, h, S) \mapsto ((G, S), (G, S \cup \{h\}))$ and the evaluator of the reduction compares $\rank({S})$ to $\rank(\gen{S \cup \{h\}})$ for equality.
+\end{proof}
+
+However, this reduction is not satisfying, because the \textsc{Submagma Rank} is essentially the \textsc{Magma Rank} problem when the input is provided as a set of generators instead of as a Cayley table.
+As stated in the reduction, this representation may be exponentially smaller than the Cayley table representation.
+
+Finally, although the precise relationship between $\FOLL$ and $\L$ is unknown, $\FOLL$ does not contain any class containing the \textsc{Parity} problem.
 Since \textsc{Parity} is in $\L$, we know $\FOLL$ does not contain $\L$.
 Stated in a slightly more general way, $\FOLL$ cannot be hard under $\AC^0$ many-one reductions for any complexity class that contains \textsc{Parity} \cite[Proposition~2.1]{bklm01}.
 This is true even when the circuit is augmented with a polylogarithmic number of nondeterministic bits \cite[Section~4]{ctw13}.
