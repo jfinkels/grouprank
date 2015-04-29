@@ -6,3 +6,4 @@ https://arxiv.org:
 - Change `backend=biber` to `backend=bibtex` in biblatex options.
 - Removes commented fields from BibTeX bibliography file.
 - Moves copyright information to first page.
+- Removes "Work-in-progress" watermark.
