@@ -1,37 +1,87 @@
+%% grouprank.tex - Computing rank with limited nondeterminsm
+%%
+%% Copyright 2014, 2015 Jeffrey Finkelstein.
+%%
+%% This LaTeX markup document is made available under the terms of the Creative
+%% Commons Attribution-ShareAlike 4.0 International License,
+%% https://creativecommons.org/licenses/by-sa/4.0/.
 \documentclass{article}
 %% required for arxiv
 \pdfoutput=1
 \usepackage{amsmath}
+\usepackage{amssymb}
 %% This must come before hyperref.
 \usepackage{amsthm}
+%% This is strongly recommended by biblatex.
+\usepackage[english]{babel}
+\usepackage[backend=bibtex]{biblatex}
+\usepackage[T1]{fontenc}
+%% This must come before csquotes.
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+%% This is strongly recommended by biblatex.
+\usepackage{csquotes}
 %% This must come before hyperref.
 \usepackage{thmtools}
 %% This must come before complexity.
 \usepackage{hyperref}
-%% This is strongly recommended by biblatex.
-\usepackage[english]{babel}
-%% This is strongly recommended by biblatex.
-\usepackage{csquotes}
-\usepackage[backend=bibtex]{biblatex}
 \usepackage{complexity}
+\usepackage[firstpage]{draftwatermark}
+\usepackage{microtype}
 \usepackage{textcomp}
 \usepackage{tikz}
 
-\hypersetup{pdftitle={Computing group rank with limited nondeterminism}, pdfauthor={Jeffrey Finkelstein}}
+\usetikzlibrary{trees}
 
-\addbibresource{references.bib}
+\LoadMicrotypeFile{cmr}
+\SetProtrusion
+    [load=lmr-T1]
+    {encoding=T1, family=lmr}
+    {
+      \textquotedblright = {,1000},
+      \textquotedblleft = {1000,},
+      {'} = {,1000},
+      {,} = {,1000},
+      {:} = {,1000},
+      {;} = {,1000},
+      {.} = {,1000}
+    }
 
-\declaretheorem[]{theorem}
+
+%% Set the ``work-in-progress'' watermark for the first page.
+\SetWatermarkLightness{0.9}
+\SetWatermarkText{Work-in-progress}
+\SetWatermarkFontSize{3.5cm}
+
+%% Set the title and author of the PDF file.
+\hypersetup{pdftitle={Computing rank of finite algebraic structures with limited nondeterminism}, pdfauthor={Jeffrey Finkelstein}}
+
+%% Declare the bibliography file.
+\addbibresource{grouprank.bib}
+
+%% Declare theorem-like environments.
+\declaretheorem[numberwithin=section]{theorem}
+\declaretheorem[numberlike=theorem,style=definition]{example}
+\declaretheorem[numberlike=theorem]{lemma}
+\declaretheorem[numberlike=theorem]{proposition}
 \declaretheorem[numberlike=theorem]{corollary}
 
+%% Custom commands are declared here.
 \newcommand{\email}[1]{\textlangle\href{mailto:#1}{\nolinkurl{#1}}\textrangle}
+\newcommand{\todo}[1]{\textbf{TODO #1}}
+\newcommand{\gen}[1]{\langle #1 \rangle}
+\newcommand{\ceil}[1]{\lceil #1 \rceil}
+\DeclareMathOperator{\cube}{cube}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\Path}{Path}
 
-% redefine footnote so it has no reference and no number
+%% Redefine the footnote environment so it has no reference and no number.
 \long\def\symbolfootnote#1{\begingroup%
 \def\thefootnote{\fnsymbol{footnote}}\footnotetext{#1}\endgroup}
 
-\title{Computing group rank \\ with limited nondeterminism}
-\author{Jeffrey~Finkelstein}
+%% Define the author, title, and date for the document.
+\author{Jeffrey~Finkelstein\\ Computer Science Department, Boston University}
+\title{Computing rank of finite algebraic structures \\ with limited nondeterminism}
 %\date{\today}
 
 \begin{document}
@@ -39,105 +89,68 @@
 \maketitle
 
 \symbolfootnote{%
-  Copyright 2014 Jeffrey Finkelstein \email{jeffreyf@bu.edu}.
-  This work is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License.
-  To view a copy of this license, visit the website \mbox{\url{https://creativecommons.org/licenses/by-sa/4.0/}}.
-  The \LaTeX{} markup that generated this document can be downloaded from its website \mbox{\url{https://github.com/jfinkels/grouprank}}.
+  Copyright 2014, 2015 Jeffrey~Finkelstein \email{jeffreyf@bu.edu}.
+
+  This document is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License, which is available at \mbox{\url{https://creativecommons.org/licenses/by-sa/4.0/}}.
+  The \LaTeX{} markup that generated this document can be downloaded from its website at \mbox{\url{https://github.com/jfinkels/grouprank}}.
   The markup is distributed under the same license.
 }
 
 \section{Introduction}
+% Foreword
+%
+% context (focus on anyone) why now? - current situation, and why the need is so important
+An efficient algorithm computing the rank of a finite algebraic structure (that is, the minimum number of elements required to generate all other elements) benefits mathematicians, who use numerical algebra systems for research, cryptographers, who rely on algebraic systems for proofs of security, and theoretical computer scientists, who seek to understand which problems can be solved in a particular model of computation.
+If the structure is, for example, a finite group, then we can represent this structure in one of two reasonable ways.
+First, we can represent it as a subset of elements along with a set of equality relations demonstrating how the group operation behaves (known as a group presentation).
+Second, we can represent it as a table of values for the binary operation under each pair of input elements (known as a Cayley table or multiplication table).
+These representations offer a tradeoff between representation size and the complexity of deciding properties of the group: the latter representation may be exponentially larger than the former, so an efficient algorithm for the latter may not necessarily be efficient for the former.
 
-An efficient algorithm computing the rank of a group (that is, the size of a minimum generating subset) benefits mathematicians, who use numerical algebra systems for research, cryptographers, who rely on algebraic systems for proofs of security, and theoretical computer scientists, who seek to understand which problems can be solved in a particular model of computation.
-Before now, the best algorithm for computing the rank of a group required a polylogarithmic amount of space, which induces a superpolynomial (hence, inefficient) algorithm.
-We reduced the best upper bound on the complexity of the group rank problem and provide a theoretically efficient algorithm for it.
-This paper proves that with very short certificates of correctness, the group rank problem can be verified by highly restricted models of computation.
+Consider the situation when the algebraic structure is the finite cyclic group of order $n$.
+A natural presentation of this group is $\langle a \, | \, a^n = 1 \rangle$.
+Since each element in this group can be represented by $O(\log n)$ bits, the total size of this representation is $O(\log n)$ bits.
+In contrast, the Cayley table for this group requires $O(n^2 \log n)$ bits.
+Thus, in certain cases, if $m$ represents the size of the input, an algorithm running in time $f(m)$ on inputs of the first form runs in time $O(f(\log m))$ on inputs of the second form.
+We can use this to our advantage to construct more efficient algorithms for algebraic problems.
 
-We prove that the problem of deciding whether the rank of a finite group, given as a multiplication table, is smaller than a specified number is decidable not only by a circuit of depth $O(\log \log n)$ augmented with $O(\log^2 n)$ nondeterministic bits, but also by a Turing machine using $O(\log n)$ space and $O(\log^2 n)$ bits of nondeterminism.
-These models of computation are extremely limited in computational power, and hence can be simulated by a deterministic Turing machine in polynomial time.
-Using limited nondeterminism and restrictive models of computation as verifiers may be useful in examining other algebraic problems.
+% need (focus on readers) why you? - why this is relevant to the reader, and why something needed to be done
+%
+%%% relevant existing work, given as part of the need
+For quasigroups, the previous best algorithm for computing the rank requires polynomial time in addition to a polylogarithmic amount of nondeterministic bits.
+For groups, the previous best algorithm for computing the rank requires a polylogarithmic amount of space, which induces a superpolynomial time (hence, inefficient) algorithm.
+Only for certain classes of finite groups was there a polynomial time algorithm.
+% task (focus on author) why me? - what was undertaken to address the need
+We reduce the best upper bound on the complexity of the rank problem for quasigroups and groups and provide a theoretically efficient algorithm for the latter.
+% object (focus on document) why this document - what the document covers
+This paper proves that with short certificates of correctness, the rank problem for quasigroups and groups can be verified by highly restricted models of computation, and demonstrates how the same strategy can be applied to semigroups and magmas in general.
 
-\section{Preliminaries}
-
-\L{} is the class of languages decidable by a deterministic Turing machine that uses $O(\log n)$ space on inputs of length $n$.
-$\L^2$ is the class of languages decidable by a deterministic Turing machine that uses $O(\log^2 n)$ space.
-\NL{} is the class of languages decidable by a nondeterministic Turing machine that uses $O(\log n)$ space.
-$\bL$ is the subclass of \NL{} in which the nondeterministic Turing machine uses at most $O(\log^2 n)$ nondeterministic bits.
-\FOLL{} is the class of languages decidable by a \L-uniform family of circuits with polynomial size, unbounded fan-in, and $O(\log \log n)$ depth.
-$\bFOLL$ is the class of languages decidable by \FOLL{} circuits that have been augmented with $O(\log^2 n)$ nondeterministic bits (gates with no inputs and one output).
-In general, the class $\beta_2 \mathcal{C}$ is the class of languages decidable by $\mathcal{C}$ machines augmented with $O(\log^2 n)$ bits of nondeterminism.
-%%$\NC^2$ is the class of languages decidable by a \L-uniform family of circuits with polynomial size, fan-in 2, and $O(\log^2 n)$ depth.
-
-A \emph{quasigroup} is a set $G$ with a binary operation $\cdot$ such that for each $a$ and $b$ in $G$ there exist unique elements $x$ and $y$ in $G$ such that $a \cdot x = b$ and $y \cdot a = b$.
-(In other words, each quasigroup element appears exactly once in each row and each column of the multiplication table of $G$.)
-If the quasigroup is nonempty and associative, then it is a \emph{group}.
-A \emph{parenthesization} $P$ of a sequence of quasigroup elements $(g_0, \dotsc, g_k)$ is a binary tree that has the quasigroup elements as its leaves (in the order indicated by the sequence).
-The \emph{parenthesized product} of a sequence of quasigroup elements $(g_0, \dotsc, g_k)$ with parenthesization $P$, denoted $P(g_0, \dotsc, g_k)$, is the quasigroup element that results from performing the quasigroup product in the order indicated by the parenthesization.
-A \emph{generating sequence of size $k + 1$} of a quasigroup $G$ is a finite sequence $(g_0, \dotsc, g_k)$ with a corresponding parenthesization $P$ such that
-$$
-G = \left\{P(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k}) \, \middle| \, \epsilon_i \in \{0, 1\} \text{ for each } i \right\}
-$$
-The \emph{rank} of a quasigroup is the length of a minimum generating sequence.
-If the quasigroup is a group, the operation is associative, so the parenthesization is superfluous, and the rank is simply the size of a minimum generating set.
-If $S$ is a subset of group elements, the \emph{subgroup generated by $S$}, denoted $\langle S \rangle$, is the set of all group elements that can be expressed as a product of any number of elements of $S$.
-
-\section{Efficient computation of quasigroup rank}
-
-The \textsc{Quasigroup Rank} problem is defined as follows.
-Given the multiplication table of a quasigroup and an integer $k$ in binary, decide whether the rank of the quasigroup is $k$ or less.
-The \textsc{Group Rank} problem is defined similarly.
-
-The \textsc{Quasigroup Isomorphism} problem is the problem of determining whether there is a bijection between two quasigroups (again, given as multiplication tables) that preserves the quasigroup operation.
-This problem is in $\bFOLL$ \autocite[Theorem~3.4]{ctw13}.
-Implicit in that algorithm is a $\bFOLL$ algorithm for \textsc{Quasigroup Rank}.
-
-\begin{theorem}[{Implicit in \autocite[Theorem~3.4]{ctw13}}]
-  \textsc{Quasigroup Rank} is in $\bFOLL$.
-\end{theorem}
-\begin{proof}
-  By \autocite[Theorem~3.3]{ctw13}, each finite quasigroup with $n$ elements has a generating sequence of size $O(\log n)$ with a parenthesization of depth $O(\log \log n)$.
-  The $\bFOLL$ algorithm works as follows on input quasigroup $G$ with $n$ elements (given as a multiplication table) and integer $k$, guaranteed to be in $O(\log n)$.
-  \begin{enumerate}
-  \item Nondeterministically choose a sequence of quasigroup elements $(g_0, \dotsc, g_k)$ and a parenthesization $P$ of depth $O(\log k)$.
-  \item For each quasigroup element $a$, in parallel:
-    \begin{enumerate}
-    \item For each binary sequence $(\epsilon_1, \dotsc, \epsilon_k) \in \{0, 1\}^k$, in parallel:
-      \begin{enumerate}
-      \item Check if $P\left(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k}\right) = a$.
-      \end{enumerate}
-    \item Output $1$ if and only if some $(\epsilon_1, \dotsc, \epsilon_k)$ produces $a$.
-    \end{enumerate}
-  \item Output $1$ if and only if all elements of the quasigroup were produced.
-  \end{enumerate}
-  Since each quasigroup element can be represented using $O(\log n)$ bits, and since $k$ is in $O(\log n)$, this algorithm uses $O(\log^2 n)$ bits of nondeterminism to guess the generating sequence and parenthesization.
-  %% TODO define FOLL and beta2 FOLL
-  In step 2, there are $n$ group elements so we create $n$ parallel subcircuits.
-  In step 2(a), since $k$ is in $O(\log n)$ there are a polynomial number of binary sequences of length $k$, so we create a polynomial number of parallel subcircuits.
-  The innermost subcircuit that decides whether $P(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k}) = a$ requires a $O(\log \log n)$ depth circuit to compute the parenthesized product, plus a constant depth circuit to perform the equality comparison.
-  In step 2(b), we use a single \textsc{or} gate (with unbounded fan-in).
-  In step 3, we use a single \textsc{and} gate (with unbounded fan-in).
-  Overall, the total size of this circuit is polynomial in $n$ and the depth is $O(\log \log n)$.
-  The correctness of the circuit follows from the fact stated at the beginning of the proof, so we conclude that \textsc{Quasigroup Rank} is in $\bFOLL$.
-\end{proof}
-
-This theorem gives an immediate improvement over the previous best upper bound for \textsc{Group Rank}, which was $\L^2$ \cite{lsz77} (see \cite[Proposition~3]{at06} for a brief description of the algorithm).
-%$\L^2$ is the class of languages decidable by a deterministic Turing machine using $O(\log^2 n)$ space.
-
-\begin{corollary}\label{cor:grouprank}
-  \textsc{Group Rank} is in $\bFOLL \cap \bL$.
-\end{corollary}
-
-\autoref{fig:inclusions} shows the chain of inclusions that demonstrates how great an improvement this is.
-This also immediately improves the result of \cite[Theorem~7]{at06}, which shows \textsc{Nilpotent Group Rank} is in \P, since
-$$
-(\bFOLL \cap \bL) \subseteq \NL \subseteq \P.
-$$
-However, the relationship between \FOLL{} and \L{} remains unknown (the best inclusion known is the uninteresting inclusion $\FOLL \subseteq \AC^1$), so the relationship between $\bFOLL$ and $\bL$ is unknown as well.
-
+% Summary
+%
+% findings (focus on author) what? - what the work revealed when performing the task
+We prove that the problem of deciding whether the rank of a finite quasigroup, given as a Cayley table, is smaller than a specified number is decidable by a circuit of depth $O(\log \log n)$ augmented with $O(\log^2 n)$ nondeterministic bits (the complexity class of problems decidable by such circuits is denoted $\bFOLL$).
+Furthermore, if the quasigroup is a group, then the problem is also decidable by a Turing machine using $O(\log n)$ space and $O(\log^2 n)$ bits of nondeterminism (the complexity class for problems like this is denoted $\bL$).
+The general strategy is to reduce the problem of computing rank to the problem of computing membership; we compute the rank of a group by guessing a small set of candidate generators, then deciding whether each other element in the group can be generated from that set.
+For the sake of completeness, we show how this strategy applies to semigroups and magmas in general, though the results are less interesting there because these algebraic structures lack two things that the groups and quasigroups have: small generating sets and efficient membership algorithms.
+The problem is in $\NL$ for semigroups and in $\NP$ for general magmas.
+\autoref{tab:summary} summarizes these improvements, and \autoref{fig:inclusions} demonstrates graphically why these improvements are so significant.
+(We could not find an explicit upper bound for magmas and semigroups, but other papers imply that the problems are in $\NP$.)
+\begin{table}
+  \caption{\label{tab:summary}We improve algorithms for computing rank of finite algebraic structures.}
+  \begin{center}
+    \begin{tabular}{r l l}
+      & old & new \\[5pt]
+      magma & $\NP$ & $\NP$ \\
+      semigroup & $\NP$ & $\NL$ \\
+      quasigroup & $\bP$ \autocite{py96} & $\bFOLL$ \\
+      group & $\L^2$ \autocite{lsz77} & $\bFOLL \cap \bL$
+    \end{tabular}
+  \end{center}
+\end{table}
 \begin{figure}
-  \caption{\label{fig:inclusions}$\bFOLL \cap \bL$ is much smaller than both $\L^2$ and \P.}
+  \caption{\label{fig:inclusions}$\bFOLL \cap \bL$ is a much smaller complexity class than both $\L^2$ and $\P$.}
   \begin{center}
     \begin{tikzpicture}
+      \node at (2, 6) (i) {$\bP$};
       \node at (2, 4) (h) {$\P$};
       \node at (0, 6) (g) {$\L^2$};
       \node at (0, 5) (f) {$\bNC^2$};
@@ -156,10 +169,19 @@ However, the relationship between \FOLL{} and \L{} remains unknown (the best inc
       \draw (a) to (x);
       \draw (x) to (e);
       \draw (d) to (h);
+      \draw (f) to (i);
+      \draw (h) to (i);
     \end{tikzpicture}
   \end{center}
 \end{figure}
 
+% conclusion (focus on readers) so what? - what the findings mean for the audience
+These are improvements on the previous best upper bounds for these problems.
+Previously, the best upper bound for computing the rank of a quasigroup given as a Cayley table was $\bP$ \autocite[Section~5]{py96} and for groups, $\L^2$ \autocite{lsz77} (see also \cite[Proposition~6]{at06} for a brief description of the algorithm).
+Our results are an improvement because
+\begin{equation*}
+  (\bFOLL \cap \bL) \subseteq \NL \subseteq (\L^2 \cap \P).
+\end{equation*}
 %% This is an improvement because
 %% \begin{align*}
 %%   (\bFOLL \cap \bL) & \subseteq \bL \subseteq \NL \subseteq \AC^1 \subseteq \bAC^1, \\ %\subseteq \bNC^2 \subseteq \L^2,
@@ -170,31 +192,496 @@ However, the relationship between \FOLL{} and \L{} remains unknown (the best inc
 %% \bAC^1 \subseteq \bNC^2 \subseteq \L^2.
 %% $$
 %% (In the last inclusion we use the fact that $\bNC^2 \subseteq \L^2$ \cite[Lemma~3.1]{wolf94}.)
+This also improves the result of \cite[Theorem~7]{at06}, which shows that computing the rank of a nilpotent group is in $\P$.
+However, the relationship between $\FOLL$ and $\L$ remains unknown (the best inclusion known is the uninteresting inclusion $\FOLL \subseteq \AC^1$), so the relationship between $\bFOLL$ and $\bL$ is unknown as well.
+Still, for groups, the problem is decidable by an extremely restrictive computational model, and so can be simulated by a deterministic Turing machine in polynomial time.
+Finally, contrast the complexity of the rank problem for groups with the complexity of computing the rank of a subgroup of a free group.
+The latter problem is $\P$-complete, so is not even in $\NC$ unless $\NC = \P$ \autocite[Theorem~4.9]{am84} (see also \autocite[Problem~A.8.11]{ghr95}).
 
-The complexity of \textsc{Group Rank} contrasts with the related problem of computing the rank of a subgroup of a free group.
-That problem is \P-complete, so is not even in \NC{} unless $\NC = \P$ \autocite[Theorem~4.9]{am84} (see also \autocite[Problem~A.8.11]{ghr95}).
+% perspective (focus on anyone) what now? - what should be done next
+Using limited nondeterminism and restrictive models of computation as verifiers may also be useful in examining other problems.
+The limited nondeterminism lens suggests some opportunities for further research in computational algebra specifically, though it has seen some recent success in other subfields of theoretical computer science (see \autocite{gottlob13}, for example).
+Can computing the rank of a quasigroup, a problem more general than computing the rank of a group, also be computed by a logarithmic space Turing machine using $O(\log^2 n)$ nondeterminism?
+Is there a reduction between the problem of computing the rank of a quasigroup and the problem of deciding whether two quasigroups are isomorphic?
+Finally, is the problem of computing the shortest generating sequence for a quasigroup strictly more difficult than the problem of computing the rank of a quasigroup?
 
-\begin{proof}[Proof of \autoref{cor:grouprank}]
-  Since a group is a quasigroup, \textsc{Group Rank} is in $\bFOLL$ because \textsc{Quasigroup Rank} is.
-  Thus, it suffices to show a $\bL$ algorithm for \textsc{Group Rank}.
-  The algorithm proceeds as follows on input group $G$ of order $n$ given as a multiplication table and integer $k$ guaranteed to be in $O(\log n)$.
+\section{Preliminaries}
+
+Here, $\log n$ denotes the base two logarithm of $n$, for any natural number $n$.
+Also, the set $\{1, \dotsc, n\}$ is denoted $[n]$.
+
+\subsection{Complexity}
+
+$\L$ is the class of languages decidable by a deterministic Turing machine that uses $O(\log n)$ space on inputs of length $n$.
+$\L^2$ is the class of languages decidable by a deterministic Turing machine that uses $O(\log^2 n)$ space.
+$\NL$ is the class of languages decidable by a nondeterministic Turing machine that uses $O(\log n)$ space.
+$\bL$ is the subclass of $\NL$ in which the nondeterministic Turing machine uses at most $O(\log^2 n)$ nondeterministic bits.
+$\FOLL$ is the class of languages decidable by a $\L$-uniform family of circuits with polynomial size, unbounded fan-in, and $O(\log \log n)$ depth.
+$\bFOLL$ is the class of languages decidable by $\FOLL$ circuits that have been augmented with $O(\log^2 n)$ nondeterministic bits (gates with no inputs and one output).
+$\AC_0$ and $\bAC_0$ are the restrictions of $\FOLL$ and $\bFOLL$, respectively, to depth $O(1)$.
+In general, the class $\beta_2 \mathcal{C}$ ($\mathsf{N} \mathcal{C}$, respectively) is the class of languages decidable by $\mathcal{C}$ machines augmented with $O(\log^2 n)$ bits (polynomial bits, respectively) of nondeterminism, or equivalently, the class of languages verifiable by $\mathcal{C}$ machines when given a certificate of length $O(\log^2 n)$ (polynomial in $n$, respectively).
+
+If $L_1$ and $L_2$ are languages, there is a \emph{$\bAC_0$ conjunctive truth-table reduction} from $L_1$ to $L_2$, denoted $L_1 \leq^{\bAC_0}_{ctt} L_2$, if there is a function $f$ and a polynomial $p$ such that
+\begin{itemize}
+\item $f$ is computable in $\bAC_0$,
+\item $f(x)$ outputs $(y_1, \dotsc, y_{p(n)})$ where $n$ is the length of $x$,
+\item $x \in L_1$ if and only if $\bigwedge_{i = 1}^{p(n)} y_i \in L_2$.
+\end{itemize}
+
+\begin{lemma}\label{lem:ctt}
+  Suppose $L_1$ and $L_2$ are languages.
   \begin{enumerate}
-  \item Nondeterministically choose $S$, a subset of $G$ of cardinality $k$.
-  \item Accept if and only if $v \in \langle S \rangle$ for all $v \in G$.
+  \item If $L_1 \leq^{\NAC_0}_{ctt} L_2$ and $L_2$ is in $\P$, then $L_1$ is in $\NP$.
+  \item If $L_1 \leq^{\NAC_0}_{ctt} L_2$ and $L_2$ is in $\NL$, then $L_1$ is in $\NL$.
+  \item If $L_1 \leq^{\bAC_0}_{ctt} L_2$ and $L_2$ is in $\FOLL$, then $L_1$ is in $\bFOLL$.
+  \item If $L_1 \leq^{\bAC_0}_{ctt} L_2$ and $L_2$ is in $\L$, then $L_1$ is in $\bL$.
   \end{enumerate}
-  $G$ has rank $k$ or less if and only if it has a generating set $S$ of size $k$ or less if and only if each element of $G$ is in the subgroup generated by $S$.
-  Hence this algorithm is correct as long as the algorithm for deciding subgroup membership is correct.
-  This algorithm uses $O(\log^2 n)$ bits of nondeterminism, since each group element can be represented using $O(\log n)$ bits, and $k$ is in $O(\log n)$.
-  In step 2, enumerating each $v$ requires only $O(\log n)$ bits of space, since the space can be reused after each iteration.
-  The subgroup membership problem is in \SL{} \cite[Section~3]{bm89}, and $\SL = \L$ \cite{reingold08}, so the algorithm for deciding subgroup membership can be implemented using only $O(\log n)$ space as well.
-  % TODO define \bL
-  Therefore this is a correct algorithm for deciding \textsc{Group Rank} in $\bL$.
+\end{lemma}
+\begin{proof}
+  In each case, let $f$ denote the reduction and $M_2$ denote the machine that decides $L_2$.
+  The machine that decides $L_1$, call it $M_1$, simulates $f$ on its input then runs $M_2$ on each component of the output of $f$.
+  The machine $M_1$ accepts if and only if each of the simulations of $M_2$ accepts.
+  The correctness of $M_1$ follows from the correctness of $f$ and $M_2$.
+  The only remaining issue is the complexity of $M_1$.
+
+  For the first two cases, we use the fact that $\NAC_0 \subseteq (\NP \cap \NL)$.
+  We define the machine $M_1$ so that it chooses all its nondeterministic bits at the beginning of its computation.
+  More specifically, if $f$ requires $p(n)$ nondeterministic bits, the length of the output of $f$ is $q(n)$, and $M_2$ requires $r(n)$ nondeterministic bits, then $M_1$ uses at most $p(n) + q(n) r(q(n))$ nondeterministic bits, which is a polynomial since $p$, $q$, and $r$ are polynomials.
+
+  In the first case, the $\NP$ machine $M_1$, after choosing a sufficient number of nondeterministic bits, can simulate $f$ in polynomial time and can simulate a polynomial number of instances of $M_2$ (specifically, $q(n)$ instances) in polynomial time.
+  In the second case, the $\NL$ machine does the same thing, but requires the fact that logarithmic space computable functions compose.
+
+  For the last two cases, we use the fact that $\bAC_0 \subseteq (\bFOLL \cap \bL)$.
+  If $L_2$ is in $\FOLL$, we define $M_1$ to be the circuit
+  \begin{equation*}
+    M_1(x, w) = \bigwedge_{i = 1}^{q(n)} M_2(y_i),
+  \end{equation*}
+  where $n$ is the length of $x$, the string $w$ is the nondeterministic string of length $O(\log^2 n)$, and $q(n)$ is the polynomial bounding the number of outputs of $f$ on inputs of length $n$.
+  The depth of the $M_1$ circuit is the depth of $f$ plus the depth of $M_2$, which is $O(1) + O(\log \log n)$, or simply $O(\log \log n)$.
+  The number of nondeterministic bits required by $M_1$ is the same as the number of nondeterministic bits required by $f$, which is $O(\log^2 n)$.
+  The circuit is polynomial in size because $f$ is polynomial in size, $M_2$ is polynomial in size, and there are a polynomial number of parallel instances of the circuit $M_2$.
+  Thus $M_1$ is in $\bFOLL$.
+
+  The proof is similar if $L_2$ is in $\L$.
+  The only difference is that instead of a circuit computing the conjunction of $q(n)$ bits, we loop over each $y_i$ and check if each one causes $M_2$ to accept.
+  Since there are a polynomial number of them, indexing them requires only logarithmic space.
+  We also require the fact that logarithmic space computable functions compose.
 \end{proof}
 
-Although, the precise relationship between \FOLL{} (and between $\FOLL^2$) and \L{} is unknown, \FOLL{} does not contain any class containing the \textsc{Parity} problem.
-Since \textsc{Parity} is in \L, we know \FOLL{} does not contain \L.
-Stated in a slightly more general way, neither \FOLL{} nor $\FOLL^2$ can be hard under $\AC^0$ many-one reductions for any complexity class that contains \textsc{Parity} \cite[Proposition~2.1]{bklm01}.
-This is true even when the circuit is augmented with a polylogarithmic number of nondeterministic gates \cite[Section~4]{ctw13}.
+Finally, if $L$ is a language and $F$ is a function, there is a \emph{nonadaptive $\AC_0$ Turing reduction} from $L$ to $F$ if there is an $\AC_0$ function $g$ and an $\AC_0$ circuit $C$ such that $x \in L$ if and only if $C(x, F(y_1), \dotsc, F(y_m)) = 1$, where $(y_1, \dotsc, y_m)$ is the output of $g(x)$ and $m$ is bounded by a polynomial in $|x|$.
+The function $g$ is called the \emph{generator of the reduction} and the circuit $C$ is called the \emph{evaluator of the reduction}.
+
+\subsection{Algebra}
+
+An \emph{magma} is a set $G$ with a binary operation $\cdot$ that is closed on $G$.
+Unless otherwise stated, we will only consider \emph{finite magmas}, in which $G$ is a finite set.
+The \emph{Cayley table} of a magma with $n$ elements is the $n \times n$ table whose rows and columns are indexed by the elements of $G$ and where entry $(a, b)$ has value $c$ if $a \cdot b = c$.
+If the binary operation is associative, the magma is called a \emph{semigroup}.
+If the binary operation has the property that for each $a$ and $b$ in $G$ there are unique elements $x$ and $y$ in $G$ such that $a \cdot x = b$ and $y \cdot a = b$, the magma is called a \emph{quasigroup}.
+(In other words, each quasigroup element appears exactly once in each row and each column of the Cayley table of $G$, or the Cayley table is a \emph{Latin square}.)
+If a quasigroup is nonempty and associative, then it is a \emph{group}.
+Alternately, if a semigroup has an identity and inverses, then it is a group.
+%% Thus if a magma is nonempty, a semigroup, and a quasigroup, it is a group.
+
+\begin{example}\label{ex:quasigroup}
+  The smallest nonempty quasigroup that is not also a group has three elements, $\{a, b, c\}$.
+  Its Cayley table is
+  \begin{equation*}
+    \begin{array}{c | c c c}
+      \cdot & a & b & c \\
+      \hline
+      a & a & b & c \\
+      b & c & a & b \\
+      c & b & c & a \\
+    \end{array}
+  \end{equation*}
+  Examining the table reveals that there is exactly one of each quasigroup element in each row and column.
+  This quasigroup is not associative because $b \cdot (a \cdot b) = b \cdot b = a$ but $(b \cdot a) \cdot b = c \cdot b = c$.
+  Also, it has a left identity, $a$, but no right identity.
+\end{example}
+
+\begin{example}\label{ex:zero}
+  The \emph{right zero semigroup} is the semigroup in which each element is a right zero.
+  Its Cayley table is
+  \begin{equation*}
+    \begin{array}{c | c c c}
+      \cdot & a & b & c \\
+      \hline
+      a & a & b & c \\
+      b & a & b & c \\
+      c & a & b & c \\
+    \end{array}
+  \end{equation*}
+  The associativity of this semigroup can be determined by examining all possible triples $(x, y, z)$ in $G^3$ and checking that $(x \cdot y) \cdot z = x \cdot (y \cdot z)$.
+  Each element of this semigroup is a left identity and a right zero, but there are no right identities, so it is not a group.
+
+  Unlike for the Latin square property in the previous example, there is no obvious way to tell whether a binary operation is associative simply by scanning the rows and columns.
+  In other words, given only its Cayley table, determining whether a magma is a quasigroup \emph{seems} easier than determining whether a magma is a semigroup.
+  However, there is a polynomial time algorithm, attributed to F.~W.~Light, for deciding whether a magma is associative; it is simply the naïve algorithmic implementation of the associativity condition.
+\end{example}
+
+\begin{example}
+  There is a unique (up to isomorphism) group on three elements $\{a, b, c\}$.
+  Its Cayley table is
+  \begin{equation*}
+    \begin{array}{c | c c c}
+      \cdot & a & b & c \\
+      \hline
+      a & a & b & c \\
+      b & b & c & a \\
+      c & c & a & b \\
+    \end{array}
+  \end{equation*}
+  This group is the group of integers under addition modulo three.
+  It is both a semigroup and a quasigroup.
+\end{example}
+
+A \emph{parenthesization} $P$ of a sequence of magma elements $(g_1, \dotsc, g_k)$ is a binary tree that has the magma elements as its leaves (in the order indicated by the sequence).
+The \emph{parenthesized product} of a sequence of magma elements $(g_1, \dotsc, g_k)$ with parenthesization $P$, denoted $P(g_1, \dotsc, g_k)$, is the element that results from performing the magma operation in the order indicated by the parenthesization.
+
+\begin{example}
+  Consider $(a, c, a, b)$, a sequence of four elements from the quasigroup defined in \autoref{ex:quasigroup}.
+  One parenthesization of this sequence is
+  \begin{equation*}
+    \begin{tikzpicture}[xscale=0.5, yscale=0.3]
+      \node[minimum size=0pt, inner sep=0pt] {}
+      child {
+        child {
+          child {node {$a$}}
+          child[color=white] {}
+        }
+        child[color=white] {}
+      }
+      child {
+        child {
+          child {node {$c$}}
+          child {node {$a$}}
+        }
+        child {
+          child[color=white] {}
+          child {node {$b$}}
+        }
+      };
+    \end{tikzpicture}
+  \end{equation*}
+  which corresponds to the parenthesized product $a \cdot ((c \cdot a) \cdot b)$.
+  According to the Cayley table, this product equals $a$.
+\end{example}
+
+If $S$ is a subset of magma elements, the \emph{submagma} generated by $S$, denoted $\gen{S}$, is the closure of $S$ under the magma operation and under any parenthesization.
+(For semigroups, and hence for groups, the operation is associative, so the parenthesization is superfluous.)
+If $\gen{S} = G$, then $S$ is called a \emph{generating set for $G$}.
+The \emph{rank of a magma $G$}, denoted $\rank(G)$, is the minimum cardinality of a generating set.
+This terminology extends to semigroups and groups as well.
+
+\begin{example}\label{ex:semigroupgen}
+  Consider the right zero semigroup on $n$ elements, a generalization of \autoref{ex:zero}.
+  In this semigroup, call it $G$, we have $x \cdot y = y$ for each $x$ and $y$ in $G$.
+  The rank of this semigroup must be $n$.
+  Assume for the sake of producing a contradiction that the rank is strictly less than $n$.
+  Thus there is an element $z$ not in the generating set such that $x_1 \cdot \dotsb \cdot x_n = z$, where each $x_i$ is an element of the generating set.
+  This is a contradiction with the fact that $x_1 \cdot \dotsb \cdot x_n = x_n$, since $x_n$ is a right zero.
+  Therefore the rank of the semigroup must be $n$.
+\end{example}
+
+\begin{example}\label{ex:elementary}
+  Consider the elementary abelian $2$-group, $(\mathbb{Z} / 2 \mathbb{Z})^k$, for some positive integer $k$.
+  Let $n$ denote the order of this group, so $n = 2^k$.
+  The minimum generating set for this group is $\{e_1, \dotsc, e_k\}$, where $e_i$ is the $k$-tuple with a one in the $i$th position and a zero in each other position (if we consider the group as a vector space, $e_i$ is the standard basis vector).
+  Thus the group has a minimum generating set of size $k$, which is $\log n$.
+\end{example}
+
+For quasigroups, we consider a slightly more specific notion of ``generating''\kern-0.5em.
+If $(g_0, \dotsc, g_k)$ is a finite sequence of quasigroup elements denoted $S$ and $P$ is a parenthesization of that sequence, then the \emph{cube of $S$ with respect to $P$}, denoted $\cube_P(S)$, is defined
+\begin{equation*}
+  \cube_P(S) = \left\{P(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k}) \, \middle| \, \epsilon_i \in \{0, 1\} \text{ for each } i \right\}.
+\end{equation*}
+(This is called a ``cube'' because each vertex of the $k$-dimensional Boolean hypercube, when interpreted as a binary string $\epsilon_1 \dotsb \epsilon_k$, yields a quasigroup element.)
+If $\cube_P(S) = G$, then $g$ is called a \emph{cube generating sequence of size $k + 1$} for the quasigroup $G$.
+The \emph{rank of a quasigroup $G$}, denoted $\rank(G)$, is the minimum size of a cube generating sequence.%
+\footnote{
+  This is a nonstandard definition of ``rank'' for quasigroups.
+  Elsewhere, the rank of a quasigroup is the number of blocks in the partition of the quasigroup into conjugacy classes according to the action of the quasigroup on itself.
+}
+Contrast the rank of a quasigroup with the rank of a semigroup: the former is the size of a sequence, the latter the size of a set.
+
+%% \begin{example}
+%%   \todo{Example of a cube generating sequence for a quasigroup.}
+%% \end{example}
+
+Quasigroups have small cube generating sequences, and groups have small generating sets.
+As of this publication, upper bounds on the size of generating sets for semigroups remain the subject of research \autocite{gray14}, although in general, some semigroups of order $n$ have rank $n$ (see \autoref{ex:semigroupgen}).
+Magmas have even less structure than semigroups, and hence lack a meaningful upper bound as well.
+
+An upper bound for the minimum size of a generating set for quasigroups can be proven by the probabilistic method.
+
+\begin{lemma}[{\autocite[Theorem~3.3]{ctw13}}]\label{lem:small}
+  Each finite quasigroup with $n$ elements has a cube generating sequence of size $O(\log n)$ with a parenthesization of depth $O(\log \log n)$.
+\end{lemma}
+
+Since a group is a quasigroup, and since a cube generating sequence induces a generating set, the same upper bound can be applied to groups.
+However, a more specific (and constructive) upper bound can be proven inductively by considering cosets of increasing size.
+
+\begin{lemma}\label{lem:log}
+  If $G$ is a finite group of order $n$ then the minimum size of a generating set is at most $\log n$, with equality when the group is a finite elementary abelian $2$-group.
+\end{lemma}
+\begin{proof}
+  This proof is an expanded version of the proof from \autocite{arvind07}.
+
+  Suppose $m$ is the size of the minimum generating set.
+  Let $H_0 = \gen{e}$, where $e$ is the identity element in $G$.
+  For each $i \in [m]$, let $H_i = \gen{H_{i - 1} \cup \{x_i\}}$ where $x_i \in G \setminus H_{i - 1}$.
+  Such an $x_i$ must exist for each $i$ because otherwise we would have some set $H_j$, of size less than $m$, which generates the group $G$; this violates the hypothesis that $m$ is the minimum size of a generating set for $G$.
+
+  Now, for each $i \in [m]$, we have $x_i \neq e$, by construction.
+  Furthermore, the cosets $x_i \gen{H_{i - 1}}$ and $e \gen{H_{i - 1}}$ are disjoint.
+  If we suppose to the contrary that there is some element $y \in e \gen{H_{i - 1}} \cap x_i \gen{H_{i - 1}}$, then $y = x_i h$ for some $h \in H_{i - 1}$, which implies $x_i = yh^{-1}$, and hence $x_i \in H_{i - 1}$ since both $y$ and $h$ are in $H_{i - 1}$.
+  This is a contradiction with the hypothesis that $x_i \in (G \setminus H_{i - 1})$.
+  Therefore $|H_i| \geq 2 |H_{i - 1}|$.
+  By induction, $|G| = |H_m| \geq 2^m$, which implies $m \leq \log |G| = \log n$.
+
+  The equality follows from \autoref{ex:elementary}.
+\end{proof}
+%% \todo{Are there subclasses of semigroups that have logarithmic size generating sets, possibly by a non-constructive existential proof via the probablistic method?
+%%   For semigroups, it seems the rank can be computed from the complicated formulas in \autocite{gray14}.}
+
+\section{Computation of submagma membership}
+% Foreword
+%
+% context (focus on anyone) why now? - current situation, and why the need is so important
+As stated in the introduction, computing the rank of a magma reduces to the problem of deciding submagma membership.
+% need (focus on readers) why you? - why this is relevant to the reader, and why something needed to be done
+Thus, in order to determine an upper bound on the complexity of computing the rank, we can determine the complexity of deciding membership.
+%
+%%% relevant existing work, given as part of the need
+Fortunately, the membership problem for a submagma when the magma is given as its Cayley table is a well-studied problem.
+% task (focus on author) why me? - what was undertaken to address the need
+% object (focus on document) why this document - what the document covers
+This section reviews the complexity for the membership problem for magmas, semigroups, quasigroups, and groups.
+
+% Summary
+%
+% findings (focus on author) what? - what the work revealed when performing the task
+We recall that for magmas the membership problem, given the Cayley table, is in $\NP$ and for semigroups $\NL$.
+We prove that for quasigroups the problem is in $\FOLL$ and for groups $\L$.
+% conclusion (focus on readers) so what? - what the findings mean for the audience
+These upper bounds allow us to prove upper bounds on the rank problem in the next section.
+% perspective (focus on anyone) what now? - what should be done next
+If future work reveals more efficient algorithms for the membership problem for quasigroups or groups, we can provide improved algorithms for computing the rank of these algebraic structures.
+
+The \textsc{Submagma Membership} problem is defined as follows.
+The inputs are a magma $G$ given as a Cayley table, a magma element $h$, and a finite set of magma elements $S$.
+The problem is to decide whether $h \in \gen{S}$.
+
+\begin{lemma}[{\autocite[Corollary~9]{jl76}}]\label{lem:submagmamem}
+  \textsc{Submagma Membership} is $\P$-complete.
+\end{lemma}
+%% \begin{proof}
+%%   Suppose the magma has $n$ elements and $h$ is the element to check for submagma membership.
+%%   The certificate is a sequence of $n$ elements chosen from $S$ and a parenthesization $P$ of that sequence.
+%%   (We choose a sequence of $n$ elements from $S$ because in the worst case, the magma is the cyclic group of order $n$, the set $S$ is the singleton set $\{1\}$, and $h$ is $1^n$.)
+%%   The verification procedure computes the parenthesized product and checks that it is $h$.
+
+%%   Each element can be represented with $O(\log n)$ bits, so a sequence of $n$ such elements can be represented with $O(n \log n)$ bits.
+%%   The parenthesization can be represented as a binary string of length $n$.
+%%   Thus the overall size of the certificate is $O(n \log n)$.
+%% \end{proof}
+
+The \textsc{Subsemigroup Membership} problem is defined as follows.
+The inputs are a semigroup $G$ given as a Cayley table, a semigroup element $h$, and a finite set $S$ of semigroup elements.
+The problem is to decide whether $h \in \gen{S}$.
+
+\begin{lemma}[{\autocite{jll76}}]\label{lem:subsemigroupmem}
+  \textsc{Subsemigroup Membership} is $\NL$-complete.
+\end{lemma}
+%% \begin{proof}
+%%   We will show a logarithmic space disjunctive truth-table reduction from \textsc{Subsemigroup Membership} to \textsc{Directed Path}.
+%%   Since the latter problem is in $\NL$ and $\NL$ is closed under this type of reduction, we conclude that the former problem is in $\NL$ as well.
+
+%%   Suppose $G$ is the semigroup, $h$ is the semigroup element, and $S$ is the set of subsemigroup generators described in the problem definition.
+%%   The Cayley table induces an edge-labeled directed multigraph $\Gamma$ with self-loops: the vertices of the graph are the semigroup elements, and for each semigroup element $a$, $b$, and $c$, there is an edge labeled $b$ from $a$ to $c$ if $a \cdot b = c$.
+%%   Consider the subgraph $\Gamma_S$ induced by those edges whose labels are in $S$.
+%%   The element $h$ is in $\gen{S}$ if and only if there is a path from some vertex in $S$ to $h$.
+%%   In other words, if $S = \{s_1, \dotsc, s_m\}$ for some natural number $m$,
+%%   %% and $\Path(\Gamma_S, h, s_i)$ is a proposition that is true exactly when there is a directed path from $h$ to $s_i$ in $\Gamma_S$,
+%%   \begin{equation*}
+%%     h \in \gen{S} \iff \bigvee_{i = 1}^m (\Gamma_S, h, s_i) \in \textsc{Directed Path}.
+%%   \end{equation*}
+%%   Therefore we choose the reduction to be $(G, h, S) \mapsto ((\Gamma_S, h, s_1), \dotsc, (\Gamma_S, h, s_m))$.
+
+%%   Computing the adjacency matrix of $\Gamma_S$ from the Cayley table of $G$ and the set $S$ can be done in logarithmic space by setting each entry $(x, y)$ in the Cayley table to be zero if $y$ is not in $S$.
+%%   Iterating over all edges in the adjacency matrix requires logarithmic space, and enumerating each of the $m$ outputs requires space logarithmic in $m$, which is logarithmic in $n$ because $m \leq n$.
+%%   We conclude that the reduction is a correct logarithmic space disjunctive truth-table reduction.
+%% \end{proof}
+
+The \textsc{Cube Membership} problem is defined as follows.
+The inputs are a quasigroup $G$ given as a Cayley table, a quasigroup element $h$, a finite \emph{sequence} of quasigroup elements $S$, and a parenthesization $P$ for that sequence.
+The problem is to decide whether $h \in \cube_P(S)$.
+
+How does a circuit access a Cayley table for a quasigroup of order $n$?%
+\footnote{This work avoids representing problems using first-order logic, as in the original definition of $\FOLL$ from \autocite{bklm01}, though the logic definition may provide a more natural representation of this sort of information.}
+One way for a circuit to compute the product of two quasigroup elements using the Cayley table is via a multiplexer.
+In the multiplexer, each input has $O(\log n)$ bits, since each quasigroup element can be represented with $O(\log n)$ bits and each input is a pair of quasigroup elements.
+A multiplexer that selects from $n^2$ inputs, each of length $O(\log n)$, can be implemented by an \emph{unbounded fan-in} circuit of depth $O(1)$ and size $O(n^2 \log n)$.
+
+\begin{lemma}[{Implicit in \autocite[Theorem~3.4]{ctw13}}]\label{lem:cubemem}
+  \textsc{Cube Membership} is decidable by an $\L$-uniform family of unbounded fan-in circuits with size $O(2^k k n^2 \log n)$ and depth $O(d)$, where $n$ is the order of the quasigroup, $k$ is the size of the generating sequence, and $d$ is the depth of the parenthesization.
+
+  %In particular, if $k$ is in $O(\log n)$ and $d$ is in $O(\log \log n)$, then the circuit is of size polynomial in $n$ and of depth $O(\log \log n)$, that is, \textsc{Cube Membership} is in $\FOLL$.
+  In particular, if $k = O(\log n)$ and $d = O(\log \log n)$, then \textsc{Cube Membership} is in $\FOLL$.
+\end{lemma}
+\begin{proof}
+  The input to the circuit is the Cayley table for a quasigroup, a quasigroup element $h$, a generating sequence $S$, and a parenthesization $P$.
+  Suppose $S = (g_0, \dotsc, g_k)$ for some positive integer $k$.
+  Since the circuit needs to determine if $h$ is in $\cube_P(S)$, the circuit accepts if and only if there is some sequence of bits $(\epsilon_1, \dotsc, \epsilon_k)$ such that $h = P(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k})$.
+  Thus the circuit consists of $2^k$ subcircuits joined to a single \textsc{or} gate, each subcircuit deciding whether one of the $2^k$ possible $k$-bit sequences $(\epsilon_1, \dotsc, \epsilon_k)$ produces $h$ under the given parenthesization.
+
+  The subcircuit corresponding to binary sequence $(\epsilon_1, \dotsc, \epsilon_k)$ computes the parenthesized product $P(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k})$.
+  Computing the product of two quasigroup elements can be implemented in $O(n^2 \log n)$ size and $O(1)$ depth, as described in the paragraph preceding this lemma.
+  Computing the parenthesized product therefore can be implemented in $O(k n^2 \log n)$ size and $O(d)$ depth, where $d$ is the depth of the parenthesization.
+  Comparing the element produced this way to the element $h$ can be done with a constant depth, $O(\log n)$ size equality comparison circuit.
+
+  We conclude that the overall size of the circuit is $O(2^k k n^2 \log n)$ and the overall depth of the circuit is $O(d)$.
+\end{proof}
+
+The \textsc{Subgroup Membership} problem is defined as follows.
+The inputs are a group $G$ given as a Cayley table, a group element $h$, and a finite set $S$ of group elements.
+The problem is to decide whether $h \in \gen{S}$.
+
+\begin{lemma}\label{lem:subgroupmem}
+  \textsc{Subgroup Membership} is in $\L$.
+\end{lemma}
+\begin{proof}
+  The problem is in $\SL$ by a reduction to \textsc{Undirected Path} \autocite[Section~3]{bm89}, and $\SL = \L$ \cite{reingold08}.
+\end{proof}
+
+\section{Computation of magma rank}
+
+% Foreword
+%
+% context (focus on anyone) why now? - current situation, and why the need is so important
+Computing submagma membership is where most of the work occurs.
+% need (focus on readers) why you? - why this is relevant to the reader, and why something needed to be done
+Now we need only reduce the rank problem to the membership problem.
+% task (focus on author) why me? - what was undertaken to address the need
+We do this via a truth-table reduction of relatively low complexity.
+% object (focus on document) why this document - what the document covers
+This section uses these reductions and the results of the previous section to prove the upper bounds on the rank problem as advertised in the introduction.
+
+% Summary
+%
+% findings (focus on author) what? - what the work revealed when performing the task
+\autoref{thm:rank} proves that for magmas, the rank problem is in $\NP$, for semigroups $\NL$, for quasigroups $\bFOLL$, and for groups $\bFOLL \cap \bL$.
+% conclusion (focus on readers) so what? - what the findings mean for the audience
+This means that for groups and semigroups, there is a polynomial time algorithm for computing the rank, and for quasigroups the problem can be verified quickly given a very short witness.
+% perspective (focus on anyone) what now? - what should be done next
+We conjecture that for magmas and semigroups, the problems are hard for their respective complexity classes.
+
+The \textsc{Magma Rank} problem is defined as follows.
+Given the Cayley table of a magma and an integer $k$ in unary, decide whether the rank of the magma is $k$ or less.
+The restrictions of this problem to quasigroups, semigroups, and groups, respectively, are defined similarly.
+The integer $k$ is given in unary in order to facilitate the construction of uniform circuit families that decide the problem; since the size of the Cayley table is $n^2 \log n$ and $k$ is always at most $n$, encoding the integer in unary does not cause an exponential increase in the size of the input to the problems.
+
+The reductions in the following lemma are implicit in \autocite[Theorem~3.4]{ctw13}.
+That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigroups are isomorphic, and the first part of that algorithm determines whether a given sequence of quasigroup elements with a parenthesization is a cube generating sequence.
+
+\begin{lemma}\label{lem:ranktomem}
+  \mbox{}
+  \begin{enumerate}
+  \item $\textsc{Magma Rank} \leq^{\NAC_0}_{ctt} \textsc{Submagma Membership}$.
+  \item $\textsc{Semigroup Rank} \leq^{\NAC_0}_{ctt} \textsc{Subsemigroup Membership}$.
+  \item $\textsc{Quasigroup Rank} \leq^{\bAC_0}_{ctt} \textsc{Cube Membership}$.
+  \item $\textsc{Group Rank} \leq^{\bAC_0}_{ctt} \textsc{Subgroup Membership}$.
+  \end{enumerate}
+\end{lemma}
+\begin{proof}
+  First, consider the problem for magmas.
+  Unlike for quasigroups and groups (\autoref{lem:small} and \autoref{lem:log}), we have no general upper bound on the minimum size of a generating set for magmas.
+  Thus, the best we can do is nondeterministically choose a set of $k$ generators and determine if that set generates the magma, where $k$ can be as large as the number of elements in the magma.
+
+  Let $g_1, \dotsc, g_n$ denote the elements of a magma.
+  The reduction proceeds as follows.
+  On input $(G, k)$, where $G$ is a magma on $n$ elements given as its Cayley table and $k$ is a positive integer given in unary, nondeterministically choose a sequence $S$ of $k$ magma elements.
+  Output $((G, g_1, S), \dotsc, (G, g_n, S))$.
+
+  Since each magma element can be represented by $O(\log n)$ bits, the number of nondeterministic bits used is $O(n \log n)$.
+  By definition of rank,
+  \begin{equation*}
+    \rank(G) \leq k \iff \bigwedge_{i = 1}^n g_i \in \gen{S},
+  \end{equation*}
+  so the reduction is a correct conjunctive truth-table reduction.
+  For semigroups, we apply the exact same reduction.
+
+  For quasigroups, the only differences are that we need to nondeterministically choose a parenthesization as well as a generating sequence, and that we have an upper bound on the size of the sequence and the parenthesization.
+  By \autoref{lem:small}, it suffices to consider inputs to \textsc{Quasigroup Rank} in which $k$ is in $O(\log n)$ and inputs to \textsc{Cube Membership} in which $P$ is of depth $O(\log \log n)$.
+  The reduction therefore must nondeterministically choose a sequence $S$ of $k$ quasigroup elements and a parenthesization $P$ of depth $O(\log \log n)$.
+  The output of the reduction is $((G, g_1, S, P), \dotsc, (G, g_n, S, P))$.
+  Now the number of nondeterministic bits used is $O(\log^2 n)$, since $S$ is a set of $O(\log n)$ strings, each of length $O(\log n)$.
+  By \autoref{lem:small},
+  \begin{equation*}
+    \rank(G) \leq k \iff \bigwedge_{i = 1}^n g_i \in \cube_P(S),
+  \end{equation*}
+  so the reduction is a correct conjunctive truth-table reduction.
+
+  The proof for groups is again similar.
+  Instead of \autoref{lem:small}, we invoke \autoref{lem:log}, which states that any group of order $n$ has a generating set of size at most $\log n$.
+  Also, we don't need to guess a parenthesization (although we still use $O(\log^2 n)$ nondeterministic bits to guess the generating set).
+  Therefore, the reduction will output $((G, g_1, S), \dotsc, (G, g_n, S))$, and the proof concludes with the fact that
+  \begin{equation*}
+    \rank(G) \leq k \iff \bigwedge_{i = 1}^n g_i \in \gen{S}.
+    \qedhere
+  \end{equation*}
+\end{proof}
+
+%% \todo{Show the probability of success for a randomized reduction to the membership problem for each of these algebraic structures.}
+
+\begin{theorem}\label{thm:rank}
+  \mbox{}
+  \begin{enumerate}
+  \item \textsc{Magma Rank} is in $\NP$.
+  \item \textsc{Semigroup Rank} is in $\NL$.
+  \item \textsc{Quasigroup Rank} is in $\bFOLL$.
+  \item \textsc{Group Rank} is in $\bFOLL \cap \bL$.
+  \end{enumerate}
+\end{theorem}
+\begin{proof}
+  Follows from \autoref{lem:ctt} and \autoref{lem:ranktomem}, along with
+  \begin{enumerate}
+  \item \autoref{lem:submagmamem} for magmas,
+  \item \autoref{lem:subsemigroupmem} for semigroups,
+  \item \autoref{lem:cubemem} for quasigroups,
+  \item \autoref{lem:subgroupmem} for groups.
+  \end{enumerate}
+  For groups the problem is also in $\bFOLL$ since a group is a quasigroup.
+\end{proof}
+
+A slight generalization of \autocite[Theorem~7]{py96} already proves that \textsc{Magma Rank} is in (and complete for) the class of problems decidable by a polynomial time Turing machine with $O(n \log n)$ nondeterministic bits.
+We have nevertheless included the fact that \textsc{Magma Rank} is in $\NP$ to highlight the general strategy for proving these upper bounds for each class of algebraic structure.
+
+We can almost show a reduction in the opposite direction of \autoref{lem:ranktomem}.
+The \textsc{Submagma Rank} problem (a search problem) is defined as follows.
+Given the Cayley table of a magma and a set of magma elements $S$, output the rank of $\gen{S}$.
+(The \textsc{Submagma Rank} problem is more general than the \textsc{Magma Rank} problem: the latter reduces to the former by choosing $S = G$.)
+
+\begin{proposition}
+  \textsc{Submagma Membership} reduces to the \textsc{Submagma Rank} function by a nonadaptive $\AC_0$ Turing reduction making exactly two queries.
+\end{proposition}
+\begin{proof}
+  We know that for any magma $G$, any magma element $h$, and any subset of magma elements $S$,
+  \begin{equation*}
+    h \in \gen{S} \iff \rank(\gen{S}) = \rank(\gen{S \cup \{h\}}).
+  \end{equation*}
+  (This is analogous to the corresponding situation in linear algebra: a vector $h$ is in the span of a set of vectors $S$ exactly when the rank of $S$ does not increase when $h$ is added to $S$.)
+  Thus the generator of the reduction is the function $(G, h, S) \mapsto ((G, S), (G, S \cup \{h\}))$ and the evaluator of the reduction compares $\rank({S})$ to $\rank(\gen{S \cup \{h\}})$ for equality.
+\end{proof}
+
+However, this reduction is not satisfying, because the \textsc{Submagma Rank} is essentially the \textsc{Magma Rank} problem when the input is provided as a set of generators instead of as a Cayley table.
+As stated in the reduction, this representation may be exponentially smaller than the Cayley table representation.
+
+Finally, although the precise relationship between $\FOLL$ and $\L$ is unknown, $\FOLL$ does not contain any class containing the \textsc{Parity} problem.
+Since \textsc{Parity} is in $\L$, we know $\FOLL$ does not contain $\L$.
+Stated in a slightly more general way, $\FOLL$ cannot be hard under $\AC^0$ many-one reductions for any complexity class that contains \textsc{Parity} \cite[Proposition~2.1]{bklm01}.
+This is true even when the circuit is augmented with a polylogarithmic number of nondeterministic bits \cite[Section~4]{ctw13}.
 This gives an immediate improvement to the upper bound of the \textsc{Quasigroup Rank} problem.
 
 \begin{theorem}
@@ -202,20 +689,9 @@ This gives an immediate improvement to the upper bound of the \textsc{Quasigroup
 \end{theorem}
 
 Specifically, \textsc{Quasigroup Rank} is not hard for any of the classes in the inclusion chain
-$$
-\ACC^0 \subseteq \TC^0 \subseteq \NC^1 \subseteq \L \subseteq \NL \subseteq (\LOGCFL \cup \DET).
-$$
-
-\section{Future work}
-
-Is \textsc{Quasigroup Rank} in $\bL$?
-
-Is \textsc{Quasigroup Rank} reducible to \textsc{Quasigroup Isomorphism}?
-Is the converse true?
-
-Certainly \textsc{Quasigroup Rank} reduces to the problem of computing a minimum generating sequence, by simply computing the length of the computed minimum generating sequence.
-Is the converse true?
-It seems unlikely that knowing the rank of a quasigroup would yield any information about the contents of a minimum generating sequence.
+\begin{equation*}
+  \ACC^0 \subseteq \TC^0 \subseteq \NC^1 \subseteq \L \subseteq \NL \subseteq (\LOGCFL \cup \DET).
+\end{equation*}
 
 \printbibliography
 
