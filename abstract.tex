@@ -1,5 +1,21 @@
-In this work we study the problem of computing the size of the minimum generating set of a finite group when given as a Cayley table using the lens of "bounded nondeterminism".
-By determining exactly the amount of nondeterminism required to solve a computational problem (as opposed to requiring, for example, any polynomial amount), we can improve upper bounds for the problem.
-Previously, the best upper bound for the minimum size generating set problem for general finite groups was $O(\log^2 n)$ space.
-We show how to improve this to $O(\log n)$ space augmented with $O(\log^2 n)$ nondeterminism.
- For restricted classes of finite groups, such as nilpotent groups and $p$-groups, we can prove even better upper bounds.
+% Foreword
+%
+% context (focus on anyone) why now? - current situation, and why the need is so important
+The rank of a finite algebraic structure with a single binary operation is the minimum number of elements needed to express every other element under the closure of the operation.
+% need (focus on readers) why you? - why this is relevant to the reader, and why something needed to be done
+In the case of groups, the previous best algorithm for computing rank used polylogarithmic space.
+%%% relevant existing work, given as part of the need
+% task (focus on author) why me? - what was undertaken to address the need
+We reduce the best upper bounds on the complexity of computing rank for quasigroups and for groups, and provide a theoretically efficient algorithm for the latter.
+% object (focus on document) why this document - what the document covers
+This paper proves that with short certificates of correctness, the rank problem for these algebraic structures can be verified by highly restricted models of computation.
+
+% Summary
+%
+% findings (focus on author) what? - what the work revealed when performing the task
+Specifically, we prove that the problem of deciding whether the rank of a finite quasigroup, given as a Cayley table, is smaller than a specified number is decidable by a circuit of depth $O(\log \log n)$ augmented with $O(\log^2 n)$ nondeterministic bits (the complexity class of problems decidable by such circuits is denoted $\bFOLL$).
+Furthermore, if the quasigroup is a group, then the problem is also decidable by a Turing machine using $O(\log n)$ space and $O(\log^2 n)$ bits of nondeterminism (the complexity class for problems like this is denoted $\bL$).
+% conclusion (focus on readers) so what? - what the findings mean for the audience
+These are great improvements on the upper bounds for these problems, and for groups, this upper bound implies a deterministic polynomial time algorithm.
+% perspective (focus on anyone) what now? - what should be done next
+The lens of limited nondeterminism provides an easy way to improve many simple algorithms, like the ones presented here, and we suspect it will be especially useful for other algebraic algorithms.
