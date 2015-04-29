@@ -206,6 +206,7 @@ Finally, is the problem of computing the shortest generating sequence for a quas
 \section{Preliminaries}
 
 Here, $\log n$ denotes the base two logarithm of $n$, for any natural number $n$.
+Also, the set $\{1, \dotsc, n\}$ is denoted $[n]$.
 
 \subsection{Complexity}
 
@@ -406,7 +407,7 @@ This terminology extends to semigroups and groups as well.
   Therefore the rank of the semigroup must be $n$.
 \end{example}
 
-\begin{example}
+\begin{example}\label{ex:elementary}
   Consider the elementary abelian $2$-group, $(\mathbb{Z} / 2 \mathbb{Z})^k$, for some positive integer $k$.
   Let $n$ denote the order of this group, so $n = 2^k$.
   The minimum generating set for this group is $\{e_1, \dotsc, e_k\}$, where $e_i$ is the $k$-tuple with a one in the $i$th position and a zero in each other position (if we consider the group as a vector space, $e_i$ is the standard basis vector).
@@ -441,29 +442,31 @@ An upper bound for the minimum size of a generating set for quasigroups can be p
   Each finite quasigroup with $n$ elements has a cube generating sequence of size $O(\log n)$ with a parenthesization of depth $O(\log \log n)$.
 \end{lemma}
 
-An upper bound for groups can be proven inductively by considering cosets of increasing size.
+Since a group is a quasigroup, and since a cube generating sequence induces a generating set, the same upper bound can be applied to groups.
+However, a more specific (and constructive) upper bound can be proven inductively by considering cosets of increasing size.
 
 \begin{lemma}\label{lem:log}
   If $G$ is a finite group of order $n$ then the minimum size of a generating set is at most $\log n$, with equality when the group is a finite elementary abelian $2$-group.
 \end{lemma}
-\todo{Should I include the proof here?}
-%% %% This proof is from \url{http://www.imsc.res.in/~arvind/notes.pdf}.
-%% \begin{proof}
-%%   Suppose $m$ is the size of the minimum generating set.
-%%   Let $H_0 = \gen{e}$, where $e$ is the identity element in $G$.
-%%   For each $i \in \{1, \dotsc, m\}$, let $H_i = \gen{H_{i - 1}, x_i}$ where $x_i \in (G \setminus H_{i - 1})$.
-%%   Such an $x_i$ must exist for each $i$ because otherwise we would have some set $H_j$, of size less than $m$, which generates the group $G$; this violates the hypothesis that $m$ is the minimum size of a generating set for $G$.
+\begin{proof}
+  This proof is an expanded version of the proof from \autocite{arvind07}.
 
-%%   Now, for each $i \in \{1, \dotsc, m\}$, we have $x_i \neq e$, by construction.
-%%   Furthermore, the cosets $x_i \gen{H_{i - 1}}$ and $e \gen{H_{i - 1}}$ are disjoint.
-%%   If we suppose to the contrary that there is some element $y \in e \gen{H_{i - 1}} \cap x_i \gen{H_{i - 1}}$, then $y = x_i h$ for some $h \in H_{i - 1}$, which implies $x_i = yh^{-1}$, and hence $x_i \in H_{i - 1}$ since both $y$ and $h$ are in $H_{i - 1}$.
-%%   This is a contradiction with the hypothesis that $x_i \in (G \setminus H_{i - 1})$.
-%%   Therefore $|H_i| \geq 2 |H_{i - 1}|$.
-%%   By induction, $|G| = |H_m| \geq 2^m$, which implies $m \leq \log |G| = \log n$.
-%% \end{proof}
+  Suppose $m$ is the size of the minimum generating set.
+  Let $H_0 = \gen{e}$, where $e$ is the identity element in $G$.
+  For each $i \in [m]$, let $H_i = \gen{H_{i - 1} \cup \{x_i\}}$ where $x_i \in G \setminus H_{i - 1}$.
+  Such an $x_i$ must exist for each $i$ because otherwise we would have some set $H_j$, of size less than $m$, which generates the group $G$; this violates the hypothesis that $m$ is the minimum size of a generating set for $G$.
 
-\todo{Are there subclasses of semigroups that have logarithmic size generating sets, possibly by a non-constructive existential proof via the probablistic method?
-  For semigroups, it seems the rank can be computed from the complicated formulas in \autocite{gray14}.}
+  Now, for each $i \in [m]$, we have $x_i \neq e$, by construction.
+  Furthermore, the cosets $x_i \gen{H_{i - 1}}$ and $e \gen{H_{i - 1}}$ are disjoint.
+  If we suppose to the contrary that there is some element $y \in e \gen{H_{i - 1}} \cap x_i \gen{H_{i - 1}}$, then $y = x_i h$ for some $h \in H_{i - 1}$, which implies $x_i = yh^{-1}$, and hence $x_i \in H_{i - 1}$ since both $y$ and $h$ are in $H_{i - 1}$.
+  This is a contradiction with the hypothesis that $x_i \in (G \setminus H_{i - 1})$.
+  Therefore $|H_i| \geq 2 |H_{i - 1}|$.
+  By induction, $|G| = |H_m| \geq 2^m$, which implies $m \leq \log |G| = \log n$.
+
+  The equality follows from \autoref{ex:elementary}.
+\end{proof}
+%% \todo{Are there subclasses of semigroups that have logarithmic size generating sets, possibly by a non-constructive existential proof via the probablistic method?
+%%   For semigroups, it seems the rank can be computed from the complicated formulas in \autocite{gray14}.}
 
 \section{Computation of submagma membership}
 % Foreword
