@@ -407,8 +407,10 @@ This terminology extends to semigroups and groups as well.
 For quasigroups, we consider a slightly more specific notion of ``generating''\kern-0.5em.
 If $(g_0, \dotsc, g_k)$ is a finite sequence of quasigroup elements denoted $S$ and $P$ is a parenthesization of that sequence, then the \emph{cube of $S$ with respect to $P$}, denoted $\cube_P(S)$, is defined
 \begin{equation*}
-  \cube_P(S) = \left\{P(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k}) \, \middle| \, \epsilon_i \in \{0, 1\} \text{ for each } i \right\}.
+  \cube_P(S) = \left\{P(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k}) \, \middle| \, \epsilon_i \in \{0, 1\} \text{ for each } i \right\},
 \end{equation*}
+where $g_i^{\epsilon_i}$ denotes $g_i$ if $\epsilon_i = 1$ and the empty word if $\epsilon_i = 0$.
+The element $g_0$ has no exponent because the empty word by itself is not an element in a quasigroup.
 (This is called a ``cube'' because each vertex of the $k$-dimensional Boolean hypercube, when interpreted as a binary string $\epsilon_1 \dotsb \epsilon_k$, yields a quasigroup element.)
 If $\cube_P(S) = G$, then $g$ is called a \emph{cube generating sequence of size $k + 1$} for the quasigroup $G$.
 The \emph{rank of a quasigroup $G$}, denoted $\rank(G)$, is the minimum size of a cube generating sequence.%
