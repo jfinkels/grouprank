@@ -4,5 +4,4 @@ https://arxiv.org:
 - Add the line `\pdfoutput=1` within the first five lines of the document.
 - Change `backend=biber` to `backend=bibtex` in biblatex options.
 - Removes commented fields from BibTeX bibliography file.
-- Moves copyright information to first page.
 - Removes "Work-in-progress" watermark.
