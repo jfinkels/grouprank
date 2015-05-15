@@ -203,24 +203,20 @@ The latter problem is $\P$-complete, so is not even in $\NC$ unless $\NC = \P$ \
 
 % perspective (focus on anyone) what now? - what should be done next
 
+%% TODO Should this text go somewhere else, or in a different section entirely?
+Is it interesting to ask about the ``rank'' of finite rings or finite fields, and what does rank mean for these algebraic structures?
+A finite ring comprises an additive group and a multiplicative monoid (with additional restrictions like distributivity), so the problem of computing the rank of a ring should be no harder than the problem of computing the rank of the group and the rank of the monoid.
+Since our purpose for asking questions about the rank of an algebraic structure is to determine the smallest number of elements required to generate all other elements, we define the \emph{rank of a ring} to be the smaller of the rank of its additive group and the rank of its multiplicative monoid.
+
+Since computing the rank of a group is in $\bFOLL \cap \bL$ and computing the rank of a monoid is in $\NL$ (because a monoid is a semigroup; see \autoref{thm:rank}), computing the rank of a ring, commutative or non-commutative, given by a pair of Cayley tables, is in $(\bFOLL \cap \bL) \cup \NL$, which is just $\NL$.
+In the special case that the ring is a finite domain (that is, it has no nontrivial zero divisors), then by Wedderburn's Theorem \autocite[Theorem~3~§~11.1]{nicholson12}, the ring is a finite field.
+The multiplicative group of any finite field is cyclic \autocite[Theorem~7~§~6.4]{nicholson12}, so the rank of a finite field, and hence a finite domain, is one and the computational problem is uninteresting.
 
 Using limited nondeterminism and restrictive models of computation as verifiers may also be useful in examining other problems.
 The limited nondeterminism lens suggests some opportunities for further research in computational algebra specifically, though it has seen some recent success in other subfields of theoretical computer science (see \autocite{gottlob13}, for example).
 Can computing the rank of a quasigroup, a problem more general than computing the rank of a group, also be computed by a logarithmic space Turing machine using $O(\log^2 n)$ nondeterminism?
 Is there a reduction between the problem of computing the rank of a quasigroup and the problem of deciding whether two quasigroups are isomorphic?
 Finally, is the problem of computing the shortest generating sequence for a quasigroup strictly more difficult than the problem of computing the rank of a quasigroup?
-
-\subsection{Rings and fields}
-
-\todo{Where should this text go}
-
-A finite ring is a pair of groups with additional restrictions, so the problem of computing the ``rank'' of a ring should be no harder than the problem of computing the rank of a group.
-What does rank mean for these algebraic structures?
-Since our purpose for asking questions about the rank of a magma is to determine the smallest number of elements required to generate all other elements, we will define the \emph{rank of a ring} to be the smaller of the rank of its additive group and the rank of its multiplicative group.
-
-Since a ring, commutative or non-commutative, comprises an abelian group under the additive ring operation, the rank problem for finite rings (given as a pair of Cayley tables) reduces to the problem of determining the rank of a finite abelian group, which is in $\bFOLL \cap \bL$, as stated above.
-If the ring is a finite domain (that is, it has no nontrivial zero divisors), then by Wedderburn's Theorem \autocite[Theorem~3~§~11.1]{nicholson12}, the ring is a finite field.
-The multiplicative group of any finite field is cyclic \autocite[Theorem~7~§~6.4]{nicholson12}, so the rank of a finite field, and hence a finite domain, is one and the computational problem is uninteresting.
 
 \section{Preliminaries}
 
