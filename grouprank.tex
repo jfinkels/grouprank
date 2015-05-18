@@ -203,15 +203,6 @@ The latter problem is $\P$-complete, so is not even in $\NC$ unless $\NC = \P$ \
 
 % perspective (focus on anyone) what now? - what should be done next
 
-%% TODO Should this text go somewhere else, or in a different section entirely?
-Is it interesting to ask about the ``rank'' of finite rings or finite fields, and what does rank mean for these algebraic structures?
-A finite ring comprises an additive group and a multiplicative monoid (with additional restrictions like distributivity), so the problem of computing the rank of a ring should be no harder than the problem of computing the rank of the group and the rank of the monoid.
-Since our purpose for asking questions about the rank of an algebraic structure is to determine the smallest number of elements required to generate all other elements, we define the \emph{rank of a ring} to be the smaller of the rank of its additive group and the rank of its multiplicative monoid.
-
-Since computing the rank of a group is in $\bFOLL \cap \bL$ and computing the rank of a monoid is in $\NL$ (because a monoid is a semigroup; see \autoref{thm:rank}), computing the rank of a ring, commutative or non-commutative, given by a pair of Cayley tables, is in $(\bFOLL \cap \bL) \cup \NL$, which is just $\NL$.
-In the special case that the ring is a finite domain (that is, it has no nontrivial zero divisors), then by Wedderburn's Theorem \autocite[Theorem~3~§~11.1]{nicholson12}, the ring is a finite field.
-The multiplicative group of any finite field is cyclic \autocite[Theorem~7~§~6.4]{nicholson12}, so the rank of a finite field, and hence a finite domain, is one and the computational problem is uninteresting.
-
 Using limited nondeterminism and restrictive models of computation as verifiers may also be useful in examining other problems.
 The limited nondeterminism lens suggests some opportunities for further research in computational algebra specifically, though it has seen some recent success in other subfields of theoretical computer science (see \autocite{gottlob13}, for example).
 Can computing the rank of a quasigroup, a problem more general than computing the rank of a group, also be computed by a logarithmic space Turing machine using $O(\log^2 n)$ nondeterminism?
@@ -234,7 +225,8 @@ $\bFOLL$ is the class of languages decidable by $\FOLL$ circuits that have been 
 $\AC_0$ and $\bAC_0$ are the restrictions of $\FOLL$ and $\bFOLL$, respectively, to depth $O(1)$.
 In general, the class $\beta_2 \mathcal{C}$ ($\mathsf{N} \mathcal{C}$, respectively) is the class of languages decidable by $\mathcal{C}$ machines augmented with $O(\log^2 n)$ bits (polynomial bits, respectively) of nondeterminism, or equivalently, the class of languages verifiable by $\mathcal{C}$ machines when given a certificate of length $O(\log^2 n)$ (polynomial in $n$, respectively).
 
-If $L_1$ and $L_2$ are languages, there is a \emph{$\bAC_0$ conjunctive truth-table reduction} from $L_1$ to $L_2$, denoted $L_1 \leq^{\bAC_0}_{ctt} L_2$, if there is a function $f$ and a polynomial $p$ such that
+If $L_1$ and $L_2$ are languages, there is a \emph{logarithmic space many-one reduction} from $L_1$ to $L_2$, denoted $L_1 \leq_m^{\L} L_2$, if there is a function $f$ such that $f$ is computable in logarithmic space and $x \in L_1$ if and only if $f(x) \in L_2$.
+There is a \emph{$\bAC_0$ conjunctive truth-table reduction} from $L_1$ to $L_2$, denoted $L_1 \leq^{\bAC_0}_{ctt} L_2$, if there is a function $f$ and a polynomial $p$ such that
 \begin{itemize}
 \item $f$ is computable in $\bAC_0$,
 \item $f(x)$ outputs $(y_1, \dotsc, y_{p(n)})$ where $n$ is the length of $x$,
@@ -712,6 +704,94 @@ Specifically, \textsc{Quasigroup Rank} is not hard for any of the classes in the
 \begin{equation*}
   \ACC^0 \subseteq \TC^0 \subseteq \NC^1 \subseteq \L \subseteq \NL \subseteq (\LOGCFL \cup \DET).
 \end{equation*}
+
+\section{Computing rank of other algebraic structures}
+% Foreword
+%
+% context (focus on anyone) why now? - current situation, and why the need is so important
+
+% need (focus on readers) why you? - why this is relevant to the reader, and why something needed to be done
+
+% task (focus on author) why me? - what was undertaken to address the need
+
+% object (focus on document) why this document - what the document covers
+
+
+% Summary
+%
+% findings (focus on author) what? - what the work revealed when performing the task
+
+% conclusion (focus on readers) so what? - what the findings mean for the audience
+
+% perspective (focus on anyone) what now? - what should be done next
+
+
+\todo{add introduction}
+
+Is it interesting to ask about the ``rank'' of finite rings or finite fields, and what does rank mean for these algebraic structures?
+A finite ring comprises an additive group and a multiplicative monoid with an additional distributivity property.
+Since our purpose for asking questions about the rank of an algebraic structure is to determine the smallest number of elements required to generate all other elements, we define the \emph{rank of a ring $R$} to be the minimum cardinality of a set $S$ such that $\gen{S} = R$, where $\gen{S}$ is the closure of $S$ under \emph{both} addition and multiplication.
+The rank of a ring is bounded above by the minimum of the rank of its additive group and the rank of its multiplicative monoid, but in general it could be smaller.
+
+Not all finite rings have an interesting rank problem.
+%% Since computing the rank of a group is in $\bFOLL \cap \bL$ and computing the rank of a monoid is in $\NL$ (because a monoid is a semigroup; see \autoref{thm:rank}), computing the rank of a ring, commutative or non-commutative, given by a pair of Cayley tables, is in $(\bFOLL \cap \bL) \cup \NL$, which is just $\NL$.
+In the special case that the ring is a finite domain (that is, it has no nontrivial zero divisors), then by Wedderburn's little theorem \autocite[Theorem~3~§~11.1]{nicholson12}, the ring is a finite field.
+The multiplicative group of any finite field is cyclic \autocite[Theorem~7~§~6.4]{nicholson12}, so the rank of a finite field, and hence any finite domain, is one and the computational problem is uninteresting.
+
+For arbitrary rings, however, the problem is interesting.
+We can apply the same strategy used for \textsc{Magma Rank} to determine the complexity of \textsc{Ring Rank}: reduce the rank problem to the membership problem, then show an upper bound on the membership problem.
+
+\begin{lemma}\label{lem:ringranktomem}
+  $\textsc{Ring Rank} \leq_{ctt}^{\bAC_0} \textsc{Subring Membership}$.
+\end{lemma}
+\begin{proof}
+  The reduction is identical to the ones in \autoref{lem:ranktomem}, and uses only $O(\log^2 n)$ bits of nondeterminism because any generating set must generate the additive group, and the additive group has a generating set of size at most $\log n$ by \autoref{lem:log}.
+\end{proof}
+
+\begin{lemma}\label{lem:memtopath}
+  $\textsc{Subring Membership} \leq_m^{\L} \textsc{Directed Path}$.
+\end{lemma}
+\begin{proof}
+  Given a ring $R$ (expressed as two Cayley tables, one for addition and one for multiplication), a ring element $r$, and a set of ring elements $S$, construct a directed, labeled graph as follows.
+  The set of vertices is the set of all ring elements.
+  There is an edge from $x$ to $y$ labeled $(a, b)$ if $x a - b = y$.
+  Let $G$ be the subgraph induced by edges labeled by pairs $(a, b)$ where both $a$ and $b$ are elements of $S$.
+  Output the subgraph $G$, the source vertex $1$, and the target vertex $r$.
+
+  The choice of edges $(x, y)$ where $x a - b = y$ for some $a$ and $b$ in $S$ deserves some justification.
+  First, choosing the subgraph induced by edges of the form $(a, 0)$ yields the Cayley graph of the ring's underlying multiplicative monoid.
+  Similarly, choosing the subgraph induced by edges of the form $(1, b)$ yields the Cayley graph of the ring's underlying additive group.
+  Second, the subring test states that a subset of a ring is a subring if it is closed under multiplication and subtraction and contains the identity element.
+  Thus the transitive closure of the vertex representing the multiplicative identity under edges labeled with elements from the subset $S$ is guaranteed to be a subring.
+
+  Looping over each pair of ring elements $(x, y)$ and each pair $(a, b)$ requires $O(\log n)$ space for a ring with $n$ elements.
+  Deciding whether to add a labeled edge from $x$ to $y$ requires a constant number of Cayley table lookups, again requiring $O(\log n)$ space.
+  Thus the reduction is computable in logarithmic space.
+
+  To prove correctness, suppose $r$ is in the subring generated by $S$.
+  One way to see that there is a path from $1$ to $r$ is to consider the sequence of multiplications and additions that produce $r$ from $1$.
+  Let $(c_1, \dotsc, c_n)$ be the sequence of ring elements and $(\ast_1, \dotsc, \ast_n)$ be the finite sequence of ring operations, each one either an addition or a multiplication, such that $1 \ast_1 c_1 \dotsb \ast_n c_n = r$.
+  The sequences must be finite because the cardinality of the ring is finite.
+  Then the path from vertex $1$ to vertex $r$ is the sequence of edges $((a_1, b_1), \dotsc, (a_n, b_n))$, where $(a_i, b_i)$ is $(c_i, 0)$ if $\ast_i$ is multiplication or $(1, -c_i)$ if $\ast_i$ is addition, for each $i \in [n]$.
+
+  For the converse, suppose there is a path from $1$ to $r$ of length $k$ in the graph $G$, where $k \leq n$.
+  Let $((a_1, b_1), \dotsc, (a_k, b_k))$ be the labels along the edges of that path.
+  To simplify the closed-form representation of $r$, let $b_0 = -1$ and $a_{k + 1} = 1$.
+  By construction of the graph $G$, we know $r = (\dotsb ((1 a_1 - b_1) a_2 - b_2) \dotsb) a_k - b_k$, or more concisely,
+  \begin{equation*}
+    r = \sum_{i = 0}^k -b_i \prod_{j = i + 1}^{k + 1} a_i.
+  \end{equation*}
+  As stated previously, the transitive closure of $1$ in $G$ is the subring generated by $S$.
+  By the formula above, $r$ is in the transitive closure of $S$, so it is in the subring generated by $S$.
+\end{proof}
+
+\begin{theorem}
+  \textsc{Ring Rank} is in $\NL$.
+\end{theorem}
+\begin{proof}
+  \textsc{Directed Path} is in (and complete for) $\NL$, and $\NL$ is closed under logarithmic space many-one reductions, so \textsc{Subring Membership} is in $\NL$, by \autoref{lem:memtopath}.
+  Using the fact that $\bAC_0$ is a subset of $\NAC_0$, \autoref{lem:ringranktomem} and \autoref{lem:ctt} imply that \textsc{Ring Rank} is in $\NL$.
+\end{proof}
 
 \printbibliography
 
