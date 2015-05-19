@@ -136,6 +136,7 @@ Furthermore, if the quasigroup is a group, then the problem is also decidable by
 The general strategy is to reduce the problem of computing rank to the problem of computing membership; we compute the rank of a group by guessing a small set of candidate generators, then deciding whether each other element in the group can be generated from that set.
 For the sake of completeness, we show how this strategy applies to semigroups and magmas in general, though the results are less interesting there because these algebraic structures lack two things that the groups and quasigroups have: small generating sets and efficient membership algorithms.
 The problem is in $\NL$ for semigroups and in $\NP$ for general magmas.
+Finally, we show that the problem for rings is in $\NL$ as well.
 \autoref{tab:summary} summarizes these improvements, and \autoref{fig:inclusions} demonstrates graphically why these improvements are so significant.
 (We could not find an explicit upper bound for magmas and semigroups, but other papers imply that the problems are in $\NP$.)
 \begin{table}
@@ -146,7 +147,8 @@ The problem is in $\NL$ for semigroups and in $\NP$ for general magmas.
       magma & $\NP$ & $\NP$ \\
       semigroup & $\NP$ & $\NL$ \\
       quasigroup & $\bP$ \autocite{py96} & $\bFOLL$ \\
-      group & $\L^2$ \autocite{lsz77} & $\bFOLL \cap \bL$
+      group & $\L^2$ \autocite{lsz77} & $\bFOLL \cap \bL$ \\
+      ring & $\NP$ & $\NL$
     \end{tabular}
   \end{center}
 \end{table}
@@ -727,41 +729,36 @@ Specifically, \textsc{Quasigroup Rank} is not hard for any of the classes in the
   \ACC^0 \subseteq \TC^0 \subseteq \NC^1 \subseteq \L \subseteq \NL \subseteq (\LOGCFL \cup \DET).
 \end{equation*}
 
-\section{Computing rank of other algebraic structures}
+\section{Computation of ring rank}
 % Foreword
 %
 % context (focus on anyone) why now? - current situation, and why the need is so important
+The previous section provides an upper bound on the computational complexity of computing the rank of a group.
+Is it interesting to ask about the ``rank'' of rings or fields, and what does rank mean for these algebraic structures?
+A ring comprises an additive group and a multiplicative monoid with an additional distributivity property.
+We represent it as a pair of Cayley tables, one for the group and one for the monoid.
 
 % need (focus on readers) why you? - why this is relevant to the reader, and why something needed to be done
-
+Since our purpose for asking questions about the rank of an algebraic structure is to determine the smallest number of elements required to generate all other elements, we define the \emph{rank of a ring $R$} to be the minimum cardinality of a set $S$ such that $\gen{S} = R$, where $\gen{S}$ is the closure of $S$ under \emph{both} addition and multiplication.
+The rank of a ring is bounded above by the minimum of the rank of its additive group and the rank of its multiplicative monoid, but in general it could be strictly smaller.
+\todo{Is this true? Come up with an example. If not, the problem becomes easier.}
 % task (focus on author) why me? - what was undertaken to address the need
-
 % object (focus on document) why this document - what the document covers
-
+This section applies the same strategy used for \textsc{Magma Rank} to determine the complexity of \textsc{Ring Rank}: reduce the rank problem to the membership problem, then show an upper bound on the membership problem.
 
 % Summary
 %
 % findings (focus on author) what? - what the work revealed when performing the task
-
+\autoref{thm:ringrank} below reveals that our best upper bound for computing the rank of a ring given as a pair of Cayley tables is $\NL$, the same as our best upper bound for computing the rank of a semigroup.
 % conclusion (focus on readers) so what? - what the findings mean for the audience
-
+This makes sense because the hardness in this problem lies in computing the rank of the underlying monoid (which is just a semigroup with an identity element, so the complexity of the rank problem for monoids and for semigroups should be exactly the same).
 % perspective (focus on anyone) what now? - what should be done next
+Improving the algorithm for computing the rank of a monoid (or semigroup) will immediately improve the algorithm for computing the rank of a ring.
 
-
-\todo{add introduction}
-
-Is it interesting to ask about the ``rank'' of finite rings or finite fields, and what does rank mean for these algebraic structures?
-A finite ring comprises an additive group and a multiplicative monoid with an additional distributivity property.
-Since our purpose for asking questions about the rank of an algebraic structure is to determine the smallest number of elements required to generate all other elements, we define the \emph{rank of a ring $R$} to be the minimum cardinality of a set $S$ such that $\gen{S} = R$, where $\gen{S}$ is the closure of $S$ under \emph{both} addition and multiplication.
-The rank of a ring is bounded above by the minimum of the rank of its additive group and the rank of its multiplicative monoid, but in general it could be smaller.
-
-Not all finite rings have an interesting rank problem.
-%% Since computing the rank of a group is in $\bFOLL \cap \bL$ and computing the rank of a monoid is in $\NL$ (because a monoid is a semigroup; see \autoref{thm:rank}), computing the rank of a ring, commutative or non-commutative, given by a pair of Cayley tables, is in $(\bFOLL \cap \bL) \cup \NL$, which is just $\NL$.
+Not all rings have an interesting rank problem.
 In the special case that the ring is a finite domain (that is, it has no nontrivial zero divisors), then by Wedderburn's little theorem \autocite[Theorem~3~§~11.1]{nicholson12}, the ring is a finite field.
 The multiplicative group of any finite field is cyclic \autocite[Theorem~7~§~6.4]{nicholson12}, so the rank of a finite field, and hence any finite domain, is one and the computational problem is uninteresting.
-
-For arbitrary rings, however, the problem is interesting.
-We can apply the same strategy used for \textsc{Magma Rank} to determine the complexity of \textsc{Ring Rank}: reduce the rank problem to the membership problem, then show an upper bound on the membership problem.
+But in general, for arbitrary (commutative or non-commutative) rings, the problem has nontrivial complexity.
 
 \begin{lemma}\label{lem:ringranktomem}
   $\textsc{Ring Rank} \leq_{ctt}^{\bAC_0} \textsc{Subring Membership}$.
@@ -782,7 +779,7 @@ We can apply the same strategy used for \textsc{Magma Rank} to determine the com
 
   The choice of edges $(x, y)$ where $x a - b = y$ for some $a$ and $b$ in $S$ deserves some justification.
   First, choosing the subgraph induced by edges of the form $(a, 0)$ yields the Cayley graph of the ring's underlying multiplicative monoid.
-  Similarly, choosing the subgraph induced by edges of the form $(1, b)$ yields the Cayley graph of the ring's underlying additive group.
+  Similarly, choosing the subgraph induced by edges of the form $(1, -b)$ yields the Cayley graph of the ring's underlying additive group.
   Second, the subring test states that a subset of a ring is a subring if it is closed under multiplication and subtraction and contains the identity element.
   Thus the transitive closure of the vertex representing the multiplicative identity under edges labeled with elements from the subset $S$ is guaranteed to be a subring.
 
@@ -798,7 +795,7 @@ We can apply the same strategy used for \textsc{Magma Rank} to determine the com
 
   For the converse, suppose there is a path from $1$ to $r$ of length $k$ in the graph $G$, where $k \leq n$.
   Let $((a_1, b_1), \dotsc, (a_k, b_k))$ be the labels along the edges of that path.
-  To simplify the closed-form representation of $r$, let $b_0 = -1$ and $a_{k + 1} = 1$.
+  To facilitate the closed-form representation of $r$, let $b_0 = -1$ and $a_{k + 1} = 1$.
   By construction of the graph $G$, we know $r = (\dotsb ((1 a_1 - b_1) a_2 - b_2) \dotsb) a_k - b_k$, or more concisely,
   \begin{equation*}
     r = \sum_{i = 0}^k -b_i \prod_{j = i + 1}^{k + 1} a_i.
@@ -807,7 +804,7 @@ We can apply the same strategy used for \textsc{Magma Rank} to determine the com
   By the formula above, $r$ is in the transitive closure of $S$, so it is in the subring generated by $S$.
 \end{proof}
 
-\begin{theorem}
+\begin{theorem}\label{thm:ringrank}
   \textsc{Ring Rank} is in $\NL$.
 \end{theorem}
 \begin{proof}
