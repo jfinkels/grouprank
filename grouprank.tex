@@ -73,6 +73,7 @@
 \DeclareMathOperator{\cube}{cube}
 \DeclareMathOperator{\rank}{rank}
 \DeclareMathOperator{\Path}{Path}
+\DeclareMathOperator{\Cay}{Cay}
 
 %% Redefine the footnote environment so it has no reference and no number.
 \long\def\symbolfootnote#1{\begingroup%
@@ -456,6 +457,27 @@ However, a more specific (and constructive) upper bound can be proven inductivel
 \end{proof}
 %% \todo{Are there subclasses of semigroups that have logarithmic size generating sets, possibly by a non-constructive existential proof via the probablistic method?
 %%   For semigroups, it seems the rank can be computed from the complicated formulas in \autocite{gray14}.}
+
+\begin{example}
+  This lemma is particularly interesting to me with respect to the following example.
+  \todo{This note doesn't particularly belong here, it should be removed; it's just here so I remember it.}
+
+  Let $G$ and $H$ be finite groups of order $m$ and $n$, respectively.
+  Let $S$ and $T$ be generating sets for $G$ and $H$, respectively.
+  By the previous lemma, $|S| \leq \log m$ and $|T| \leq \log n$.
+  Since $S$ and $T$ are generatings sets, $S \times T$ is a generating set for $G \times H$.
+  But $|S \times T| = |S| |T| \leq (\log m) (\log n)$, whereas $\log |G \times H| = \log |G| |H| = \log |G| + \log |H| = \log m + \log n$.
+  Thus $G \times H$ has a generating set of strictly smaller than $S \times T$, for sufficiently large $m$ and $n$.
+
+  This is surprising to me because I would expect the direct product of $G$ and $H$ to behave like the span of two independent spaces.
+  In graph terms, let $\Cay(G, S)$ and $\Cay(H, T)$ be the Cayley graphs of $G$ and $H$ with edges labeled by elements of $S$ and $T$, respectively.
+  We know
+  \begin{equation*}
+    \Cay(G \times H, S \times T) = \Cay(G, S) \times \Cay(H, T),
+  \end{equation*}
+  where the first $\times$ is the direct product of groups, the second is the Cartesian product of sets, and the third is the tensor product of labeled graphs.
+  A step in a tensor product graph is like two independent steps in the factor graphs.
+\end{example}
 
 \section{Computation of submagma membership}
 % Foreword
