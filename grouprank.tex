@@ -285,6 +285,7 @@ An \emph{magma} is a set $G$ with a binary operation $\cdot$ that is closed on $
 Unless otherwise stated, we will only consider \emph{finite magmas}, in which $G$ is a finite set.
 The \emph{Cayley table} of a magma with $n$ elements is the $n \times n$ table whose rows and columns are indexed by the elements of $G$ and where entry $(a, b)$ has value $c$ if $a \cdot b = c$.
 If the binary operation is associative, the magma is called a \emph{semigroup}.
+A semigroup with a unique identity element is called a \emph{monoid}.
 If the binary operation has the property that for each $a$ and $b$ in $G$ there are unique elements $x$ and $y$ in $G$ such that $a \cdot x = b$ and $y \cdot a = b$, the magma is called a \emph{quasigroup}.
 (In other words, each quasigroup element appears exactly once in each row and each column of the Cayley table of $G$, or the Cayley table is a \emph{Latin square}.)
 If a quasigroup is nonempty and associative, then it is a \emph{group}.
@@ -735,7 +736,7 @@ Specifically, \textsc{Quasigroup Rank} is not hard for any of the classes in the
 % context (focus on anyone) why now? - current situation, and why the need is so important
 The previous section provides an upper bound on the computational complexity of computing the rank of a group.
 Is it interesting to ask about the ``rank'' of rings or fields, and what does rank mean for these algebraic structures?
-A ring comprises an additive group and a multiplicative monoid with an additional distributivity property.
+A ring comprises an additive group and a multiplicative monoid with an additional distributivity property relating the two.
 We represent it as a pair of Cayley tables, one for the group and one for the monoid.
 
 % need (focus on readers) why you? - why this is relevant to the reader, and why something needed to be done
@@ -751,7 +752,7 @@ This section applies the same strategy used for \textsc{Magma Rank} to determine
 % findings (focus on author) what? - what the work revealed when performing the task
 \autoref{thm:ringrank} below reveals that our best upper bound for computing the rank of a ring given as a pair of Cayley tables is $\NL$, the same as our best upper bound for computing the rank of a semigroup.
 % conclusion (focus on readers) so what? - what the findings mean for the audience
-This makes sense because the hardness in this problem lies in computing the rank of the underlying monoid (which is just a semigroup with an identity element, so the complexity of the rank problem for monoids and for semigroups should be exactly the same).
+This makes sense because the hardness in this problem lies in computing the rank of the underlying monoid (which is just a semigroup with an identity element, so the worst-case complexity of the rank problem for monoids and for semigroups should be exactly the same).
 % perspective (focus on anyone) what now? - what should be done next
 Improving the algorithm for computing the rank of a monoid (or semigroup) will immediately improve the algorithm for computing the rank of a ring.
 
