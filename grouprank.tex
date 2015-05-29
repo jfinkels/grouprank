@@ -581,6 +581,30 @@ A multiplexer that selects from $n^2$ inputs, each of length $O(\log n)$, can be
   We conclude that the overall size of the circuit is $O(2^k k n^2 \log n)$ and the overall depth of the circuit is $O(d)$.
 \end{proof}
 
+Although the notion of cube generating sequence will give us a better upper bound for computing quasigroup rank, we prefer to consider the more natural notion of a generating set, as we did for magmas, semigroups, and quasigroups.
+Since we know from \autoref{lem:small} that we need only consider candidate generating sets of size $O(\log n)$ and candidate parenthesizations of depth $O(\log \log n)$, we use a generalized form of the quasigroup membership problem that allows us to specify bounds on the generating set size and parenthesization depth.
+
+The \textsc{Bounded Subquasigroup Membership} problem is defined as follows.
+The inputs are a quasigroup $G$ given as a Cayley table, a quasigroup element $h$, a finite set $S$ of semigroup elements, a positive integer $k$, and a positive integer $d$.
+The problem is to decide whether there is a sequence $s$ in $S^k$ and a parenthesization of depth $d$ on $k$ elements such that $h = P(s)$.
+(This is the definition of ``$h \in \gen{S}$'', but with specific size and depth bounds on the binary tree that generates $h$.)
+This problem should be at least as difficult as \textsc{Cube Membership}: the former requires finding an appropriate sequence and parenthesization, whereas for the latter, they are fixed beforehand.
+
+\begin{lemma}\label{lem:subquasigroupmem}
+  \textsc{Bounded Subquasigroup Membership} is decidable by an $\L$-uniform family of unbounded fan-in circuits with size $O(n^2 k \log n)$ and depth $O(d)$, using $O(k \log n)$ nondeterministic bits.
+
+  In particular, if $k = O(\log n)$ and $d = O(\log \log n)$, then \textsc{Bounded Subquasigroup Membership} is in $\bFOLL$.
+\end{lemma}
+\begin{proof}
+  The algorithm is similar to that of \autoref{lem:cubemem}, except now we must nondeterministically choose a sequence and parenthesization.
+  The circuit nondeterministically chooses $k$ elements of $S$ and a parenthesization of $k$ elements of depth $d$, then accepts if and only if that parenthesized product is $h$.
+  Choosing $k$ elements, each of size $O(\log n)$, requires $O(k \log n)$ bits and choosing a parenthesization requires $O(k)$ bits, so the total number of nondeterministic bits required is $O(k \log n)$.
+  \todo{refactor out the parenthesized product algorithm}
+  As in \autoref{lem:cubemem}, computing the parenthesized product requires a circuit of size $O(k n^2 \log n)$ and depth $O(d)$.
+  The final equality comparison requires size $O(\log n)$ and depth $O(1)$.
+  We conclude that the overall size of the circuit is $O(k n^2 \log n)$ and the overall depth of the circuit is $O(d)$.
+\end{proof}
+
 The \textsc{Subgroup Membership} problem is defined as follows.
 The inputs are a group $G$ given as a Cayley table, a group element $h$, and a finite set $S$ of group elements.
 The problem is to decide whether $h \in \gen{S}$.
@@ -628,6 +652,7 @@ That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigro
   \item $\textsc{Magma Rank} \leq^{\NAC_0}_{ctt} \textsc{Submagma Membership}$.
   \item $\textsc{Semigroup Rank} \leq^{\NAC_0}_{ctt} \textsc{Subsemigroup Membership}$.
   \item $\textsc{Quasigroup Rank} \leq^{\bAC_0}_{ctt} \textsc{Cube Membership}$.
+  \item $\textsc{Quasigroup Rank} \leq^{\bAC_0}_{ctt} \textsc{Bounded Subqasigroup Membership}$.
   \item $\textsc{Group Rank} \leq^{\bAC_0}_{ctt} \textsc{Subgroup Membership}$.
   \end{enumerate}
 \end{lemma}
@@ -649,7 +674,7 @@ That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigro
   so the reduction is a correct conjunctive truth-table reduction.
   For semigroups, we apply the exact same reduction.
 
-  For quasigroups, the only differences are that we need to nondeterministically choose a parenthesization as well as a generating sequence, and that we have an upper bound on the size of the sequence and the parenthesization.
+  For quasigroups, in the reduction to the cube membership problem, the only differences are that we need to nondeterministically choose a parenthesization as well as a generating sequence, and that we have an upper bound on the size of the sequence and the parenthesization.
   By \autoref{lem:small}, it suffices to consider inputs to \textsc{Quasigroup Rank} in which $k$ is in $O(\log n)$ and inputs to \textsc{Cube Membership} in which $P$ is of depth $O(\log \log n)$.
   The reduction therefore must nondeterministically choose a sequence $S$ of $k$ quasigroup elements and a parenthesization $P$ of depth $O(\log \log n)$.
   The output of the reduction is $((G, g_1, S, P), \dotsc, (G, g_n, S, P))$.
@@ -659,6 +684,12 @@ That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigro
     \rank(G) \leq k \iff \bigwedge_{i = 1}^n g_i \in \cube_P(S),
   \end{equation*}
   so the reduction is a correct conjunctive truth-table reduction.
+
+  For the reduction to the bounded quasigroup membership problem, we still need $O(\log^2 n)$ bits to guess the generating set, but we can let $k = O(\log n)$ and $d = O(\log \log n)$, by \autoref{lem:small}.
+  Thus the reduction outputs $((G, g_1, S, k, d), \dotsc, (G, g_n, S, k, d))$, and the correctness of the reduction follows from the fact that
+  \begin{equation*}
+    \rank(G) \leq k \iff \bigwedge_{i = 1}^n g_i \in \gen{S}.
+  \end{equation*}
 
   The proof for groups is again similar.
   Instead of \autoref{lem:small}, we invoke \autoref{lem:log}, which states that any group of order $n$ has a generating set of size at most $\log n$.
@@ -692,10 +723,13 @@ That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigro
   For groups the problem is also in $\bFOLL$ since a group is a quasigroup.
 \end{proof}
 
-A slight generalization of \autocite[Theorem~7]{py96} already proves that \textsc{Magma Rank} is in (and complete for) the class of problems decidable by a polynomial time Turing machine with $O(n \log n)$ nondeterministic bits.
+We conclude this section with a few observations about \autoref{thm:rank}.
+First, in this proof, we did not use the reduction from \textsc{Quasigroup Rank} to \textsc{Bounded Subquasigroup Membership}, because the closure of $\bFOLL$ under $\bAC_0$ conjunctive truth-table reductions is $\NFOLL$, that is, $\FOLL$ with a polynomial amount of nondeterminism, whereas the closure of $\FOLL$ under the same reductions is $\bFOLL$, a subset of $\NFOLL$.
+
+Second, a slight generalization of \autocite[Theorem~7]{py96} already proves that \textsc{Magma Rank} is in (and complete for) the class of problems decidable by a polynomial time Turing machine with $O(n \log n)$ nondeterministic bits.
 We have nevertheless included the fact that \textsc{Magma Rank} is in $\NP$ to highlight the general strategy for proving these upper bounds for each class of algebraic structure.
 
-We can almost show a reduction in the opposite direction of \autoref{lem:ranktomem}.
+Third, we can almost show a reduction in the opposite direction of \autoref{lem:ranktomem}.
 The \textsc{Submagma Rank} problem (a search problem) is defined as follows.
 Given the Cayley table of a magma and a set of magma elements $S$, output the rank of $\gen{S}$.
 (The \textsc{Submagma Rank} problem is more general than the \textsc{Magma Rank} problem: the latter reduces to the former by choosing $S = G$.)
