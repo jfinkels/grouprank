@@ -1,4 +1,4 @@
-%% grouprank.tex - Computing rank with limited nondeterminsm
+%% grouprank.tex - computing rank with limited nondeterminism
 %%
 %% Copyright 2014, 2015 Jeffrey Finkelstein.
 %%
@@ -470,7 +470,7 @@ However, a more specific (and constructive) upper bound can be proven inductivel
   By the previous lemma, $|S| \leq \log m$ and $|T| \leq \log n$.
   Since $S$ and $T$ are generatings sets, $S \times T$ is a generating set for $G \times H$.
   But $|S \times T| = |S| |T| \leq (\log m) (\log n)$, whereas $\log |G \times H| = \log |G| |H| = \log |G| + \log |H| = \log m + \log n$.
-  Thus $G \times H$ has a generating set of strictly smaller than $S \times T$, for sufficiently large $m$ and $n$.
+  Thus $G \times H$ has a generating set strictly smaller than $S \times T$, for sufficiently large $m$ and $n$.
 
   This is surprising to me because I would expect the direct product of $G$ and $H$ to behave like the span of two independent spaces.
   In graph terms, let $\Cay(G, S)$ and $\Cay(H, T)$ be the Cayley graphs of $G$ and $H$ with edges labeled by elements of $S$ and $T$, respectively.
@@ -775,8 +775,7 @@ We represent it as a pair of Cayley tables, one for the group and one for the mo
 
 % need (focus on readers) why you? - why this is relevant to the reader, and why something needed to be done
 Since our purpose for asking questions about the rank of an algebraic structure is to determine the smallest number of elements required to generate all other elements, we define the \emph{rank of a ring $R$} to be the minimum cardinality of a set $S$ such that $\gen{S} = R$, where $\gen{S}$ is the closure of $S$ under \emph{both} addition and multiplication.
-The rank of a ring is bounded above by the minimum of the rank of its additive group and the rank of its multiplicative monoid, but in general it could be strictly smaller.
-\todo{Is this true? Come up with an example. If not, the problem becomes easier.}
+The rank of a ring is bounded above by the minimum of the rank of its additive group and the rank of its multiplicative monoid.  %, but in general it could be strictly smaller.
 % task (focus on author) why me? - what was undertaken to address the need
 % object (focus on document) why this document - what the document covers
 This section applies the same strategy used for \textsc{Magma Rank} to determine the complexity of \textsc{Ring Rank}: reduce the rank problem to the membership problem, then show an upper bound on the membership problem.
@@ -814,7 +813,7 @@ But in general, for arbitrary (commutative or non-commutative) rings, the proble
 
   The choice of edges $(x, y)$ where $x a - b = y$ for some $a$ and $b$ in $S$ deserves some justification.
   First, choosing the subgraph induced by edges of the form $(a, 0)$ yields the Cayley graph of the ring's underlying multiplicative monoid.
-  Similarly, choosing the subgraph induced by edges of the form $(1, -b)$ yields the Cayley graph of the ring's underlying additive group.
+  Similarly, choosing the subgraph induced by edges of the form $(1, b)$ yields the Cayley graph of the ring's underlying additive group.
   Second, the subring test states that a subset of a ring is a subring if it is closed under multiplication and subtraction and contains the identity element.
   Thus the transitive closure of the vertex representing the multiplicative identity under edges labeled with elements from the subset $S$ is guaranteed to be a subring.
 
@@ -846,6 +845,13 @@ But in general, for arbitrary (commutative or non-commutative) rings, the proble
   \textsc{Directed Path} is in (and complete for) $\NL$, and $\NL$ is closed under logarithmic space many-one reductions, so \textsc{Subring Membership} is in $\NL$, by \autoref{lem:memtopath}.
   Using the fact that $\bAC_0$ is a subset of $\NAC_0$, \autoref{lem:ctt} and \autoref{lem:ringranktomem} imply that \textsc{Ring Rank} is in $\NL$.
 \end{proof}
+
+\begin{itemize}
+\item \todo{Are group membership and ring membership incomparable?}
+\item \todo{Is there a ring with rank strictly less than the minimum of the rank of its underlying group and monoid?
+  If so, is there an upper bound on the rank of a ring better than the $\log n$ upper bound inherited from its underlying group?}
+\item \todo{How hard is the succinct version of these problems?}
+\end{itemize}
 
 \printbibliography
 
