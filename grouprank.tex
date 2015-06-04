@@ -846,11 +846,18 @@ But in general, for arbitrary (commutative or non-commutative) rings, the proble
   Using the fact that $\bAC_0$ is a subset of $\NAC_0$, \autoref{lem:ctt} and \autoref{lem:ringranktomem} imply that \textsc{Ring Rank} is in $\NL$.
 \end{proof}
 
+\todo{Open questions.}
 \begin{itemize}
-\item \todo{Are group membership and ring membership incomparable?}
-\item \todo{Is there a ring with rank strictly less than the minimum of the rank of its underlying group and monoid?
-  If so, is there an upper bound on the rank of a ring better than the $\log n$ upper bound inherited from its underlying group?}
-\item \todo{How hard is the succinct version of these problems?}
+\item Are group membership and ring membership incomparable?
+\item
+  Is there a ring with rank strictly less than the minimum of the rank of its underlying group and monoid?
+  If so, is there an upper bound on the rank of a ring better than the $\log n$ upper bound inherited from its underlying group?
+  If not, then the ring rank problem immediately becomes easier.
+\item How hard is the succinct version of these problems?
+\item
+  Is the group rank problem in a smaller complexity class, one contained in both $\bFOLL$ and $\bL$?
+  What is the largest complexity class we can find that is in $\FOLL \cap \L$?
+  This would likely improve all the results in \autocite{bklm01}.
 \end{itemize}
 
 \printbibliography
