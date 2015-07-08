@@ -432,10 +432,10 @@ Contrast the rank of a quasigroup with the rank of a semigroup: the former is th
 %%   \todo{Example of a cube generating sequence for a quasigroup.}
 %% \end{example}
 
-Ideally, we would like the notion of rank to be identical for each class of algebraic structure.
+Ideally, we would like the notion of rank to be identical for each algebraic structure.
 If a quasigroup has a cube generating sequence of size at most $k$, then it has a generating set of size at most $k$, specifically the set of distinct elements from the sequence.
 However, we conjecture that for sufficiently large sizes, there is a quasigroup that has a generating set of size strictly less than the size of its minimum cube generating sequence.
-If this is incorrect, that is if a small generating set implies a small cube generating sequence, we could use the same definition of rank for all our algebraic structures, and our proofs would be simplified.
+If this is incorrect, that is if a small generating set implies a small cube generating sequence, we could use the same definition of rank for all our algebraic structures, simplifying our proofs.
 
 Quasigroups have small cube generating sequences, and groups have small generating sets.
 As of this publication, upper bounds on the size of generating sets for semigroups remain the subject of research \autocite{gray14}, although in general, some semigroups of order $n$ have rank $n$ (see \autoref{ex:semigroupgen}).
@@ -453,9 +453,9 @@ However, a more specific (and constructive) upper bound can be proven inductivel
 \begin{lemma}\label{lem:log}
   If $G$ is a finite group of order $n$ then the minimum size of a generating set is at most $\log n$, with equality when the group is a finite elementary abelian $2$-group.
 \end{lemma}
-\begin{proof}
-  This proof is an expanded version of the proof from \autocite{arvind07}.
-
+\begin{proof}[Proof (expanded from \autocite{arvind07})]
+  %This proof is an expanded version of the proof from \autocite{arvind07}.
+  %
   Suppose $m$ is the size of the minimum generating set.
   Let $H_0 = \gen{e}$, where $e$ is the identity element in $G$.
   For each $i \in [m]$, let $H_i = \gen{H_{i - 1} \cup \{x_i\}}$ where $x_i \in G \setminus H_{i - 1}$.
