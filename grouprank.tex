@@ -208,10 +208,23 @@ The latter problem is $\P$-complete, so is not even in $\NC$ unless $\NC = \P$ \
 % perspective (focus on anyone) what now? - what should be done next
 
 Using limited nondeterminism and restrictive models of computation as verifiers may also be useful in examining other problems.
-The limited nondeterminism lens suggests some opportunities for further research in computational algebra specifically, though it has seen some recent success in other subfields of theoretical computer science (see \autocite{gottlob13}, for example).
-Can computing the rank of a quasigroup, a problem more general than computing the rank of a group, also be computed by a logarithmic space Turing machine using $O(\log^2 n)$ nondeterminism?
-Is there a reduction between the problem of computing the rank of a quasigroup and the problem of deciding whether two quasigroups are isomorphic?
-Finally, is the problem of computing the shortest generating sequence for a quasigroup strictly more difficult than the problem of computing the rank of a quasigroup?
+The limited nondeterminism lens specifically suggests some opportunities for further research in computational algebra, though it has seen some recent success in other subfields of theoretical computer science (see \autocite{gottlob13}, for example).
+Here are some avenues for future research.
+\begin{itemize}
+\item Is computing the rank of a quasigroup also in $\bL$?
+\item
+  Is the group rank problem in a smaller complexity class, one contained in both $\bFOLL$ and $\bL$?
+  What is the largest complexity class we can find that is in $\FOLL \cap \L$?
+  This would likely improve all the results in \autocite{bklm01}.
+\item Is there a reduction between the problem of computing the rank of a quasigroup and the problem of deciding whether two quasigroups are isomorphic?
+\item Is the problem of computing the shortest generating sequence for a quasigroup strictly more difficult than the problem of computing the rank of a quasigroup?
+\item
+  The complexity of group problems, for example, varies based on the succinctness of the representation of the input.
+  In this paper we show that the rank problem is quite easy when the input is given its least succinct representation, the full Cayley table.
+  On the other hand, in the most succinct representation, the group presentation (a set of generators for the group along with relations among the generators), many problems become very difficult, or even undecidable if the group is infinite.
+  For representations of intermediate succinctness, for example a circuit that outputs the entries of the Cayley table, how difficult is the rank problem?
+\end{itemize}
+
 
 \section{Preliminaries}
 
@@ -226,13 +239,13 @@ $\NL$ is the class of languages decidable by a nondeterministic Turing machine t
 $\bL$ is the subclass of $\NL$ in which the nondeterministic Turing machine uses at most $O(\log^2 n)$ nondeterministic bits.
 $\FOLL$ is the class of languages decidable by a $\L$-uniform family of circuits with polynomial size, unbounded fan-in, and $O(\log \log n)$ depth.
 $\bFOLL$ is the class of languages decidable by $\FOLL$ circuits that have been augmented with $O(\log^2 n)$ nondeterministic bits (gates with no inputs and one output).
-$\AC_0$ and $\bAC_0$ are the restrictions of $\FOLL$ and $\bFOLL$, respectively, to depth $O(1)$.
+$\AC^0$ and $\bAC^0$ are the restrictions of $\FOLL$ and $\bFOLL$, respectively, to depth $O(1)$.
 In general, the class $\beta_2 \mathcal{C}$ ($\mathsf{N} \mathcal{C}$, respectively) is the class of languages decidable by $\mathcal{C}$ machines augmented with $O(\log^2 n)$ bits (polynomial bits, respectively) of nondeterminism, or equivalently, the class of languages verifiable by $\mathcal{C}$ machines when given a certificate of length $O(\log^2 n)$ (polynomial in $n$, respectively).
 
 If $L_1$ and $L_2$ are languages, there is a \emph{logarithmic space many-one reduction} from $L_1$ to $L_2$, denoted $L_1 \leq_m^{\L} L_2$, if there is a function $f$ such that $f$ is computable in logarithmic space and $x \in L_1$ if and only if $f(x) \in L_2$.
-There is a \emph{$\bAC_0$ conjunctive truth-table reduction} from $L_1$ to $L_2$, denoted $L_1 \leq^{\bAC_0}_{ctt} L_2$, if there is a function $f$ and a polynomial $p$ such that
+There is a \emph{$\bAC^0$ conjunctive truth-table reduction} from $L_1$ to $L_2$, denoted $L_1 \leq^{\bAC^0}_{ctt} L_2$, if there is a function $f$ and a polynomial $p$ such that
 \begin{itemize}
-\item $f$ is computable in $\bAC_0$,
+\item $f$ is computable in $\bAC^0$,
 \item $f(x)$ outputs $(y_1, \dotsc, y_{p(n)})$ where $n$ is the length of $x$,
 \item $x \in L_1$ if and only if $\bigwedge_{i = 1}^{p(n)} y_i \in L_2$.
 \end{itemize}
@@ -240,10 +253,10 @@ There is a \emph{$\bAC_0$ conjunctive truth-table reduction} from $L_1$ to $L_2$
 \begin{lemma}\label{lem:ctt}
   Suppose $L_1$ and $L_2$ are languages.
   \begin{enumerate}
-  \item If $L_1 \leq^{\NAC_0}_{ctt} L_2$ and $L_2$ is in $\P$, then $L_1$ is in $\NP$.
-  \item If $L_1 \leq^{\NAC_0}_{ctt} L_2$ and $L_2$ is in $\NL$, then $L_1$ is in $\NL$.
-  \item If $L_1 \leq^{\bAC_0}_{ctt} L_2$ and $L_2$ is in $\FOLL$, then $L_1$ is in $\bFOLL$.
-  \item If $L_1 \leq^{\bAC_0}_{ctt} L_2$ and $L_2$ is in $\L$, then $L_1$ is in $\bL$.
+  \item If $L_1 \leq^{\NAC^0}_{ctt} L_2$ and $L_2$ is in $\P$, then $L_1$ is in $\NP$.
+  \item If $L_1 \leq^{\NAC^0}_{ctt} L_2$ and $L_2$ is in $\NL$, then $L_1$ is in $\NL$.
+  \item If $L_1 \leq^{\bAC^0}_{ctt} L_2$ and $L_2$ is in $\FOLL$, then $L_1$ is in $\bFOLL$.
+  \item If $L_1 \leq^{\bAC^0}_{ctt} L_2$ and $L_2$ is in $\L$, then $L_1$ is in $\bL$.
   \end{enumerate}
 \end{lemma}
 \begin{proof}
@@ -253,14 +266,14 @@ There is a \emph{$\bAC_0$ conjunctive truth-table reduction} from $L_1$ to $L_2$
   The correctness of $M_1$ follows from the correctness of $f$ and $M_2$.
   The only remaining issue is the complexity of $M_1$.
 
-  For the first two cases, we use the fact that $\NAC_0 \subseteq (\NP \cap \NL)$.
+  For the first two cases, we use the fact that $\NAC^0 \subseteq (\NP \cap \NL)$.
   We define the machine $M_1$ so that it chooses all its nondeterministic bits at the beginning of its computation.
   More specifically, if $f$ requires $p(n)$ nondeterministic bits, the length of the output of $f$ is $q(n)$, and $M_2$ requires $r(n)$ nondeterministic bits, then $M_1$ uses at most $p(n) + q(n) r(q(n))$ nondeterministic bits, which is a polynomial since $p$, $q$, and $r$ are polynomials.
 
   In the first case, the $\NP$ machine $M_1$, after choosing a sufficient number of nondeterministic bits, can simulate $f$ in polynomial time and can simulate a polynomial number of instances of $M_2$ (specifically, $q(n)$ instances) in polynomial time.
   In the second case, the $\NL$ machine does the same thing, but requires the fact that logarithmic space computable functions compose.
 
-  For the last two cases, we use the fact that $\bAC_0 \subseteq (\bFOLL \cap \bL)$.
+  For the last two cases, we use the fact that $\bAC^0 \subseteq (\bFOLL \cap \bL)$.
   If $L_2$ is in $\FOLL$, we define $M_1$ to be the circuit
   \begin{equation*}
     M_1(x, w) = \bigwedge_{i = 1}^{q(n)} M_2(y_i),
@@ -277,7 +290,7 @@ There is a \emph{$\bAC_0$ conjunctive truth-table reduction} from $L_1$ to $L_2$
   We also require the fact that logarithmic space computable functions compose.
 \end{proof}
 
-Finally, if $L$ is a language and $F$ is a function, there is a \emph{nonadaptive $\AC_0$ Turing reduction} from $L$ to $F$ if there is an $\AC_0$ function $g$ and an $\AC_0$ circuit $C$ such that $x \in L$ if and only if $C(x, F(y_1), \dotsc, F(y_m)) = 1$, where $(y_1, \dotsc, y_m)$ is the output of $g(x)$ and $m$ is bounded by a polynomial in $|x|$.
+Finally, if $L$ is a language and $F$ is a function, there is a \emph{nonadaptive $\AC^0$ Turing reduction} from $L$ to $F$ if there is an $\AC^0$ function $g$ and an $\AC^0$ circuit $C$ such that $x \in L$ if and only if $C(x, F(y_1), \dotsc, F(y_m)) = 1$, where $(y_1, \dotsc, y_m)$ is the output of $g(x)$ and $m$ is bounded by a polynomial in $|x|$.
 The function $g$ is called the \emph{generator of the reduction} and the circuit $C$ is called the \emph{evaluator of the reduction}.
 
 \subsection{Algebra}
@@ -653,11 +666,11 @@ That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigro
 \begin{lemma}\label{lem:ranktomem}
   \mbox{}
   \begin{enumerate}
-  \item $\textsc{Magma Rank} \leq^{\NAC_0}_{ctt} \textsc{Submagma Membership}$.
-  \item $\textsc{Semigroup Rank} \leq^{\NAC_0}_{ctt} \textsc{Subsemigroup Membership}$.
-  \item $\textsc{Quasigroup Rank} \leq^{\bAC_0}_{ctt} \textsc{Cube Membership}$.
-  \item $\textsc{Quasigroup Rank} \leq^{\bAC_0}_{ctt} \textsc{Bounded Subqasigroup Membership}$.
-  \item $\textsc{Group Rank} \leq^{\bAC_0}_{ctt} \textsc{Subgroup Membership}$.
+  \item $\textsc{Magma Rank} \leq^{\NAC^0}_{ctt} \textsc{Submagma Membership}$.
+  \item $\textsc{Semigroup Rank} \leq^{\NAC^0}_{ctt} \textsc{Subsemigroup Membership}$.
+  \item $\textsc{Quasigroup Rank} \leq^{\bAC^0}_{ctt} \textsc{Cube Membership}$.
+  \item $\textsc{Quasigroup Rank} \leq^{\bAC^0}_{ctt} \textsc{Bounded Subqasigroup Membership}$.
+  \item $\textsc{Group Rank} \leq^{\bAC^0}_{ctt} \textsc{Subgroup Membership}$.
   \end{enumerate}
 \end{lemma}
 \begin{proof}
@@ -737,7 +750,7 @@ If the parenthesization is of depth $O(\log \log n)$, this problem is in $\FOLL$
 \end{theorem}
 \begin{proof}
   This is a brief overview of the alternate proof.
-  We will show a $\bAC_0$ conjunctive normal form truth-table reduction from $\textsc{Quasigroup Isomorphism}$ to the join of $\textsc{Cube Membership}$ and $\textsc{Product Equality}$, both of which are in $\FOLL$.
+  We will show a $\bAC^0$ conjunctive normal form truth-table reduction from $\textsc{Quasigroup Isomorphism}$ to the join of $\textsc{Cube Membership}$ and $\textsc{Product Equality}$, both of which are in $\FOLL$.
   Assuming this reduction exists, we conclude using a proof similar to that of \autoref{lem:ctt} that \textsc{Quasigroup Isomorphism} is in $\bFOLL$.
 
   The reduction first guesses two cube generating sequences, $\mathbf{g}$ for $G$ and $\mathbf{h}$ for $H$, both of length $O(\log n)$ and a parenthesization $P$ of depth $O(\log \log n)$, then outputs the conjunction of the following queries.
@@ -756,7 +769,7 @@ If the parenthesization is of depth $O(\log \log n)$, this problem is in $\FOLL$
 \end{proof}
 
 We conclude this section with a few observations about \autoref{thm:rank}.
-First, in this proof, we did not use the reduction from \textsc{Quasigroup Rank} to \textsc{Bounded Subquasigroup Membership}, because the closure of $\bFOLL$ under $\bAC_0$ conjunctive truth-table reductions is $\NFOLL$, that is, $\FOLL$ with a polynomial amount of nondeterminism, whereas the closure of $\FOLL$ under the same reductions is $\bFOLL$, a subset of $\NFOLL$.
+First, in this proof, we did not use the reduction from \textsc{Quasigroup Rank} to \textsc{Bounded Subquasigroup Membership}, because the closure of $\bFOLL$ under $\bAC^0$ conjunctive truth-table reductions is $\NFOLL$, that is, $\FOLL$ with a polynomial amount of nondeterminism, whereas the closure of $\FOLL$ under the same reductions is $\bFOLL$, a subset of $\NFOLL$.
 
 Second, a slight generalization of \autocite[Theorem~7]{py96} already proves that \textsc{Magma Rank} is in (and complete for) the class of problems decidable by a polynomial time Turing machine with $O(n \log n)$ nondeterministic bits.
 We have nevertheless included the fact that \textsc{Magma Rank} is in $\NP$ to highlight the general strategy for proving these upper bounds for each class of algebraic structure.
@@ -767,7 +780,7 @@ Given the Cayley table of a magma and a set of magma elements $S$, output the ra
 (The \textsc{Submagma Rank} problem is more general than the \textsc{Magma Rank} problem: the latter reduces to the former by choosing $S = G$.)
 
 \begin{proposition}
-  \textsc{Submagma Membership} reduces to the \textsc{Submagma Rank} function by a nonadaptive $\AC_0$ Turing reduction making exactly two queries.
+  \textsc{Submagma Membership} reduces to the \textsc{Submagma Rank} function by a nonadaptive $\AC^0$ Turing reduction making exactly two queries.
 \end{proposition}
 \begin{proof}
   We know that for any magma $G$, any magma element $h$, and any subset of magma elements $S$,
@@ -817,7 +830,7 @@ This section applies the same strategy used for \textsc{Magma Rank} to determine
 % findings (focus on author) what? - what the work revealed when performing the task
 \autoref{thm:ringrank} below reveals that our best upper bound for computing the rank of a ring given as a pair of Cayley tables is $\NL$, the same as our best upper bound for computing the rank of a semigroup.
 % conclusion (focus on readers) so what? - what the findings mean for the audience
-This makes sense because the hardness in this problem lies in computing the rank of the underlying monoid (which is just a semigroup with an identity element, so the worst-case complexity of the rank problem for monoids and for semigroups should be exactly the same).
+This makes sense because the hardness in this problem lies in computing the rank of the underlying monoid (which is just a semigroup with an identity element, so the worst-case complexity of the rank problem for monoids and for semigroups is exactly the same).
 % perspective (focus on anyone) what now? - what should be done next
 Improving the algorithm for computing the rank of a monoid (or semigroup) will immediately improve the algorithm for computing the rank of a ring.
 
@@ -827,7 +840,7 @@ The multiplicative group of any finite field is cyclic \autocite[Theorem~7~§~6.
 But in general, for arbitrary (commutative or non-commutative) rings, the problem has nontrivial complexity.
 
 \begin{lemma}\label{lem:ringranktomem}
-  $\textsc{Ring Rank} \leq_{ctt}^{\bAC_0} \textsc{Subring Membership}$.
+  $\textsc{Ring Rank} \leq_{ctt}^{\bAC^0} \textsc{Subring Membership}$.
 \end{lemma}
 \begin{proof}
   The reduction is identical to the ones in \autoref{lem:ranktomem}, and uses only $O(\log^2 n)$ bits of nondeterminism because any generating set must generate the additive group, and the additive group has a generating set of size at most $\log n$ by \autoref{lem:log}.
@@ -875,22 +888,18 @@ But in general, for arbitrary (commutative or non-commutative) rings, the proble
 \end{theorem}
 \begin{proof}
   \textsc{Directed Path} is in (and complete for) $\NL$, and $\NL$ is closed under logarithmic space many-one reductions, so \textsc{Subring Membership} is in $\NL$, by \autoref{lem:memtopath}.
-  Using the fact that $\bAC_0$ is a subset of $\NAC_0$, \autoref{lem:ctt} and \autoref{lem:ringranktomem} imply that \textsc{Ring Rank} is in $\NL$.
+  Using the fact that $\bAC^0$ is a subset of $\NAC^0$, \autoref{lem:ctt} and \autoref{lem:ringranktomem} imply that \textsc{Ring Rank} is in $\NL$.
 \end{proof}
 
-\todo{Open questions.}
-\begin{itemize}
-\item Are group membership and ring membership incomparable?
-\item
-  Is there a ring with rank strictly less than the minimum of the rank of its underlying group and monoid?
-  If so, is there an upper bound on the rank of a ring better than the $\log n$ upper bound inherited from its underlying group?
-  If not, then the ring rank problem immediately becomes easier.
-\item How hard is the succinct version of these problems?
-\item
-  Is the group rank problem in a smaller complexity class, one contained in both $\bFOLL$ and $\bL$?
-  What is the largest complexity class we can find that is in $\FOLL \cap \L$?
-  This would likely improve all the results in \autocite{bklm01}.
-\end{itemize}
+If \textsc{Subring Membership} reduces to \textsc{Subgroup Membership} by a sufficiently tight reduction, then we could improve the upper bound for \textsc{Ring Rank} to $\bL$.
+However, such a reduction seems unlikely, since access to both addition and multiplication should allow more ring elements to be generated from a given set than access to addition alone.
+The converse reduction seems unlikely as well, since an arbitrary group is not necessarily abelian, and a non-abelian group does not admit a ring structure.
+Even for abelian groups, the previous concern about access to both addition and multiplication applies.
+We conjecture that the two problems are incomparable with respect to many-one reductions of sufficiently low complexity.
+
+As stated in the introduction to this section, the rank of a ring is bounded above by the rank of its subgroup and of its monoid.
+If this inequality is tight, then \textsc{Ring Rank} reduces to the join of \textsc{Group Rank} and \textsc{Monoid Rank}, by computing the minimum of the solution to each of these two problems.
+However, we conjecture that there is a finite ring whose rank is strictly less than the rank of both its group and its monoid.
 
 \printbibliography
 
