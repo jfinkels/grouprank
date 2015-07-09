@@ -5,14 +5,13 @@
 %% This LaTeX markup document is made available under the terms of the Creative
 %% Commons Attribution-ShareAlike 4.0 International License,
 %% https://creativecommons.org/licenses/by-sa/4.0/.
-\documentclass{article}
+\documentclass[a4paper, USenglish]{lipics}
 
 \usepackage{amsmath}
 \usepackage{amssymb}
 %% This must come before hyperref.
 \usepackage{amsthm}
 %% This is strongly recommended by biblatex.
-\usepackage[english]{babel}
 \usepackage[backend=biber]{biblatex}
 \usepackage[T1]{fontenc}
 %% This must come before csquotes.
@@ -25,7 +24,6 @@
 %% This must come before complexity.
 \usepackage{hyperref}
 \usepackage{complexity}
-\usepackage[firstpage]{draftwatermark}
 \usepackage{mathtools}
 \usepackage{microtype}
 \usepackage{textcomp}
@@ -47,12 +45,6 @@
       {.} = {,1000}
     }
 
-
-%% Set the ``work-in-progress'' watermark for the first page.
-\SetWatermarkLightness{0.9}
-\SetWatermarkText{Work-in-progress}
-\SetWatermarkFontSize{3.5cm}
-
 %% Set the title and author of the PDF file.
 \hypersetup{pdftitle={Computing rank of finite algebraic structures with limited nondeterminism}, pdfauthor={Jeffrey Finkelstein}}
 
@@ -60,11 +52,7 @@
 \addbibresource{grouprank.bib}
 
 %% Declare theorem-like environments.
-\declaretheorem[numberwithin=section]{theorem}
-\declaretheorem[numberlike=theorem,style=definition,qed=\qedsymbol]{example}
-\declaretheorem[numberlike=theorem]{lemma}
 \declaretheorem[numberlike=theorem]{proposition}
-\declaretheorem[numberlike=theorem]{corollary}
 
 %% Custom commands are declared here.
 \newcommand{\email}[1]{\textlangle\href{mailto:#1}{\nolinkurl{#1}}\textrangle}
@@ -81,9 +69,26 @@
 \def\thefootnote{\fnsymbol{footnote}}\footnotetext{#1}\endgroup}
 
 %% Define the author, title, and date for the document.
-\author{Jeffrey~Finkelstein\\ Computer Science Department, Boston University}
-\title{Computing rank of finite algebraic structures \\ with limited nondeterminism}
-%\date{\today}
+\author[1]{Jeffrey~Finkelstein}
+\authorrunning{J. Finkelstein}
+\title{Computing rank of finite algebraic structures \protect\\ with limited nondeterminism}
+
+\Copyright{Jeffrey~Finkelstein}
+
+\subjclass{F.1.3 Complexity Measures and Classes, F.2.2 Nonnumerical Algorithms and Problems}
+\keywords{groups, quasigroups, rings, rank, limited nondeterminism}
+
+%% Editor-only macros
+\serieslogo{}
+\volumeinfo
+  {Billy Editor and Bill Editors}
+  {2}
+  {Conference title on which this volume is based on}
+  {1}
+  {1}
+  {1}
+\EventShortName{}
+\DOI{10.4230/LIPIcs.xxx.yyy.p}
 
 \begin{document}
 
