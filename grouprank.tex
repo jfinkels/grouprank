@@ -740,6 +740,12 @@ That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigro
   For groups the problem is also in $\bFOLL$ since a group is a quasigroup.
 \end{proof}
 
+These reductions can be generalized to the problem of computing the size of a minimum generating set for an arbitrary subset of the magma elements.
+The \textsc{Generalized Magma Rank} problem is defined as follows (and there are analagous problems for the other algebraic structures).
+Given a magma $G$ as a Cayley table, a finite set $T$ of magma elements, and a natural number $k$ in unary, decide whether there is a set $S$ of size at most $k$ such that $S \subseteq T \subseteq \gen{S}$.
+\textsc{Magma Rank} occurs as a special case when choosing $T = G$.
+Still, this problem reduces to the appropriate membership problem by the same reduction as in \autoref{lem:ranktomem}: nondeterministically choose a subset $S$ of $V$ with $|S| \leq k$, then decide whether each element of $V$ is in $\gen{S}$.
+
 We can reprove \autocite[Theorem~3.4]{ctw13} using this strategy as well.
 The alternate proof is a reduction from \textsc{Quasigroup Isomorphism} to the join of \emph{two} languages, \textsc{Cube Membership} and \textsc{Product Equality}.
 The latter is the problem of deciding whether two parenthesized products are equal according to the quasigroup operation given as a Cayley table.
