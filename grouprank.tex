@@ -643,48 +643,16 @@ That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigro
   \end{enumerate}
 \end{lemma}
 \begin{proof}
-  First, consider the problem for magmas.
-  Unlike for quasigroups and groups (\autoref{lem:small} and \autoref{lem:log}), we have no general upper bound on the minimum size of a generating set for magmas.
-  Thus, the best we can do is nondeterministically choose a set of $k$ generators and determine if that set generates the magma, where $k$ can be as large as the number of elements in the magma.
+  The general technique is the same in each of these reductions.
+  Given the algebraic structure $G$ of order $n$ and the integer $k$, nondeterministically choose a subset $S$ of $G$ of cardinality at most $k$, then decide whether each element of $G$ is in $\gen{S}$.
+  For magmas and semigroups, we have no general upper bound (better than $n$) on the minimum size of a generating set, so the number of nondeterministic bits required is $O(n \log n)$.
 
-  Let $g_1, \dotsc, g_n$ denote the elements of a magma.
-  The reduction proceeds as follows.
-  On input $(G, k)$, where $G$ is a magma on $n$ elements given as its Cayley table and $k$ is a positive integer given in unary, nondeterministically choose a sequence $S$ of $k$ magma elements.
-  Output $((G, g_1, S), \dotsc, (G, g_n, S))$.
+  Reducing to the cube membership requires choosing a parenthesization $P$ in addition to a cube generating sequence $S$, but fortunately \autoref{lem:small} permits us to consider only inputs $k$ bounded above by $O(\log n)$ and parenthesizations $P$ of depth at most $O(\log \log n)$.
+  Thus the number of nondeterministic bits used is $O(\log^2 n)$, since $S$ is a set of $O(\log n)$ strings, each of length $O(\log n)$, and $P$ can be represented with $O(\log \log n)$ bits.
+  Similarly, for the reduction to the bounded quasigroup membership problem, we can assume $k = O(\log n)$ and $d = O(\log \log n)$, by \autoref{lem:small}, so the number of nondeterministic bits guessed is still $O(\log^2 n)$.
 
-  Since each magma element can be represented by $O(\log n)$ bits, the number of nondeterministic bits used is $O(n \log n)$.
-  By definition of rank,
-  \begin{equation*}
-    \rank(G) \leq k \iff \bigwedge_{i = 1}^n g_i \in \gen{S},
-  \end{equation*}
-  so the reduction is a correct conjunctive truth-table reduction.
-  For semigroups, we apply the exact same reduction.
-
-  For quasigroups, in the reduction to the cube membership problem, the only differences are that we need to nondeterministically choose a parenthesization as well as a generating sequence, and that we have an upper bound on the size of the sequence and the parenthesization.
-  By \autoref{lem:small}, it suffices to consider inputs to \textsc{Quasigroup Rank} in which $k$ is in $O(\log n)$ and inputs to \textsc{Cube Membership} in which $P$ is of depth $O(\log \log n)$.
-  The reduction therefore must nondeterministically choose a sequence $S$ of $k$ quasigroup elements and a parenthesization $P$ of depth $O(\log \log n)$.
-  The output of the reduction is $((G, g_1, S, P), \dotsc, (G, g_n, S, P))$.
-  Now the number of nondeterministic bits used is $O(\log^2 n)$, since $S$ is a set of $O(\log n)$ strings, each of length $O(\log n)$.
-  By \autoref{lem:small},
-  \begin{equation*}
-    \rank(G) \leq k \iff \bigwedge_{i = 1}^n g_i \in \cube_P(S),
-  \end{equation*}
-  so the reduction is a correct conjunctive truth-table reduction.
-
-  For the reduction to the bounded quasigroup membership problem, we still need $O(\log^2 n)$ bits to guess the generating set, but we can let $k = O(\log n)$ and $d = O(\log \log n)$, by \autoref{lem:small}.
-  Thus the reduction outputs $((G, g_1, S, k, d), \dotsc, (G, g_n, S, k, d))$, and the correctness of the reduction follows from the fact that
-  \begin{equation*}
-    \rank(G) \leq k \iff \bigwedge_{i = 1}^n g_i \in \gen{S}.
-  \end{equation*}
-
-  The proof for groups is again similar.
-  Instead of \autoref{lem:small}, we invoke \autoref{lem:log}, which states that any group of order $n$ has a generating set of size at most $\log n$.
-  Also, we don't need to guess a parenthesization (although we still use $O(\log^2 n)$ nondeterministic bits to guess the generating set).
-  Therefore, the reduction will output $((G, g_1, S), \dotsc, (G, g_n, S))$, and the proof concludes with the fact that
-  \begin{equation*}
-    \rank(G) \leq k \iff \bigwedge_{i = 1}^n g_i \in \gen{S}.
-    \qedhere
-  \end{equation*}
+  Finally for groups, we invoke \autoref{lem:log}, which states that any group of order $n$ has a generating set of size at most $\log n$.
+  We do not need to guess a parenthesization (although we still use $O(\log^2 n)$ nondeterministic bits to guess the generating set).
 \end{proof}
 
 %% \todo{Show the probability of success for a randomized reduction to the membership problem for each of these algebraic structures.}
