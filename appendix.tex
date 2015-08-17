@@ -1,149 +1,19 @@
-\section{Polynomial time algorithm for finite nilpotent groups}\label{app:p}
+\section{Finite groups have logarithmic rank}\label{app:log}
+This proof is an expanded version of the proof from \autocite{arvind07}.
 
-At this point, we provide a clearer presentation of the proof of \cite[Theorem~7]{at06}.
-We have split up the proof into multiple parts in order to more easily analyze their complexity.
-First we recall some definitions from group theory.
+Suppose $m$ is the size of the minimum generating set.
+Let $H_0 = \gen{e}$, where $e$ is the identity element in $G$.
+For each $i \in [m]$, let $H_i = \gen{H_{i - 1} \cup \{x_i\}}$ where $x_i \in G \setminus H_{i - 1}$.
+Such an $x_i$ must exist for each $i$ because otherwise we would have some set $H_j$, of size less than $m$, which generates the group $G$; this violates the hypothesis that $m$ is the minimum size of a generating set for $G$.
 
-If $H \subseteq G$ and $\odot$ is the restriction of $\cdot$ to $H$, we say $H$ is a \emph{subgroup} of $G$ if $(H, \odot)$ is itself a group.
-We denote the subgroup relation by $H < G$.
-If $H$ is a subgroup of $G$ and $g \in G$ then the \emph{left} coset of $H$ under $g$, denoted $gH$, is the set $\{ g \cdot h \, | \, h \in H\}$; the right coset is defined analogously.
-The subgroup $H$ is \emph{normal} in $G$, denoted $H \triangleleft G$, if $gH = Hg$ for all $g \in G$.
+Now, for each $i \in [m]$, we have $x_i \neq e$, by construction.
+Furthermore, the cosets $x_i \gen{H_{i - 1}}$ and $e \gen{H_{i - 1}}$ are disjoint.
+If we suppose to the contrary that there is some element $y \in e \gen{H_{i - 1}} \cap x_i \gen{H_{i - 1}}$, then $y = x_i h$ for some $h \in H_{i - 1}$, which implies $x_i = yh^{-1}$, and hence $x_i \in H_{i - 1}$ since both $y$ and $h$ are in $H_{i - 1}$.
+This is a contradiction with the hypothesis that $x_i \in (G \setminus H_{i - 1})$.
+Therefore $|H_i| \geq 2 |H_{i - 1}|$.
+By induction, $|G| = |H_m| \geq 2^m$, which implies $m \leq \log |G| = \log n$.
 
-\begin{lemma}\label{lem:sylow}
-  Suppose $G$ is a finite group of order $n$, where the (unique) prime factorization of $n$ is $\Pi_{i = 1}^m p_i^{e_i}$.
-  Then $G$ is nilpotent if and only if $G \cong S_{p_1} \times S_{p_2} \times \dotsb \times S_{p_m}$ where each $S_{p_i}$ is the unique $p_i$-Sylow subgroup of $G$.
-\end{lemma}
-
-%% \begin{lemma}
-%%   Suppose $(G, \cdot)$ and $(H, \circ)$ are groups such that $G \cong H$ and $k$ is a non-negative integer.
-%%   $G$ has a generating set of size $k$ if and only if $H$ has a generating set of size $k$.
-%% \end{lemma}
-
-In order to show that a decision problem is in $\P$ it suffices to show a polynomial time reduction to another decision problem in $\P$.
-If $P$ and $Q$ are decision problems, we say \emph{$P$ is conjunctive truth-table reducible to $Q$} if there exists a function $f$ such that for all strings $x$, we have $f(x) = \langle y_1, y_2, \dotsc, y_m \rangle$ for some positive integer $m$ and $x \in P$ if and only if for all $i \leq m$, we have $y_i \in Q$.
-
-\begin{proposition}
-  \begin{equation*}
-    \textsc{Min Gen Size(Nilpotent)} \leq_{ctt}^P \textsc{Min Gen Size(p-Group)}.
-  \end{equation*}
-\end{proposition}
-\begin{proof}
-  Define the reduction by
-  \begin{equation*}
-    \pair{G}{k} \mapsto \left\langle \pair{S_{p_1}}{k}, \pair{S_{p_2}}{k}, \dotsc, \pair{S_{p_m}}{k} \right\rangle
-  \end{equation*}
-  for all nilpotent groups $G$ of order $n$ and all positive integers $k$, where the prime factorization of $n$ is $p_1^{e_1}p_2^{e_2}\dotsb p_m^{e_m}$ and $S_{p_i}$ is the unique $p_i$-Sylow subgroup of $G$.
-  Observe that the output is correctly formatted because each of the Sylow subgroups is a $p$-group.
-
-  First we show that this reduction is computable in deterministic polynomial time.
-  Since the length of the input is $n^2 \log n$, the prime factorization of $n$ can be computed in deterministic polynomial time with respect to the length of the input (using, for example, the general number field sieve \cite{llmp93}).
-  We know that the set of Sylow subgroups exists by \autoref{lem:sylow}.
-  If $n_i = n p_i^{-e_i}$ then $S_{p_i} = \{g^{n_i} \, | \, g \in G\}$ for all $i \leq m$.
-  The $n_i$th power of $g$ can be computed in logarithmic space (by iteratively computing $g$, $g^2$, $g^3$, etc.).
-  Computing the set $S_{p_i}$ can therefore be computed in logarithmic space as well.
-  Constructing the Cayley table of $S_{p_i}$ can be performed in constant space by simply looking up the appropriate entries in the Cayley table of the group $G$.
-  The total number of clauses in the conjunction is $m$, which is the number of prime factors of $n$, which is bounded by a polynomial in $n^2 \log n$ because the number of prime factors of $n$ is less than $n$.
-  Hence the reduction is polynomial time computable.
-
-  Next we show that the reduction is correct.
-  Suppose first that $\pair{G}{k} \in \textsc{Min Gen Size(Nilpotent)}$, so there exists a subset of $G$, say $\{g_1, g_2, \dotsc, g_k\}$, such that $\gen{g_1, g_2, \dotsc, g_k} = G$.
-  If $n_i = n p_i^{-e_i}$, as defined above, then the set $\{g_1^{n_i}, g_2^{n_i}, \dotsc, g_k^{n_i} \}$ is a generating set for $S_{p_i}$.
-  So for each $i$ with $1 \leq i \leq m$, we have $\pair{S_{p_i}}{k} \in \textsc{Min Gen Size(p-Group)}$.
-  For the converse, suppose that each $S_{p_i}$ has a generating set of size $k$, say $\{g_{i, 1}, g_{i, 2}, \dotsc, g_{i, k}\}$.
-  Let $g_j = \Pi_{i = 1}^m g_{i, j}$ for all $j$ with $1 \leq j \leq k$.
-  In other words, $g_j$ is the product of all the $j$th elements in the generating sets of $S_{p_1}$, $S_{p_2}, \dotsc, S_{p_m}$.
-  Since $\gen{g_1^{n_i}, g_2^{n_i}, \dotsc, g_k^{n_i}} = S_{p_i} $, we have $\gen{g_1, g_2, \dotsc, g_k} = G$.
-
-  We have now shown a correct deterministic polynomial time conjunctive truth table reduction from \textsc{Min Gen Size(Nilpotent)} to \textsc{Min Gen Size(p-Group)}.
-\end{proof}
-
-\begin{lemma}\label{lem:decompose}
-  If $G$ is a finite abelian group, then there exists a finite set of cyclic groups $\{H_1, H_2, \dotsc, H_t\}$ such that $G \cong H_1 \times H_2 \times \dotsb \times H_t$.
-\end{lemma}
-
-\begin{lemma}\label{lem:factorgroup}
-  If $G$ is a group of order $n$ given by its Cayley table and $H < G$ then the function $\pair{G}{H} \mapsto G / H$ is computable in polynomial time.
-\end{lemma}
-\begin{todo}
-  Fill in the gaps in this proof.
-\end{todo}
-\begin{proof}
-  The elements of $G / H$ can be computed by iteratively computing $g H$ for each $g \in G$.
-  There are $O(n)$ such iterations, each of which requires $O(n)$ multiplications, where each multiplication requires constant time (by lookup in the Cayley table).
-  Constructing the table \ldots
-\end{proof}
-
-\begin{definition}
-  Suppose $G$ is a group.
-  The \emph{Frattini subgroup} of $G$, denoted $\Phi(G)$, is the intersection of all maximal subgroups of $G$.
-\end{definition}
-
-\begin{lemma}\label{lem:frattinip}
-  Let $G$ be a finite $p$-group.
-  Then the function $G \mapsto \Phi(G)$ is computable in polynomial time.
-\end{lemma}
-\begin{proof}
-  Let $G'$ be the commutator subgroup of $G$.
-  We know $G' \triangleleft G$ and $G/G'$ is abelian.
-  $G$ is nilpotent if and only if $G' \subseteq \Phi(G)$.
-  Since $G$ is a finite $p$-group, $G$ is nilpotent.
-  For any subgroup $N < G$, if $N \triangleleft G$ and $N \subseteq \Phi(G)$ then $\Phi(G / N) \cong \Phi(G) / N$.
-  Hence $\Phi(G / G') \cong \Phi(G) / G'$.
-  If the Cayley tables for $\Phi(G / G')$ and $G'$ can be computed in polynomial time, then so can the Cayley table for $\Phi(G)$ using this isomorphism.
-  Since the table for $G'$ can be computed in polynomial time, it therefore suffices to show that the table for $\Phi(G / G')$ is computable in polynomial time.
-
-  Since the table for $G'$ can be computed in polynomial time, so can the table for $G / G'$.
-  By \autoref{lem:decompose} we can compute in polynomial time the decomposition of $G / G'$ into a product of cyclic groups $\{H_1 / G', H_2 / G', \dotsc, H_t / G'\}$, so $G / G' \cong H_1 / G' \times H_2 / G' \times \dotsb \times H_t / G'$.
-  For each $j$ with $1 \leq j \leq t$, let $y_jG'$ be the element in $G / G'$ which generates $H_j / G'$, and suppose the order of $y_jG'$ is $p^{c_j}$ for some non-negative integer $c_j$.
-  We know the order of $y_jG'$ must be a power of $p$ because the order of $G$ is a prime power.
-  Since the group is given as a Cayley table, we can compute the generator of a cyclic group in polynomial time by iterating over each element and testing whether it is a generator.
-
-  We know $\Phi(G / G') \cong \Phi(H_1 / G') \times \Phi(H_2 / G') \times \dotsb \times \Phi(H_t / G')$.
-  Since each factor group $H_j / G'$ is a cyclic group of prime power order, it has a unique maximal proper subgroup, specifically the subgroup $\gen{y_j^pG'}$.
-  Therefore, by definition of the Frattini subgroup, $\Phi(H_j / G') = \gen{y_j^pG'}$ for all $j$ with $ 1 \leq j \leq t$.
-  Working our way back through the isomorphisms, we find that $\Phi(G / G') = \gen{y_1^pG', y_2^pG', \dotsc, y_t^pG'}$, and hence $\Phi(G) = \gen{y_1^p, y_2^p, \dotsc, y_t^p, G'}$.
-  Since we can compute each generator $y_j$ in polynomial time, since we can compute $y_j^p$ in polynomial time, and since $t$ is bounded by $O(n)$, the size of $\Phi(G)$ is polynomial in $n$.
-\end{proof}
-
-\begin{proposition}
-  \begin{equation*}
-    \textsc{Min Gen Size(p-Group)} \leq_m^P \textsc{Min Gen Size(Elementary Abelian)}.
-  \end{equation*}
-\end{proposition}
-\begin{proof}
-  Define the reduction by
-  \begin{equation*}
-    \pair{G}{k} \mapsto \pair{G / \Phi(G)}{k}
-  \end{equation*}
-  for all $p$-groups $G$ of order $n$ and all positive integers $k$, where $\Phi(G)$ is the Frattini subgroup of $G$.
-  By \autoref{lem:frattinip}, the Cayley table of $\Phi(G)$ is computable in polynomial time.
-  By \autoref{lem:factorgroup}, the Cayley table of $G / \Phi(G)$ is computable in polynomial time.
-  Hence the reduction is polynomial time computable.
-
-  Suppose $\pair{G}{k} \in \textsc{Min Gen Size(p-Group)}$, so $G$ has a generating set of size at most $k$, say $\{g_1, g_2, \dotsc, g_k\}$.
-  Then $\{g_1\Phi(G), g_2\Phi(G), \dotsc, g_k\Phi(G)\}$ is a generating set for $G / \Phi(G)$ of size at most $k$.
-  For the converse suppose $\pair{G / \Phi(G)}{k} \in \textsc{Min Gen Size(Elementary Abelian)}$, so $G / \Phi(G)$ has a generating set of size at most $k$, say $\{g_1\Phi(G), g_2\Phi(G), \dotsc, g_k\Phi(G)\}$.
-  If we let $H = \gen{g_1, g_2, \dotsc, g_k}$, then $H \Phi(G) = G$.
-  Since $\Phi(G)$ is a set containing only nongenerators for $G$, we have $H = G$.
-  Therefore $G$ has a generating set of size at most $k$.
-  This concludes the proof.
-\end{proof}
-
-\begin{theorem}
-  $\textsc{Min Gen Size(Nilpotent)} \in \P$.
-\end{theorem}
-\begin{proof}
-  Since a many-one reduction implies a conjunctive truth table reduction, we have
-  \begin{equation*}
-    \textsc{Min Gen Size(Nilpotent)} \leq_{ctt}^P \textsc{Min Gen Size(p-Group)},
-  \end{equation*}
-  and
-  \begin{equation*}
-    \textsc{Min Gen Size(p-Group)} \leq_{ctt}^P \textsc{Min Gen Size(Elementary Abelian)}.
-  \end{equation*}
-  Since polynomial time conjunctive truth table reductions compose this implies
-  \begin{equation*}
-    \textsc{Min Gen Size(Nilpotent)} \leq_{ctt}^P \textsc{Min Gen Size(Elementary Abelian)}.
-  \end{equation*}
-  Since $\textsc{Min Gen Size(Elementary Abelian)}$ is in \NC{}, a subset of \P, by \autoref{thm:eainnc} and $\P$ is closed under polynomial time conjunctive truth table reductions, $\textsc{Min Gen Size(Nilpotent)} \in \P$.
-\end{proof}
+Equality occurs with the elementary abelian $2$-group, $(\mathbb{Z} / 2 \mathbb{Z})^k$, for each positive integer $k$.
+Let $n$ denote the order of this group, so $n = 2^k$.
+The minimum generating set for this group is $\{e_1, \dotsc, e_k\}$, where $e_i$ is the $k$-tuple with a one in the $i$th position and a zero in each other position (if we consider the group as a vector space, $e_i$ is the standard basis vector).
+Thus the group has a minimum generating set of size $k$, which is $\log n$.
