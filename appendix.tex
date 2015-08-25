@@ -1,5 +1,5 @@
 \section{Finite groups have logarithmic rank}\label{app:log}
-This proof is an expanded version of the proof from \autocite{arvind07}.
+This section proves \autoref{lem:log}, using an expanded version of the proof from \autocite{arvind07}.
 
 Suppose $m$ is the size of the minimum generating set.
 Let $H_0 = \gen{e}$, where $e$ is the identity element in $G$.
@@ -17,3 +17,35 @@ Equality occurs with the elementary abelian $2$-group, $(\mathbb{Z} / 2 \mathbb{
 Let $n$ denote the order of this group, so $n = 2^k$.
 The minimum generating set for this group is $\{e_1, \dotsc, e_k\}$, where $e_i$ is the $k$-tuple with a one in the $i$th position and a zero in each other position (if we consider the group as a vector space, $e_i$ is the standard basis vector).
 Thus the group has a minimum generating set of size $k$, which is $\log n$.
+
+\section{Closure under nondeterministic conjunctive truth-table reductions}\label{app:closure}
+This section proves \autoref{lem:ctt}.
+
+In each case, let $f$ denote the reduction and $M_2$ denote the machine that decides $L_2$.
+The machine that decides $L_1$, call it $M_1$, simulates $f$ on its input then runs $M_2$ on each component of the output of $f$.
+The machine $M_1$ accepts if and only if each of the simulations of $M_2$ accepts.
+The correctness of $M_1$ follows from the correctness of $f$ and $M_2$.
+The only remaining issue is the complexity of $M_1$.
+
+For the first two cases, we use the fact that $\NAC^0 \subseteq (\NP \cap \NL)$.
+We define the machine $M_1$ so that it chooses all its nondeterministic bits at the beginning of its computation.
+More specifically, if $f$ requires $p(n)$ nondeterministic bits, the length of the output of $f$ is $q(n)$, and $M_2$ requires $r(n)$ nondeterministic bits, then $M_1$ uses at most $p(n) + q(n) r(q(n))$ nondeterministic bits, which is a polynomial since $p$, $q$, and $r$ are polynomials.
+
+In the first case, the $\NP$ machine $M_1$, after choosing a sufficient number of nondeterministic bits, can simulate $f$ in polynomial time and can simulate a polynomial number of instances of $M_2$ (specifically, $q(n)$ instances) in polynomial time.
+In the second case, the $\NL$ machine does the same thing, but requires the fact that logarithmic space computable functions compose.
+
+For the last two cases, we use the fact that $\bAC^0 \subseteq (\bFOLL \cap \bL)$.
+If $L_2$ is in $\FOLL$, we define $M_1$ to be the circuit
+\begin{equation*}
+  M_1(x, w) = \bigwedge_{i = 1}^{q(n)} M_2(y_i),
+\end{equation*}
+where $n$ is the length of $x$, the string $w$ is the nondeterministic string of length $O(\log^2 n)$, and $q(n)$ is the polynomial bounding the number of outputs of $f$ on inputs of length $n$.
+The depth of the $M_1$ circuit is the depth of $f$ plus the depth of $M_2$, which is $O(1) + O(\log \log n)$, or simply $O(\log \log n)$.
+The number of nondeterministic bits required by $M_1$ is the same as the number of nondeterministic bits required by $f$, which is $O(\log^2 n)$.
+The circuit is polynomial in size because $f$ is polynomial in size, $M_2$ is polynomial in size, and there are a polynomial number of parallel instances of the circuit $M_2$.
+Thus $M_1$ is in $\bFOLL$.
+
+The proof is similar if $L_2$ is in $\L$.
+The only difference is that instead of a circuit computing the conjunction of $q(n)$ bits, we loop over each $y_i$ and check if each one causes $M_2$ to accept.
+Since there are a polynomial number of them, indexing them requires only logarithmic space.
+We also require the fact that logarithmic space computable functions compose.
