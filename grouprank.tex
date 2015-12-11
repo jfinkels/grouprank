@@ -102,6 +102,8 @@
 }
 
 \section{Introduction}
+\todo{Rewrite introduction to not have false information.}
+
 % Foreword
 %
 % context (focus on anyone) why now? - current situation, and why the need is so important
@@ -268,30 +270,27 @@ There is a \emph{$\bAC^0$ conjunctive truth-table reduction} from $L_1$ to $L_2$
 \item $f$ is computable in $\AC^0$,
 \item $x \in L_1$ if and only if there is a $w$ of length $O(\log^2 n)$ such that $\bigwedge_{i = 1}^{p(n)} y_i \in L_2$, where $f(x, w) = (y_1, \dotsc, y_{p(n)})$.
 \end{itemize}
-A $\NAC^0$ conjunctive truth-table reduction is the generalization in which $f$ receives a witness of length polynomial in $n$, instead of polylogarithmic in $n$.\footnote{A reduction of this form is really a nondeterministic polynomial-time conjunctive truth-table reduction, since $\NAC^0 = \NP$.}
+A $\NAC^0$ conjunctive truth-table reduction is the generalization in which $f$ receives a witness of length polynomial in $n$, instead of polylogarithmic in $n$.
+A reduction of this form is really a nondeterministic polynomial-time conjunctive truth-table reduction, since $\NAC^0 = \NP$.
 
 \begin{lemma}\label{lem:ctt}
   Suppose $L_1$ and $L_2$ are languages.
   \begin{enumerate}
   \item If $L_1 \leq^{\NAC^0}_{ctt} L_2$ and $L_2$ is in $\P$, then $L_1$ is in $\NP$.
-  \item If $L_1 \leq^{\NAC^0}_{ctt} L_2$ and $L_2$ is in $\NL$, then $L_1$ is in $\NL$.
+  %% THIS IS FALSE, nondeterministic functions don't compose: \item If $L_1 \leq^{\NAC^0}_{ctt} L_2$ and $L_2$ is in $\NL$, then $L_1$ is in $\NL$.
   \item If $L_1 \leq^{\bAC^0}_{ctt} L_2$ and $L_2$ is in $\FOLL$, then $L_1$ is in $\bFOLL$.
   \item If $L_1 \leq^{\bAC^0}_{ctt} L_2$ and $L_2$ is in $\L$, then $L_1$ is in $\bL$.
   \end{enumerate}
 \end{lemma}
 \begin{proof}
-  In each case, let $f$ denote the reduction and $M_2$ denote the machine that decides $L_2$.
-  The machine that decides $L_1$, call it $M_1$, simulates $f$ on its input then runs $M_2$ on each component of the output of $f$.
+  In each case, let $f$ denote the reduction, $M_2$ denote the machine that decides $L_2$, and $q(n)$ denote the polynomial that bounds the number of outputs produced by $f$.
+  We construct a nondeterministic machine $M_1$ of the appropriate type as follows on input $x$ of length $n$.
+  Nondeterministically choose a string $w$ of the appropriate length (polynomial or polylogarithmic), simulate $f(x, w)$, then run $M_2$ on each $y_i$, where $f(x, w) = (y_1, \dotsc, y_{q(n)})$.
   The machine $M_1$ accepts if and only if each of the simulations of $M_2$ accepts.
   The correctness of $M_1$ follows from the correctness of $f$ and $M_2$.
   The only remaining issue is the complexity of $M_1$.
 
-  For the first two cases, we use the fact that $\NAC^0 \subseteq (\NP \cap \NL)$.
-  We define the machine $M_1$ so that it chooses all its nondeterministic bits at the beginning of its computation.
-  More specifically, if $f$ requires $p(n)$ nondeterministic bits, the length of the output of $f$ is $q(n)$, and $M_2$ requires $r(n)$ nondeterministic bits, then $M_1$ uses at most $p(n) + q(n) r(q(n))$ nondeterministic bits, which is a polynomial since $p$, $q$, and $r$ are polynomials.
-
-  In the first case, the $\NP$ machine $M_1$, after choosing a sufficient number of nondeterministic bits, can simulate $f$ in polynomial time and can simulate a polynomial number of instances of $M_2$ (specifically, $q(n)$ instances) in polynomial time.
-  In the second case, the $\NL$ machine does the same thing, but requires the fact that logarithmic space computable functions compose.
+  In the first case, the $\NP$ machine $M_1$, after choosing its nondeterministic bits, can simulate $f$ in polynomial time and can simulate a polynomial number of instances of $M_2$ in polynomial time.
 
   For the last two cases, we use the fact that $\bAC^0 \subseteq (\bFOLL \cap \bL)$.
   If $L_2$ is in $\FOLL$, we define $M_1$ to be the circuit
@@ -309,6 +308,8 @@ A $\NAC^0$ conjunctive truth-table reduction is the generalization in which $f$ 
   Since there are a polynomial number of them, indexing them requires only logarithmic space.
   We also require the fact that logarithmic space computable functions compose.
 \end{proof}
+
+Conondeterministic reductions yield similar closures.
 
 Finally, if $L$ is a language and $F$ is a function, there is a \emph{nonadaptive $\AC^0$ Turing reduction} from $L$ to $F$ if there is an $\AC^0$ function $g$ and an $\AC^0$ circuit $C$ such that $x \in L$ if and only if $C(x, F(y_1), \dotsc, F(y_m)) = 1$, where $(y_1, \dotsc, y_m)$ is the output of $g(x)$ and $m$ is bounded by a polynomial in $|x|$.
 The function $g$ is called the \emph{generator of the reduction} and the circuit $C$ is called the \emph{evaluator of the reduction}.
@@ -653,7 +654,7 @@ The problem is to decide whether $h \in \gen{S}$.
   The problem is in $\SL$ by a reduction to \textsc{Undirected Path} \autocite[Section~3]{bm89}, and $\SL = \L$ \cite{reingold08}.
 \end{proof}
 
-\section{Computation of magma rank}
+\section{Computation of magma rank}\label{sec:rank}
 
 % Foreword
 %
@@ -926,6 +927,112 @@ We conjecture that the two problems are incomparable with respect to many-one re
 As stated in the introduction to this section, the rank of a ring is bounded above by the rank of its subgroup and of its monoid.
 If this inequality is tight, then \textsc{Ring Rank} reduces to the join of \textsc{Group Rank} and \textsc{Monoid Rank}, by computing the minimum of the solution to each of these two problems.
 However, we conjecture that there is a finite ring whose rank is strictly less than the rank of both its group and its monoid.
+
+\section{Computing other types of ranks}
+
+\todo{Introduction to this section.}
+
+Until now we have considered the most common definition of rank, the minimum cardinality of a generating set, but there are others.
+First we require a notion dual to that of a generating set.
+An element $x$ of a subset $S$ of a magma is \emph{independent with respect to $S$} if $x$ is not in $\gen{S \setminus \{x\}}$.
+A subset $S$ is \emph{independent} if each element of $S$ is independent with respect to $S$.
+This is a generalization of linear independence in vector spaces, just as a generating set is a generalization of a spanning set in a vector space; an independent generating set is the generalization of a basis of a vector space.
+
+Here are the five common definitions of rank (found in Kumar and Krishna ``Rank Properties of Multiplicative Semigroups...'' 2014).
+For any magma $G$,
+\begin{align*}
+  \rank_L(G) & = \min \{ k \, | \, \text{each subset of cardinality } k \text{ is a generating set}\} \\
+  \rank_u(G) & = \max \{ |S| \, | \, S \subseteq G \text{ and } S \text{ is an independent set} \} \\
+  \rank_i(G) & = \max \{ |S| \, | \, S \subseteq G \text{ and } S \text{ is an independent generating set} \} \\
+  \rank_\ell(G) & = \min \{ |S| \, | \, S \subseteq G \text{ and } S \text{ is a generating set} \} \\
+  \rank_s(G) & = \max \{ k \, | \, \text{each subset of cardinality } k \text{ is an independent set} \}
+\end{align*}
+
+These are called \emph{large rank}, \emph{upper rank}, \emph{intermediate rank}, \emph{lower rank}, and \emph{small rank}, respectively.
+The lower rank is the notion of rank discussed in the previous sections of the paper.
+\begin{proposition}
+  For any finite semigroup $G$ (\todo{how about quasigroups or magmas?}),
+  \begin{equation*}
+    \rank_s(G) \leq \rank_\ell(G) \leq \rank_i(G) \leq \rank_u(G) \leq \rank_L(G).
+  \end{equation*}
+\end{proposition}
+
+The framework of \autoref{sec:rank} provides a simple way of determining the complexity of computing these functions.
+The decision problems corresponding to these rank functions are defined as follows.
+\begin{align*}
+  \textsc{Magma Large Rank} & = \{ (G, k) \, | \, \rank_L(G) \leq k \} \\
+  \textsc{Magma Upper Rank} & = \{ (G, k) \, | \, \rank_u(G) \geq k \} \\
+  \textsc{Magma Intermediate Rank} & = \{ (G, k) \, | \, \rank_i(G) \geq k \} \\
+  \textsc{Magma Lower Rank} & = \{ (G, k) \, | \, \rank_\ell(G) \leq k \} \\
+  \textsc{Magma Small Rank} & = \{ (G, k) \, | \, \rank_s(G) \geq k \}
+\end{align*}
+Some of these are maximization problems and some are minimization problems, depending on whether the rank is a minimum or a maximum.
+The problems are defined similarly for the other algebraic structures.
+
+We can construct nondeterministic or conondeterministic reductions as follows.
+Let $G^k$ denote the collection of subsets of $G$ of cardinality $k$.
+\begin{align*}
+  \rank_L(G) \leq k & \iff \forall S \subseteq G^k\colon S \text{ is a generating set} \\
+  \rank_u(G) \geq k & \iff \exists S \subseteq G^k\colon S \text{ is independent} \\
+  \rank_i(G) \geq k & \iff \exists S \subseteq G^k\colon S \text{ is an independent generating set} \\
+  \rank_\ell(G) \leq k & \iff \exists S \subseteq G^k\colon S \text{ is a generating set} \\
+  \rank_s(G) \geq k & \iff \forall S \subseteq G^k\colon S \text{ is an independent set}
+\end{align*}
+Since $S$ is an independent set exactly when $x \notin \gen{S \setminus \{x\}}$ for each $x$ and $S$ is a generating set for $G$ exactly when $g \in \gen{S}$ for each $g$ in $G$, these reductions are nondeterministic or conondeterministic truth-table reductions.
+\begin{align*}
+  \rank_L(G) \leq k & \iff \forall S \subseteq G^k\colon \bigwedge_{g \in G} g \in \gen{S} \\
+  \rank_u(G) \geq k & \iff \exists S \subseteq G^k\colon \bigwedge_{x \in S} x \notin \gen{S \setminus \{x\}} \\
+  \rank_i(G) \geq k & \iff \exists S \subseteq G^k\colon \bigwedge_{g \in G} g \in \gen{S} \land \bigwedge_{x \in S} x \notin \gen{S \setminus \{x\}} \\
+  \rank_\ell(G) \leq k & \iff \exists S \subseteq G^k\colon \bigwedge_{g \in G} g \in \gen{S} \\
+  \rank_s(G) \geq k & \iff \forall S \subseteq G^k\colon \bigwedge_{x \in S} x \notin \gen{S \setminus \{x\}}
+\end{align*}
+
+We can extend the $\log n$ upper bound of \autoref{lem:log} to the upper rank for groups as well.
+(For large rank, however, it seems that any bound must depend on the prime factorization of $n$.)
+\begin{lemma}\label{lem:logind}
+  For each finite group $G$ of order $n$, we have $\rank_u(G) \leq \log n$.
+  In other words, each independent subset has size at most $\log n$.
+\end{lemma}
+\begin{proof}
+  The proof is identical to the proof of \autoref{lem:log} with the following modification.
+  Let $S$ be an independent subset of $G$, defined as $S = \{x_1, \dotsc, x_m\}$.
+  Instead of choosing an arbitrary element $x_i$ from $G \setminus H_{i - 1}$, choose the element $x_i$ from $S$.
+  Since $S$ is independent, $x_i$ is not in $H_{i - 1}$.
+  The remainder of the proof is similar to the original.
+\end{proof}
+
+For any language $L$, let $\overline{L}$ denote the complement of $L$ in $\Sigma^*$.
+For any bit $b$, let $Lb$ denote the set $\{ wb \, | \, w \in L, b \in \Sigma\}$.
+For any languages $L_0$ and $L_1$, let $L_0 \oplus L_1$ denote the \emph{join} of $L_0$ and $L_1$, defined by $L_0 \oplus L_1 = L_0 0 \cup L_1 1$.
+
+\begin{lemma}
+  For brevity, let \textsc{SM} denote \textsc{Subgroup Membership}.
+  \mbox{}
+  \begin{enumerate}
+  \item $\textsc{Group Large Rank} \leq_{ctt}^{\co\NAC^0} \textsc{SM}$.
+  \item $\textsc{Group Upper Rank} \leq_{ctt}^{\bAC^0} \overline{\textsc{SM}}$.
+  \item $\textsc{Group Intermediate Rank} \leq_{ctt}^{\bAC^0} \textsc{SM}$.
+  \item $\textsc{Group Lower Rank} \leq_{ctt}^{\bAC^0} \textsc{SM} \oplus \overline{\textsc{SM}}$.
+  \item $\textsc{Group Small Rank} \leq_{ctt}^{\co\bAC^0} \overline{\textsc{SM}}$.
+  \end{enumerate}
+\end{lemma}
+
+Similar reductions can be shown for the other algebraic structures.
+
+The fact that $\L$ is closed under complement yields the following upper bound for computing the various types of rank.
+
+\begin{theorem}
+  \mbox{}
+  \begin{enumerate}
+  \item $\textsc{Group Large Rank}$ is in $\coNP$.
+  \item $\textsc{Group Upper Rank}$ is in $\bL$.
+  \item $\textsc{Group Intermediate Rank}$ is in $\bL$.
+  \item $\textsc{Group Lower Rank}$ is in $\bL$.
+  \item $\textsc{Group Small Rank}$ is in $\co\bL$.
+  \end{enumerate}
+\end{theorem}
+
+If the Immerman–Szelepcsényi theorem \autocite{immerman88, szelepcsenyi88}, which proves $\NL = \coNL$, can be adapted to show $\bL = \co\bL$, then small rank problem can be decided in $\bL$ as well.
 
 \printbibliography
 
