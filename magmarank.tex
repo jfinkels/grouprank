@@ -14,9 +14,9 @@ This section uses these reductions and the results of the previous section to pr
 % Summary
 %
 % findings (focus on author) what? - what the work revealed when performing the task
-\autoref{thm:rank} proves that for magmas, the rank problem is in $\NP$, for semigroups $\NL$, for quasigroups $\bFOLL$, and for groups $\bFOLL \cap \bL$.
+\autoref{thm:rank} proves that for semigroups and magmas, the rank problem is in $\NP$ (which was already known), for quasigroups $\bFOLL$, and for groups $\bFOLL \cap \bL$.
 % conclusion (focus on readers) so what? - what the findings mean for the audience
-This means that for groups and semigroups, there is a polynomial time algorithm for computing the rank, and for quasigroups the problem can be verified quickly given a very short witness.
+This means that for groups and quasigroups, the problem can be verified quickly in parallel given a very short witness.
 % perspective (focus on anyone) what now? - what should be done next
 We conjecture that for magmas and semigroups, the problems are hard for their respective complexity classes.
 
@@ -89,7 +89,7 @@ That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigro
   \mbox{}
   \begin{enumerate}
   \item \textsc{Magma Rank} is in $\NP$.
-  \item \textsc{Semigroup Rank} is in $\NL$.
+  \item \textsc{Semigroup Rank} is in $\NP$.
   \item \textsc{Quasigroup Rank} is in $\bFOLL$.
   \item \textsc{Group Rank} is in $\bFOLL \cap \bL$.
   \end{enumerate}
@@ -105,6 +105,7 @@ That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigro
   For groups the problem is also in $\bFOLL$ since a group is a quasigroup.
 \end{proof}
 
+\todo{Move this to the new section on generalizations?}
 These reductions can be generalized to the problem of computing the size of a minimum generating set for an arbitrary subset of the magma elements.
 The \textsc{Generalized Magma Rank} problem is defined as follows (and there are analagous problems for the other algebraic structures).
 Given a magma $G$ as a Cayley table, a finite set $T$ of magma elements, and a natural number $k$ in unary, decide whether there is a set $S$ of size at most $k$ such that $S \subseteq T \subseteq \gen{S}$.
