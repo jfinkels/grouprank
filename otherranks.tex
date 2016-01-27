@@ -1,6 +1,49 @@
 \section{Computing other types of ranks}
+\label{sec:otherranks}
 
-\todo{Introduction to this section.}
+% % Foreword %
+%
+% %% Context (anyone - why now?) %%
+%
+% What is the current situation, and why is the need so important?
+%
+The ``rank'' of a vector space is the number of vectors in any basis of the space.
+In this setting, the vectors must not only span (or ``generate'') the space, but also be \emph{linearly independent}.
+The rank as defined and used in the previous sections have no such independence requirement.
+% %% Need (readers - why you?) %%
+%
+% Why is this relevant to the reader, and why does something need to be done?
+% (Also reference relevant existing work.)
+%
+However, we could use other definitions of rank for groups, semigroups, etc., that do require independence in some way.
+\autocite{hr99, hr00} define five such ranks for semigroups.
+% %% Task (author - why me?) %%
+%
+% What was undertaken to address the need?
+%
+We apply the same analysis as in \autoref{sec:rank} with the new definition to get some similar results;
+% %% Object (document - why this document?) %%
+%
+% What does this document cover?
+%
+this section summarizes those similarities and differences.
+
+% % Summary %
+%
+% %% Findings (author - what?)
+%
+% What did the work reveal when performing the task?
+%
+\autoref{thm:otherranks} shows that for groups, most other rank definitions yield limited nondeterminism (or conondeterminism) algorithms with simple verifiers, similar to that of \autoref{thm:rank}.
+% %% Conclusion (readers - so what?)
+%
+% What did the findings mean for the audience?
+%
+The limited nondeterminism lens is capable of improving algorithms for computational problems whose conditions seem even more strict than that of the standard rank problem.
+% %% Perspective (anyone - what now?)
+%
+% What should be done next?
+One definition of rank, the large rank, seems unlikely to be solvable with limited nondeterminism, and we conjecture this problem is $\NP$-complete.
 
 Until now we have considered the most common definition of rank, the minimum cardinality of a generating set, but there are others.
 Here are the five common definitions of rank, as described in \autocite{hr99, hr00}.
@@ -75,7 +118,7 @@ Similar reductions can be shown for the other algebraic structures.
 
 The fact that $\L$ is closed under complement yields the following upper bound for computing the various types of rank.
 
-\begin{theorem}
+\begin{theorem}\label{thm:otherranks}
   \mbox{}
   \begin{enumerate}
   \item $\textsc{Group Large Rank}$ is in $\coNP$.
