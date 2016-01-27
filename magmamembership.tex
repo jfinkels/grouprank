@@ -1,0 +1,125 @@
+\section{Computation of submagma membership}
+% Foreword
+%
+% context (focus on anyone) why now? - current situation, and why the need is so important
+As stated in the introduction, computing the rank of a magma reduces to the problem of deciding submagma membership.
+% need (focus on readers) why you? - why this is relevant to the reader, and why something needed to be done
+Thus, in order to determine an upper bound on the complexity of computing the rank, we can determine the complexity of deciding membership.
+%
+%%% relevant existing work, given as part of the need
+Fortunately, the membership problem for a submagma when the magma is given as its Cayley table is a well-studied problem.
+% task (focus on author) why me? - what was undertaken to address the need
+% object (focus on document) why this document - what the document covers
+This section reviews the complexity for the membership problem for magmas, semigroups, quasigroups, and groups.
+
+% Summary
+%
+% findings (focus on author) what? - what the work revealed when performing the task
+We recall that for magmas the membership problem, given the Cayley table, is in $\NP$ and for semigroups $\NL$.
+We prove that for quasigroups the problem is in $\FOLL$ and for groups $\L$.
+% conclusion (focus on readers) so what? - what the findings mean for the audience
+These upper bounds allow us to prove upper bounds on the rank problem in the next section.
+% perspective (focus on anyone) what now? - what should be done next
+If future work reveals more efficient algorithms for the membership problem for quasigroups or groups, we can provide improved algorithms for computing the rank of these algebraic structures.
+
+The \textsc{Submagma Membership} problem is defined as follows.
+The inputs are a magma $G$ given as a Cayley table, a magma element $h$, and a finite set of magma elements $S$.
+The problem is to decide whether $h \in \gen{S}$.
+
+\begin{lemma}[{\autocite[Corollary~9]{jl76}}]\label{lem:submagmamem}
+  \textsc{Submagma Membership} is $\P$-complete.
+\end{lemma}
+%% \begin{proof}
+%%   Suppose the magma has $n$ elements and $h$ is the element to check for submagma membership.
+%%   The certificate is a sequence of $n$ elements chosen from $S$ and a parenthesization $P$ of that sequence.
+%%   (We choose a sequence of $n$ elements from $S$ because in the worst case, the magma is the cyclic group of order $n$, the set $S$ is the singleton set $\{1\}$, and $h$ is $1^n$.)
+%%   The verification procedure computes the parenthesized product and checks that it is $h$.
+
+%%   Each element can be represented with $O(\log n)$ bits, so a sequence of $n$ such elements can be represented with $O(n \log n)$ bits.
+%%   The parenthesization can be represented as a binary string of length $n$.
+%%   Thus the overall size of the certificate is $O(n \log n)$.
+%% \end{proof}
+
+The \textsc{Subsemigroup Membership} problem is defined as follows.
+The inputs are a semigroup $G$ given as a Cayley table, a semigroup element $h$, and a finite set $S$ of semigroup elements.
+The problem is to decide whether $h \in \gen{S}$.
+
+\begin{lemma}[{\autocite{jll76}}]\label{lem:subsemigroupmem}
+  \textsc{Subsemigroup Membership} is $\NL$-complete.
+\end{lemma}
+%% \begin{proof}
+%%   We will show a logarithmic space disjunctive truth-table reduction from \textsc{Subsemigroup Membership} to \textsc{Directed Path}.
+%%   Since the latter problem is in $\NL$ and $\NL$ is closed under this type of reduction, we conclude that the former problem is in $\NL$ as well.
+
+%%   Suppose $G$ is the semigroup, $h$ is the semigroup element, and $S$ is the set of subsemigroup generators described in the problem definition.
+%%   The Cayley table induces an edge-labeled directed multigraph $\Gamma$ with self-loops: the vertices of the graph are the semigroup elements, and for each semigroup element $a$, $b$, and $c$, there is an edge labeled $b$ from $a$ to $c$ if $a \cdot b = c$.
+%%   Consider the subgraph $\Gamma_S$ induced by those edges whose labels are in $S$.
+%%   The element $h$ is in $\gen{S}$ if and only if there is a path from some vertex in $S$ to $h$.
+%%   In other words, if $S = \{s_1, \dotsc, s_m\}$ for some natural number $m$,
+%%   %% and $\Path(\Gamma_S, h, s_i)$ is a proposition that is true exactly when there is a directed path from $h$ to $s_i$ in $\Gamma_S$,
+%%   \begin{equation*}
+%%     h \in \gen{S} \iff \bigvee_{i = 1}^m (\Gamma_S, h, s_i) \in \textsc{Directed Path}.
+%%   \end{equation*}
+%%   Therefore we choose the reduction to be $(G, h, S) \mapsto ((\Gamma_S, h, s_1), \dotsc, (\Gamma_S, h, s_m))$.
+
+%%   Computing the adjacency matrix of $\Gamma_S$ from the Cayley table of $G$ and the set $S$ can be done in logarithmic space by setting each entry $(x, y)$ in the Cayley table to be zero if $y$ is not in $S$.
+%%   Iterating over all edges in the adjacency matrix requires logarithmic space, and enumerating each of the $m$ outputs requires space logarithmic in $m$, which is logarithmic in $n$ because $m \leq n$.
+%%   We conclude that the reduction is a correct logarithmic space disjunctive truth-table reduction.
+%% \end{proof}
+
+The \textsc{Cube Membership} problem is defined as follows.
+The inputs are a quasigroup $G$ given as a Cayley table, a quasigroup element $h$, a finite \emph{sequence} of quasigroup elements $S$, and a parenthesization $P$ for that sequence.
+The problem is to decide whether $h \in \cube_P(S)$.
+
+\begin{lemma}[{Implicit in \autocite[Theorem~3.4]{ctw13}}]\label{lem:cubemem}
+  \textsc{Cube Membership} is decidable by an $\L$-uniform family of unbounded fan-in circuits with size $O(2^k k n^2 \log n)$ and depth $O(d)$, where $n$ is the order of the quasigroup, $k$ is the size of the generating sequence, and $d$ is the depth of the parenthesization.
+
+  %In particular, if $k$ is in $O(\log n)$ and $d$ is in $O(\log \log n)$, then the circuit is of size polynomial in $n$ and of depth $O(\log \log n)$, that is, \textsc{Cube Membership} is in $\FOLL$.
+  In particular, if $k = O(\log n)$ and $d = O(\log \log n)$, then \textsc{Cube Membership} is in $\FOLL$.
+\end{lemma}
+\begin{proof}
+  The input to the circuit is the Cayley table for a quasigroup, a quasigroup element $h$, a generating sequence $S$, and a parenthesization $P$.
+  Suppose $S = (g_0, \dotsc, g_k)$ for some positive integer $k$.
+  Since the circuit needs to determine if $h$ is in $\cube_P(S)$, the circuit accepts if and only if there is some sequence of bits $(\epsilon_1, \dotsc, \epsilon_k)$ such that $h = P(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k})$.
+  Thus the circuit consists of $2^k$ subcircuits joined to a single \textsc{or} gate, each subcircuit deciding whether one of the $2^k$ possible $k$-bit sequences $(\epsilon_1, \dotsc, \epsilon_k)$ produces $h$ under the given parenthesization.
+
+  The subcircuit corresponding to binary sequence $(\epsilon_1, \dotsc, \epsilon_k)$ computes the parenthesized product $P(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k})$.
+  Computing the parenthesized product can be implemented in $O(k n^2 \log n)$ size and $O(d)$ depth by \autoref{lem:product}.
+  Comparing the element produced this way to the element $h$ can be done with a constant depth, $O(\log n)$ size equality comparison circuit.
+
+  We conclude that the overall size of the circuit is $O(2^k k n^2 \log n)$ and the overall depth of the circuit is $O(d)$.
+\end{proof}
+
+Although the notion of cube generating sequence will give us a better upper bound for computing quasigroup rank, we prefer to consider the more natural notion of a generating set, as we did for magmas, semigroups, and quasigroups.
+Since we know from \autoref{lem:small} that we need only consider candidate generating sets of size $O(\log n)$ and candidate parenthesizations of depth $O(\log \log n)$, we use a generalized form of the quasigroup membership problem that allows us to specify bounds on the generating set size and parenthesization depth.
+
+The \textsc{Bounded Subquasigroup Membership} problem is defined as follows.
+The inputs are a quasigroup $G$ given as a Cayley table, a quasigroup element $h$, a finite set $S$ of semigroup elements, a positive integer $k$, and a positive integer $d$.
+The problem is to decide whether there is a sequence $s$ in $S^k$ and a parenthesization of depth $d$ on $k$ elements such that $h = P(s)$.
+(This is the definition of ``$h \in \gen{S}$'', but with specific size and depth bounds on the binary tree that generates $h$.)
+This problem should be at least as difficult as \textsc{Cube Membership}: the former requires finding an appropriate sequence and parenthesization, whereas for the latter, they are fixed beforehand.
+
+\begin{lemma}\label{lem:subquasigroupmem}
+  \textsc{Bounded Subquasigroup Membership} is decidable by an $\L$-uniform family of unbounded fan-in circuits with size $O(n^2 k \log n)$ and depth $O(d)$, using $O(k \log n)$ nondeterministic bits.
+
+  In particular, if $k = O(\log n)$ and $d = O(\log \log n)$, then \textsc{Bounded Subquasigroup Membership} is in $\bFOLL$.
+\end{lemma}
+\begin{proof}
+  The algorithm is similar to that of \autoref{lem:cubemem}, except now we must nondeterministically choose a sequence and parenthesization.
+  The circuit nondeterministically chooses $k$ elements of $S$ and a parenthesization of $k$ elements of depth $d$, then accepts if and only if that parenthesized product is $h$.
+  Choosing $k$ elements, each of size $O(\log n)$, requires $O(k \log n)$ bits and choosing a parenthesization requires $O(k)$ bits, so the total number of nondeterministic bits required is $O(k \log n)$.
+  By \autoref{lem:product}, computing the parenthesized product requires a circuit of size $O(k n^2 \log n)$ and depth $O(d)$.
+  The final equality comparison requires size $O(\log n)$ and depth $O(1)$.
+  We conclude that the overall size of the circuit is $O(k n^2 \log n)$ and the overall depth of the circuit is $O(d)$.
+\end{proof}
+
+The \textsc{Subgroup Membership} problem is defined as follows.
+The inputs are a group $G$ given as a Cayley table, a group element $h$, and a finite set $S$ of group elements.
+The problem is to decide whether $h \in \gen{S}$.
+
+\begin{lemma}\label{lem:subgroupmem}
+  \textsc{Subgroup Membership} is in $\L$.
+\end{lemma}
+\begin{proof}
+  The problem is in $\SL$ by a reduction to \textsc{Undirected Path} \autocite[Section~3]{bm89}, and $\SL = \L$ \cite{reingold08}.
+\end{proof}

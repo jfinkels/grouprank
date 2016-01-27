@@ -1,0 +1,102 @@
+\section{Computation of ring rank}
+
+\todo{Finite rings seem to not be given as two Cayley tables, but as one Cayley table for multiplication and a decomposition of the additive group as a direct sum of its Sylow subgroups (computable in time polynomial in the order of the group).}
+
+% Foreword
+%
+% context (focus on anyone) why now? - current situation, and why the need is so important
+The previous section provides an upper bound on the computational complexity of computing the rank of a group.
+Is it interesting to ask about the ``rank'' of rings or fields, and what does rank mean for these algebraic structures?
+A ring comprises an additive group and a multiplicative monoid with an additional distributivity property relating the two.
+We represent it as a pair of Cayley tables, one for the group and one for the monoid.
+
+% need (focus on readers) why you? - why this is relevant to the reader, and why something needed to be done
+Since our purpose for asking questions about the rank of an algebraic structure is to determine the smallest number of elements required to generate all other elements, we define the \emph{rank of a ring $R$} to be the minimum cardinality of a set $S$ such that $\gen{S} = R$, where $\gen{S}$ is the closure of $S$ under \emph{both} addition and multiplication.
+The rank of a ring is bounded above by the minimum of the rank of its additive group and the rank of its multiplicative monoid.  %, but in general it could be strictly smaller.
+Indeed, the \textsc{Ring Rank} problem is in $\P$, since a ring is an abelian group under addition, and for abelian groups (even for nilpotent groups) a minimum generating set can be computed in polynomial time \autocite[Theorem~7]{at06}.
+% task (focus on author) why me? - what was undertaken to address the need
+Regardless, we believe it enlightening to show how to use the same strategy used to determine the complexity of \textsc{Magma Rank} on \textsc{Ring Rank}.
+% object (focus on document) why this document - what the document covers
+This section shows how to reduce the rank problem to the membership problem, then shows an upper bound on the complexity of the membership problem.
+
+% Summary
+%
+% findings (focus on author) what? - what the work revealed when performing the task
+\todo{This is false.}
+\autoref{thm:ringrank} below reveals that our best upper bound for computing the rank of a ring given as a pair of Cayley tables is $\NL$, the same as our best upper bound for computing the rank of a semigroup.
+% conclusion (focus on readers) so what? - what the findings mean for the audience
+This makes sense because the hardness in this problem lies in computing the rank of the underlying monoid (which is just a semigroup with an identity element, so the worst-case complexity of the rank problem for monoids and for semigroups is exactly the same).
+% perspective (focus on anyone) what now? - what should be done next
+Improving the algorithm for computing the rank of a monoid (or semigroup) will immediately improve the algorithm for computing the rank of a ring.
+
+Not all rings have an interesting rank problem.
+In the special case that the ring is a finite domain (that is, it has no nontrivial zero divisors), then by Wedderburn's little theorem \autocite[Theorem~3~§~11.1]{nicholson12}, the ring is a finite field.
+The multiplicative group of any finite field is cyclic \autocite[Theorem~7~§~6.4]{nicholson12}, so the rank of a finite field, and hence any finite domain, is one and the computational problem is uninteresting.
+But in general, for arbitrary (commutative or non-commutative) rings, the problem has nontrivial complexity.
+
+\begin{lemma}\label{lem:ringranktomem}
+  $\textsc{Ring Rank} \leq_{ctt}^{\bAC^0} \textsc{Subring Membership}$.
+\end{lemma}
+\begin{proof}
+  The reduction is identical to the ones in \autoref{lem:ranktomem}, and uses only $O(\log^2 n)$ bits of nondeterminism because any generating set must generate the additive group, and the additive group has a generating set of size at most $\log n$ by \autoref{lem:log}.
+\end{proof}
+
+\begin{lemma}\label{lem:memtopath}
+  $\textsc{Subring Membership} \leq_m^{\L} \textsc{Directed Path}$.
+\end{lemma}
+\begin{proof}
+  Given a ring $R$ (expressed as two Cayley tables, one for addition and one for multiplication), a ring element $r$, and a set of ring elements $S$, construct a directed, labeled graph as follows.
+  The set of vertices is the set of all ring elements.
+  There is an edge from $x$ to $y$ labeled $(a, b)$ if $x a - b = y$.
+  Let $G$ be the subgraph induced by edges labeled by pairs $(a, b)$ where both $a$ and $b$ are elements of $S$.
+  Output the subgraph $G$, the source vertex $1$, and the target vertex $r$.
+
+  The choice of edges $(x, y)$ where $x a - b = y$ for some $a$ and $b$ in $S$ deserves some justification.
+  First, choosing the subgraph induced by edges of the form $(a, 0)$ yields the Cayley graph of the ring's underlying multiplicative monoid.
+  Similarly, choosing the subgraph induced by edges of the form $(1, b)$ yields the Cayley graph of the ring's underlying additive group.
+  Second, the subring test states that a subset of a ring is a subring if it is closed under multiplication and subtraction and contains the identity element.
+  Thus the transitive closure of the vertex representing the multiplicative identity under edges labeled with elements from the subset $S$ is guaranteed to be a subring.
+
+  Looping over each pair of ring elements $(x, y)$ and each pair $(a, b)$ requires $O(\log n)$ space for a ring with $n$ elements.
+  Deciding whether to add a labeled edge from $x$ to $y$ requires a constant number of Cayley table lookups, again requiring $O(\log n)$ space.
+  Thus the reduction is computable in logarithmic space.
+
+  To prove correctness, suppose $r$ is in the subring generated by $S$.
+  One way to see that there is a path from $1$ to $r$ is to consider the sequence of multiplications and additions that produce $r$ from $1$.
+  Let $(c_1, \dotsc, c_n)$ be the sequence of ring elements and $(\ast_1, \dotsc, \ast_n)$ be the finite sequence of ring operations, each one either an addition or a multiplication, such that $1 \ast_1 c_1 \dotsb \ast_n c_n = r$.
+  The sequences must be finite because the cardinality of the ring is finite.
+  Then the path from vertex $1$ to vertex $r$ is the sequence of edges $((a_1, b_1), \dotsc, (a_n, b_n))$, where $(a_i, b_i)$ is $(c_i, 0)$ if $\ast_i$ is multiplication or $(1, -c_i)$ if $\ast_i$ is addition, for each $i \in [n]$.
+
+  For the converse, suppose there is a path from $1$ to $r$ of length $k$ in the graph $G$, where $k \leq n$.
+  Let $((a_1, b_1), \dotsc, (a_k, b_k))$ be the labels along the edges of that path.
+  To facilitate the closed-form representation of $r$, let $b_0 = -1$ and $a_{k + 1} = 1$.
+  By construction of the graph $G$, we know $r = (\dotsb ((1 a_1 - b_1) a_2 - b_2) \dotsb) a_k - b_k$, or more concisely,
+  \begin{equation*}
+    r = -\sum_{i = 0}^k \left[b_i \prod_{j = i + 1}^{k + 1} a_j\right].
+  \end{equation*}
+  As stated previously, the transitive closure of $1$ in $G$ is the subring generated by $S$.
+  By the formula above, $r$ is in the transitive closure of $S$, so it is in the subring generated by $S$.
+\end{proof}
+
+\begin{theorem}\label{thm:ringrank}
+  \textsc{Ring Rank} is in $\NL$.
+\end{theorem}
+\begin{proof}
+  \textsc{Directed Path} is in (and complete for) $\NL$, and $\NL$ is closed under logarithmic space many-one reductions, so \textsc{Subring Membership} is in $\NL$, by \autoref{lem:memtopath}.
+  Using the fact that $\bAC^0$ is a subset of $\NAC^0$, \autoref{lem:ctt} and \autoref{lem:ringranktomem} imply that \textsc{Ring Rank} is in $\NL$.
+\end{proof}
+
+Can the complexity of \textsc{Subring Membership} be reduced, thereby reducing the complexity of \textsc{Ring Rank}?
+One way of showing that it cannot would be to prove it $\NL$-complete.
+We conjecture it is by a reduction from \textsc{Directed Path} to \textsc{Subring Membership}, but see no obvious approach.
+The strategy from \autocite[Theorem~4.4]{ks06}, which reduces the isomorphism problem for graphs to that for rings, does not seem directly applicable, since the reduction only maintains adjacency, not connectedness.
+
+On the other hand, if \textsc{Subring Membership} reduces to \textsc{Subgroup Membership} by a sufficiently tight reduction, then we could improve the upper bound for \textsc{Ring Rank} to $\bL$.
+However, such a reduction seems unlikely, since access to both addition and multiplication should allow more ring elements to be generated from a given set than access to addition alone.
+The converse reduction seems unlikely as well, since an arbitrary group is not necessarily abelian, and a non-abelian group does not admit a ring structure.
+Even for abelian groups, the previous concern about access to both addition and multiplication applies.
+We conjecture that the two problems are incomparable with respect to many-one reductions of sufficiently low complexity.
+
+As stated in the introduction to this section, the rank of a ring is bounded above by the rank of its subgroup and of its monoid.
+If this inequality is tight, then \textsc{Ring Rank} reduces to the join of \textsc{Group Rank} and \textsc{Monoid Rank}, by computing the minimum of the solution to each of these two problems.
+However, we conjecture that there is a finite ring whose rank is strictly less than the rank of both its group and its monoid.
