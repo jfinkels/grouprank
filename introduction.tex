@@ -33,7 +33,7 @@ We prove that the problem of deciding whether the rank of a finite quasigroup, g
 Furthermore, if the quasigroup is a group, then the problem is also decidable by a Turing machine using $O(\log n)$ space and $O(\log^2 n)$ bits of nondeterminism with \emph{two-way} read access to the nondeterministic bits (the complexity class for problems like this is denoted $\bL$).
 The general strategy is to reduce the problem of computing rank to the problem of computing membership; we compute the rank of a group by guessing a small set of candidate generators, then deciding whether each other element in the group can be generated from that set.
 For the sake of completeness, we show how this strategy applies to semigroups and magmas in general, though these results are less interesting because those algebraic structures lack the small generating sets that quasigroups have.
-We show that the rank problem for rings is decidable by a bounded fan-in circuit of depth $O(\log^2 n)$ augmented with $O(\log^2 n)$ nondeterministic bits (a class denoted $\bNC^2$).
+We show that the rank problem for rings is decidable by a circuit of depth $O(\log n)$ augmented with $O(\log^2 n)$ nondeterministic bits (a class denoted $\bAC^1$).
 Finally, we show how this technique applies to relaxations of notions of ``generating set'' \todo{fill me in with results}.
 \autoref{tab:summary} summarizes these improvements, and \autoref{fig:inclusions} demonstrates graphically why these improvements are so significant.
 (We could not find an explicit upper bound for magmas, semigroups, or rings, but other papers imply that the problems are in $\NP$.)
@@ -46,7 +46,7 @@ Finally, we show how this technique applies to relaxations of notions of ``gener
       semigroup & $\NP$ & $\NP$ \\
       quasigroup & $\bP$ \autocite{py96} & $\bFOLL$ \\
       group & $\L^2$ \autocite{lsz77} & $\bFOLL \cap \bL$ \\
-      ring & $\NP$ & $\bNC^2$
+      ring & $\P$ & $\bAC^1 \cap \P$
     \end{tabular}
   \end{center}
 \end{table}
@@ -56,7 +56,7 @@ Finally, we show how this technique applies to relaxations of notions of ``gener
     \begin{tikzpicture}
       \node at ( 0, 6) (l2) {$\L^2$};
       \node at ( 1, 5) (p) {$\P$};
-      \node at ( 0, 5) (bnc2) {$\bNC^2$};
+      \node at ( 0, 5) (bac1) {$\bAC^1$};
       \node at ( 1, 4) (ac1) {$\AC^1$};
       \node at ( 0, 4) (bl) {$\bL$};
       \node at ( 1, 3) (nllog2) {$\NL[\log^2 n]$};
@@ -73,12 +73,12 @@ Finally, we show how this technique applies to relaxations of notions of ``gener
       \draw (nllog2) to (bl);
       \draw (bfollandbl) to (bl);
       \draw (bfollandbl) to (bfoll);
-      \draw (bfoll) to (bnc2);
-      \draw (bl) to (bnc2);
+      \draw (bfoll) to (bac1);
+      \draw (bl) to (bac1);
       \draw (nllog2) to (ac1);
-      \draw (ac1) to (bnc2);
+      \draw (ac1) to (bac1);
       \draw (ac1) to (p);
-      \draw (bnc2) to (l2);
+      \draw (bac1) to (l2);
     \end{tikzpicture}
   \end{center}
 \end{figure}

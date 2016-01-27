@@ -1,14 +1,15 @@
 \section{Computation of ring rank}
 
-\todo{Finite rings seem to not be given as two Cayley tables, but as one Cayley table for multiplication and a decomposition of the additive group as a direct sum of its Sylow subgroups (computable in time polynomial in the order of the group).}
-
 % Foreword
 %
 % context (focus on anyone) why now? - current situation, and why the need is so important
 The previous section provides an upper bound on the computational complexity of computing the rank of a group.
 Is it interesting to ask about the ``rank'' of rings or fields, and what does rank mean for these algebraic structures?
 A ring comprises an additive group and a multiplicative monoid with an additional distributivity property relating the two.
-We represent it as a pair of Cayley tables, one for the group and one for the monoid.
+We represent it as a pair of Cayley tables, one for the group and one for the monoid.\footnote{
+  The underlying additive group of a finite ring can also be represented as the direct sum of a finite number of cyclic groups of prime power order by the fundamental theorem of finite abelian groups.
+  This is the representation chosen in, for example, \autocite{ks06} and \autocite{av05} when designing algorithms for finite rings.
+}
 
 % need (focus on readers) why you? - why this is relevant to the reader, and why something needed to be done
 Since our purpose for asking questions about the rank of an algebraic structure is to determine the smallest number of elements required to generate all other elements, we define the \emph{rank of a ring $R$} to be the minimum cardinality of a set $S$ such that $\gen{S} = R$, where $\gen{S}$ is the closure of $S$ under \emph{both} addition and multiplication.
@@ -22,12 +23,11 @@ This section shows how to reduce the rank problem to the membership problem, the
 % Summary
 %
 % findings (focus on author) what? - what the work revealed when performing the task
-\todo{This is false.}
-\autoref{thm:ringrank} below reveals that our best upper bound for computing the rank of a ring given as a pair of Cayley tables is $\NL$, the same as our best upper bound for computing the rank of a semigroup.
+\autoref{thm:ringrank} below yields an upper bound of $\bAC^1$ for computing the rank of a ring given as a pair of Cayley tables.
 % conclusion (focus on readers) so what? - what the findings mean for the audience
-This makes sense because the hardness in this problem lies in computing the rank of the underlying monoid (which is just a semigroup with an identity element, so the worst-case complexity of the rank problem for monoids and for semigroups is exactly the same).
+The hardness of this problem lies in computing the rank of the underlying monoid (which is just a semigroup with an identity element, so the worst-case complexity of the rank problem for monoids and for semigroups is the same).
 % perspective (focus on anyone) what now? - what should be done next
-Improving the algorithm for computing the rank of a monoid (or semigroup) will immediately improve the algorithm for computing the rank of a ring.
+Improving the algorithm for computing the rank of a monoid (or semigroup) will immediately improve the algorithm we propose in this section for computing the rank of a ring.
 
 Not all rings have an interesting rank problem.
 In the special case that the ring is a finite domain (that is, it has no nontrivial zero divisors), then by Wedderburn's little theorem \autocite[Theorem~3~§~11.1]{nicholson12}, the ring is a finite field.
@@ -79,11 +79,13 @@ But in general, for arbitrary (commutative or non-commutative) rings, the proble
 \end{proof}
 
 \begin{theorem}\label{thm:ringrank}
-  \textsc{Ring Rank} is in $\NL$.
+  \textsc{Ring Rank} is in $\bAC^1 \cap \P$.
 \end{theorem}
 \begin{proof}
-  \textsc{Directed Path} is in (and complete for) $\NL$, and $\NL$ is closed under logarithmic space many-one reductions, so \textsc{Subring Membership} is in $\NL$, by \autoref{lem:memtopath}.
-  Using the fact that $\bAC^0$ is a subset of $\NAC^0$, \autoref{lem:ctt} and \autoref{lem:ringranktomem} imply that \textsc{Ring Rank} is in $\NL$.
+  We already know that \textsc{Ring Rank} is in $\P$ by \autocite[Theorem~7]{at06}, which provides a polynomial-time algorithm for computing a minimum generating set for a nilpotent group, and the underlying additive group of any ring is nilpotent because it is abelian by definition.
+  \textsc{Directed Path} is in $\NL$, and $\NL$ is closed under logarithmic space many-one reductions, so \textsc{Subring Membership} is in $\NL$, by \autoref{lem:memtopath}.
+  Since $\NL \subseteq \AC^1$, there is a $\bAC^0$ conjunctive truth-table reduction from \textsc{Ring Rank} to a problem in $\AC^1$.
+  Thus, by a proof similar to that of \autoref{lem:ctt}, we have \textsc{Ring Rank} in $\bAC^1$.
 \end{proof}
 
 Can the complexity of \textsc{Subring Membership} be reduced, thereby reducing the complexity of \textsc{Ring Rank}?
