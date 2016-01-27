@@ -2,3 +2,4 @@
   groups when given in a different input format (for example, as a list of
   generators).
 - replace meaningful
+- replace "polynomial time" with "polyomial-time"
