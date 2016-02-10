@@ -8,15 +8,15 @@ Is it interesting to ask about the ``rank'' of rings or fields, and what does ra
 A ring comprises an additive group and a multiplicative monoid with an additional distributivity property relating the two.
 We represent it as a pair of Cayley tables, one for the group and one for the monoid.\footnote{
   The underlying additive group of a finite ring can also be represented as the direct sum of a finite number of cyclic groups of prime power order by the fundamental theorem of finite abelian groups.
-  This is the representation chosen in, for example, \autocite{ks06} and \autocite{av05} when designing algorithms for finite rings.
+  This is the representation chosen in, for example, \autocite{av05} and \autocite{ks06}  when designing algorithms for finite rings.
 }
 
 % need (focus on readers) why you? - why this is relevant to the reader, and why something needed to be done
 Since our purpose for asking questions about the rank of an algebraic structure is to determine the smallest number of elements required to generate all other elements, we define the \emph{rank of a ring $R$} to be the minimum cardinality of a set $S$ such that $\gen{S} = R$, where $\gen{S}$ is the closure of $S$ under \emph{both} addition and multiplication.
-The rank of a ring is bounded above by the minimum of the rank of its additive group and the rank of its multiplicative monoid.  %, but in general it could be strictly smaller.
-Indeed, the \textsc{Ring Rank} problem is in $\P$, since a ring is an abelian group under addition, and for abelian groups (even for nilpotent groups) a minimum generating set can be computed in polynomial time \autocite[Theorem~7]{at06}.
+The rank of a ring is bounded above by the minimum of the rank of its additive group and the rank of its multiplicative monoid.  % We are not sure if there is an example of a finite ring that has strictly smaller ring rank than group or monoid rank.
+%% *This is not necessarily true*: Indeed, the \textsc{Ring Rank} problem is in $\P$, since a ring is an abelian group under addition, and for abelian groups (even for nilpotent groups) a minimum generating set can be computed in polynomial time \autocite[Theorem~7]{at06}.
 % task (focus on author) why me? - what was undertaken to address the need
-Regardless, we believe it enlightening to show how to use the same strategy used to determine the complexity of \textsc{Magma Rank} on \textsc{Ring Rank}.
+We believe it enlightening to show how to use the same strategy used to determine the complexity of \textsc{Magma Rank} on \textsc{Ring Rank}.
 % object (focus on document) why this document - what the document covers
 This section shows how to reduce the rank problem to the membership problem, then shows an upper bound on the complexity of the membership problem.
 
@@ -25,7 +25,7 @@ This section shows how to reduce the rank problem to the membership problem, the
 % findings (focus on author) what? - what the work revealed when performing the task
 \autoref{thm:ringrank} below yields an upper bound of $\bAC^1$ for computing the rank of a ring given as a pair of Cayley tables.
 % conclusion (focus on readers) so what? - what the findings mean for the audience
-The hardness of this problem lies in computing the rank of the underlying monoid (which is just a semigroup with an identity element, so the worst-case complexity of the rank problem for monoids and for semigroups is the same).
+The hardness of this problem lies in computing the rank with respect to the underlying monoid (which is just a semigroup with an identity element, so the worst-case complexity of the rank problem for monoids and for semigroups is the same).
 % perspective (focus on anyone) what now? - what should be done next
 Improving the algorithm for computing the rank of a monoid (or semigroup) will immediately improve the algorithm we propose in this section for computing the rank of a ring.
 
@@ -79,10 +79,10 @@ But in general, for arbitrary (commutative or non-commutative) rings, the proble
 \end{proof}
 
 \begin{theorem}\label{thm:ringrank}
-  \textsc{Ring Rank} is in $\bAC^1 \cap \P$.
+  \textsc{Ring Rank} is in $\bAC^1$.
 \end{theorem}
 \begin{proof}
-  We already know that \textsc{Ring Rank} is in $\P$ by \autocite[Theorem~7]{at06}, which provides a polynomial-time algorithm for computing a minimum generating set for a nilpotent group, and the underlying additive group of any ring is nilpotent because it is abelian by definition.
+  %% We already know that \textsc{Ring Rank} is in $\P$ by \autocite[Theorem~7]{at06}, which provides a polynomial-time algorithm for computing a minimum generating set for a nilpotent group, and the underlying additive group of any ring is nilpotent because it is abelian by definition.
   \textsc{Directed Path} is in $\NL$, and $\NL$ is closed under logarithmic space many-one reductions, so \textsc{Subring Membership} is in $\NL$, by \autoref{lem:memtopath}.
   Since $\NL \subseteq \AC^1$, there is a $\bAC^0$ conjunctive truth-table reduction from \textsc{Ring Rank} to a problem in $\AC^1$.
   Thus, by a proof similar to that of \autoref{lem:ctt}, we have \textsc{Ring Rank} in $\bAC^1$.
