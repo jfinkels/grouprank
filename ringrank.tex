@@ -13,8 +13,7 @@ We represent it as a pair of Cayley tables, one for the group and one for the mo
 
 % need (focus on readers) why you? - why this is relevant to the reader, and why something needed to be done
 Since our purpose for asking questions about the rank of an algebraic structure is to determine the smallest number of elements required to generate all other elements, we define the \emph{rank of a ring $R$} to be the minimum cardinality of a set $S$ such that $\gen{S} = R$, where $\gen{S}$ is the closure of $S$ under \emph{both} addition and multiplication.
-The rank of a ring is bounded above by the minimum of the rank of its additive group and the rank of its multiplicative monoid.  % We are not sure if there is an example of a finite ring that has strictly smaller ring rank than group or monoid rank.
-%% *This is not necessarily true*: Indeed, the \textsc{Ring Rank} problem is in $\P$, since a ring is an abelian group under addition, and for abelian groups (even for nilpotent groups) a minimum generating set can be computed in polynomial time \autocite[Theorem~7]{at06}.
+The rank of a ring is bounded above by the minimum of the rank of its additive group and the rank of its multiplicative monoid, but there are finite rings that have strictly smaller rank; see \autoref{ex:ringsmaller}.
 % task (focus on author) why me? - what was undertaken to address the need
 We believe it enlightening to show how to use the same strategy used to determine the complexity of \textsc{Magma Rank} on \textsc{Ring Rank}.
 % object (focus on document) why this document - what the document covers
@@ -33,6 +32,28 @@ Not all rings have an interesting rank problem.
 In the special case that the ring is a finite domain (that is, it has no nontrivial zero divisors), then by Wedderburn's little theorem \autocite[Theorem~3~§~11.1]{nicholson12}, the ring is a finite field.
 The multiplicative group of any finite field is cyclic \autocite[Theorem~7~§~6.4]{nicholson12}, so the rank of a finite field, and hence any finite domain, is one and the computational problem is uninteresting.
 But in general, for arbitrary (commutative or non-commutative) rings, the problem has nontrivial complexity.
+Even for small commutative rings, the rank of the ring can be strictly smaller than the rank of the group and of the monoid.
+
+\begin{example}[{\autocite{mse}}]\label{ex:ringsmaller}
+  The ring $(\mathbb{Z} / 2 \mathbb{Z})^3$, with both addition and multiplication defined componentwise, has rank strictly smaller than both the rank of its underlying group and the rank of its underlying monoid.
+
+  The group is the elementary abelian $2$-group of order $2^3$, and so has rank three by \autoref{ex:elementary}.
+  The monoid has rank four via the generating set $\{(0, 1, 1), (1, 0, 1), (1, 1, 0), (1, 1, 1)\}$.
+  This set is a generating set because the product of any pair of the first three elements yields the elements $(0, 0, 1)$, $(0, 1, 0)$, and $(1, 0, 0)$, and the product of any pair of those three yields the remaining element, $(0, 0, 0)$.
+  No smaller set can generate the entire monoid, since the identity generates only itself and no other element generates it, and removing any one of the first three makes it impossible to generate an element with a zero in the same coordinate as in the removed element.
+  Thus the rank of the monoid is four.
+
+  However, the rank of the ring is at most two.
+  Starting with the generating set $\{(0, 1, 1), (1, 1, 0)\}$ we have
+  \begin{align*}
+    (0, 1, 1) + (1, 1, 0) &= (1, 0, 1), \\
+    (0, 1, 1) \cdot (1, 1, 0) &= (0, 1, 0), \\
+    (1, 0, 1) + (0, 1, 0) &= (1, 1, 1).
+  \end{align*}
+  At this point, we have generated each element in the generating set for the monoid, so we can generate all other elements.
+\end{example}
+
+In order to compute the rank of the ring, we reduce the problem to the corresponding membership problem as in \autoref{sec:rank}.
 
 \begin{lemma}\label{lem:ringranktomem}
   $\textsc{Ring Rank} \leq_{ctt}^{\bAC^0} \textsc{Subring Membership}$.
@@ -98,7 +119,3 @@ However, such a reduction seems unlikely, since access to both addition and mult
 The converse reduction seems unlikely as well, since an arbitrary group is not necessarily abelian, and a non-abelian group does not admit a ring structure.
 Even for abelian groups, the previous concern about access to both addition and multiplication applies.
 We conjecture that the two problems are incomparable with respect to many-one reductions of sufficiently low complexity.
-
-As stated in the introduction to this section, the rank of a ring is bounded above by the rank of its subgroup and of its monoid.
-If this inequality is tight, then \textsc{Ring Rank} reduces to the join of \textsc{Group Rank} and \textsc{Monoid Rank}, by computing the minimum of the solution to each of these two problems.
-However, we conjecture that there is a finite ring whose rank is strictly less than the rank of both its group and its monoid.
