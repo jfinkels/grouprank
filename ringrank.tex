@@ -86,7 +86,7 @@ In order to compute the rank of the ring, we reduce the problem to the correspon
   One way to see that there is a path from $1$ to $r$ is to consider the sequence of multiplications and additions that produce $r$ from $1$.
   Let $(c_1, \dotsc, c_n)$ be the sequence of ring elements and $(\ast_1, \dotsc, \ast_n)$ be the finite sequence of ring operations, each one either an addition or a multiplication, such that $1 \ast_1 c_1 \dotsb \ast_n c_n = r$.
   The sequences must be finite because the cardinality of the ring is finite.
-  Then the path from vertex $1$ to vertex $r$ is the sequence of edges $((a_1, b_1), \dotsc, (a_n, b_n))$, where $(a_i, b_i)$ is $(c_i, 0)$ if $\ast_i$ is multiplication or $(1, -c_i)$ if $\ast_i$ is addition, for each $i \in [n]$.
+  Then the path from vertex $1$ to vertex $r$ is the sequence of edges $((a_1, b_1), \dotsc, (a_n, b_n))$, where $(a_i, b_i)$ is $(c_i, 0)$ if $\ast_i$ is multiplication or $(1, -c_i)$ if $\ast_i$ is addition, for each $i \in \{1, \dotsc, n\}$.
 
   For the converse, suppose there is a path from $1$ to $r$ of length $k$ in the graph $G$, where $k \leq n$.
   Let $((a_1, b_1), \dotsc, (a_k, b_k))$ be the labels along the edges of that path.
