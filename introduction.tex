@@ -24,7 +24,7 @@ Only for certain classes of finite groups is there a polynomial-time algorithm.
 % task (focus on author) why me? - what was undertaken to address the need
 We improve the best upper bound on the complexity of the rank problem for quasigroups and groups by using an algorithm with limited nondeterminism.
 % object (focus on document) why this document - what the document covers
-This paper proves that with short certificates of correctness, the rank problem for quasigroups and groups can be verified by highly restricted models of computation, and demonstrates how the same strategy can be applied to semigroups and magmas in general.
+This paper proves that with short certificates of correctness, the rank problem for quasigroups and groups can be verified by highly restricted models of computation, and demonstrates how the same strategy can be applied to other algebraic structures.
 
 % Summary
 %
@@ -34,7 +34,7 @@ Furthermore, if the quasigroup is a group, then the problem is also decidable by
 The general strategy is to reduce the problem of computing rank to the problem of computing membership; we compute the rank of a group by guessing a small set of candidate generators, then deciding whether each other element in the group can be generated from that set.
 For the sake of completeness, we show how this strategy applies to semigroups and magmas in general, though these results are less interesting because those algebraic structures lack the small generating sets that quasigroups have.
 We show that the rank problem for rings is decidable by a circuit of depth $O(\log n)$ augmented with $O(\log^2 n)$ nondeterministic bits (a class denoted $\bAC^1$).
-Finally, we show how this technique applies to relaxations of notions of ``generating set'' \todo{fill me in with results}.
+Finally, we show how this technique applies to other notions of rank.
 \autoref{tab:summary} summarizes these improvements, and \autoref{fig:inclusions} demonstrates graphically why these improvements are so significant.
 (We could not find an explicit upper bound for magmas, semigroups, or rings, but other papers imply that the problems are in $\NP$.)
 \begin{table}
