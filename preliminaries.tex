@@ -89,6 +89,7 @@ If the binary operation is associative, the magma is called a \emph{semigroup}.
 A semigroup with a unique identity element is called a \emph{monoid}.
 If the binary operation has the property that for each $a$ and $b$ in $G$ there are unique elements $x$ and $y$ in $G$ such that $a \cdot x = b$ and $y \cdot a = b$, the magma is called a \emph{quasigroup}.
 (In other words, each quasigroup element appears exactly once in each row and each column of the Cayley table of $G$, or the Cayley table is a \emph{Latin square}.)
+A quasigroup with at least one identity element is called a \emph{loop}.
 If a quasigroup is nonempty and associative, then it is a \emph{group}.
 Alternately, if a semigroup has an identity and inverses, then it is a group.
 %% Thus if a magma is nonempty, a semigroup, and a quasigroup, it is a group.
@@ -279,8 +280,10 @@ In fact, we can prove a more general lemma bounding the size of independent sets
   We conclude that $m \leq \log |H_m| \leq \log |G| = \log n$.
 \end{proof}
 
-\todo{Groups satisfy the disjointness requirement, but loops (quasigroups with identity) do not and I suspect semigroups do not; see ``Transversals in loops'' by E. Kuznetsov, where the author states, ``The cosets in a loop to its subloop do not necessarily form a partition of the loop.''}
-A finite group satisfies the hypothesis in the previous lemma, so each independent set of a finite group has size at most $\log n$.
+The disjointness requirement in the previous lemma is fairly strict.
+% TODO add the citation: \autocite[Section~I.2]{pflugfelder90}
+Neither semigroups (the zero semigroup, for example) nor loops necessarily satisfy it.
+Still, a finite group satisfies the hypothesis in the previous lemma, so each independent set of a finite group has size at most $\log n$.
 Furthermore, each finite group has an independent \emph{generating} set.
 
 \begin{lemma}
