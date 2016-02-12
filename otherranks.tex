@@ -59,11 +59,37 @@ For any magma $G$,
 These are called \emph{large rank}, \emph{upper rank}, \emph{intermediate rank}, \emph{lower rank}, and \emph{small rank}, respectively.
 The lower rank is the notion of rank discussed in the previous sections of the paper.
 \begin{proposition}
-  For any finite semigroup $G$ (\todo{how about quasigroups or magmas?}),
+  For each finite magma $G$,
   \begin{equation*}
     \rank_s(G) \leq \rank_\ell(G) \leq \rank_i(G) \leq \rank_u(G) \leq \rank_L(G).
   \end{equation*}
 \end{proposition}
+\begin{proof}
+  \autocite{hr00} states this chain of inequalities for semigroups; we show that it holds for finite magmas as well.
+
+  The inequalities $\rank_\ell(G) \leq \rank_i(G) \leq \rank_u(G)$ follow from the fact that the collection of independent generating sets is the intersection of the collection of independent sets and the collection of generating sets.
+
+  Next we prove that $\rank_s(G) \leq \rank_\ell(G)$.
+  If $\rank_\ell(G) = |G|$, then we are done since $\rank_s(G)$ must be bounded above by $|G|$ by definition.%
+  \footnote{A semigroup $G$ with $\rank_\ell(G) = |G|$ is sometimes called a ``royal semigroup'' (because it has the highest possible rank) \autocite{gh85}.}
+  Thus it suffices to consider only magmas with $\rank_\ell(G) < |G|$.
+  Assume with the intention of producing a contradiction that $\rank_s(G) > \rank_\ell(G)$.
+  Let $S$ be the generating set of cardinality $\rank_\ell(G)$.
+  Let $x \in G \setminus S$, which exists because $\rank_\ell(G) < |G|$.
+  Now $S \cup \{x\}$ is a generating set of cardinality at most $\rank_s(G)$.
+  By definition of $\rank_s(G)$, this means $S \cup \{x\}$ is independent.
+  But $x \in \gen{S}$ since $S$ generates $G$, so $S$ cannot be independent.
+  This is a contradiction, therefore $\rank_s(G) \leq \rank_\ell(G)$.
+
+  Finally we prove that $\rank_u(G) \leq \rank_L(G)$.
+  If $\rank_L(G) = |G|$, then $G$ is the smallest generating set, so $\rank_\ell(G) = \rank_L(G)$, which subsumes the equality $\rank_u(G) = \rank_L(G)$.
+  Thus it suffices to consider only magmas with $\rank_L(G) < |G|$.
+  Assume with the intention of producing a contradiction that $\rank_u(G) > \rank_L(G)$.
+  Let $S$ be the independent set of cardinality $\rank_u(G)$ and let $x$ be an arbitrary element of $S$.
+  Then the set $S \setminus \{x\}$ has cardinality at least $\rank_L(G)$, so it is a generating set for $G$.
+  This means $x \in \gen{S \setminus \{x\}}$, a contradiction with the hypothesis that $S$ is independent.
+  Therefore, $\rank_u(G) \leq \rank_L(G)$.
+\end{proof}
 
 The framework of \autoref{sec:rank} provides a simple way of determining the complexity of computing these functions.
 The decision problems corresponding to these rank functions are defined as follows.
