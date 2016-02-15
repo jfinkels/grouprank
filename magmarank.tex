@@ -38,49 +38,29 @@ That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigro
   \item $\textsc{Group Rank} \leq^{\bAC^0}_{ctt} \textsc{Subgroup Membership}$.
   \end{enumerate}
 \end{lemma}
-\begin{proof}
-  First, consider the problem for magmas.
+\begin{proof}[Proof sketch]
+  Each reduction is essentially the same.
+  By the definition of rank, we have for each magma $G$,
+  \begin{equation*}
+    \rank(G) \leq k \iff \exists S \subseteq G \colon |S| \leq k \land \bigwedge_{i = 1}^n g_i \in \gen{S},
+  \end{equation*}
+  with slight modifications to deal with sequences instead of sets, required parenthesizations, and/or cube membership.
+  Thus the witness is the binary representation of the set $S$ and the function $f$ computing the reduction outputs the $n$-tuple $((G, g_1, S), \dotsc, (G, g_n, S))$.
+  For the reduction to \textsc{Cube Membership}, the witness also includes a parenthesization, and the reduction must output that as well.
+  For the reduction to \textsc{Bounded Subquasigroup Membership}, the witness includes also the depth $d$ of parenthesizations, and the reduction must output $d$ as well as the number $k$.
+
+  The correctness of the reductions follows immediately from the definitions of rank, but the real interest is in the complexity.
   Unlike for quasigroups and groups (\autoref{lem:small} and \autoref{lem:log}), we have no general upper bound on the minimum size of a generating set for magmas.
-  Thus, the best we can do is nondeterministically choose a set of $k$ generators and determine if that set generates the magma, where $k$ can be as large as the number of elements in the magma.
-
-  Let $g_1, \dotsc, g_n$ denote the elements of a magma.
-  The reduction proceeds as follows.
-  On input $(G, k)$, where $G$ is a magma on $n$ elements given as its Cayley table and $k$ is a positive integer given in unary, nondeterministically choose a sequence $S$ of $k$ magma elements.
-  Output $((G, g_1, S), \dotsc, (G, g_n, S))$.
-
+  Thus, for magmas, the best we can do is nondeterministically choose a set of $k$ generators and determine if that set generates the magma, where $k$ can be as large as the number of elements in the magma.
   Since each magma element can be represented by $O(\log n)$ bits, the number of nondeterministic bits used is $O(n \log n)$.
-  By definition of rank,
-  \begin{equation*}
-    \rank(G) \leq k \iff \bigwedge_{i = 1}^n g_i \in \gen{S},
-  \end{equation*}
-  so the reduction is a correct conjunctive truth-table reduction.
-  For semigroups, we apply the exact same reduction.
+  For semigroups, we apply the exact same analysis.
 
-  For quasigroups, in the reduction to the cube membership problem, the only differences are that we need to nondeterministically choose a parenthesization as well as a generating sequence, and that we have an upper bound on the size of the sequence and the parenthesization.
   By \autoref{lem:small}, it suffices to consider inputs to \textsc{Quasigroup Rank} in which $k$ is in $O(\log n)$ and inputs to \textsc{Cube Membership} in which $P$ is of depth $O(\log \log n)$.
-  The reduction therefore must nondeterministically choose a sequence $S$ of $k$ quasigroup elements and a parenthesization $P$ of depth $O(\log \log n)$.
-  The output of the reduction is $((G, g_1, S, P), \dotsc, (G, g_n, S, P))$.
+  Therefore, the witness for that reduction is a sequence $S$ of $k$ quasigroup elements and a parenthesization $P$ of depth $O(\log \log n)$.
   Now the number of nondeterministic bits used is $O(\log^2 n)$, since $S$ is a set of $O(\log n)$ strings, each of length $O(\log n)$.
-  By \autoref{lem:small},
-  \begin{equation*}
-    \rank(G) \leq k \iff \bigwedge_{i = 1}^n g_i \in \cube_P(S),
-  \end{equation*}
-  so the reduction is a correct conjunctive truth-table reduction.
-
-  For the reduction to the bounded quasigroup membership problem, we still need $O(\log^2 n)$ bits to guess the generating set, but we can let $k = O(\log n)$ and $d = O(\log \log n)$, by \autoref{lem:small}.
-  Thus the reduction outputs $((G, g_1, S, k, d), \dotsc, (G, g_n, S, k, d))$, and the correctness of the reduction follows from the fact that
-  \begin{equation*}
-    \rank(G) \leq k \iff \bigwedge_{i = 1}^n g_i \in \gen{S}.
-  \end{equation*}
-
-  The proof for groups is again similar.
-  Instead of \autoref{lem:small}, we invoke \autoref{lem:log}, which states that any group of order $n$ has a generating set of size at most $\log n$.
+  For the reduction to \textsc{Bounded Subquasigroup Membership}, we still need $O(\log^2 n)$ bits to guess the generating set and the depth $d$, but we can assume $k = O(\log n)$ and $d = O(\log \log n)$, by \autoref{lem:small}.
+  For groups, we invoke \autoref{lem:log}, which states that any group of order $n$ has a generating set of size at most $\log n$.
   Also, we don't need to guess a parenthesization (although we still use $O(\log^2 n)$ nondeterministic bits to guess the generating set).
-  Therefore, the reduction will output $((G, g_1, S), \dotsc, (G, g_n, S))$, and the proof concludes with the fact that
-  \begin{equation*}
-    \rank(G) \leq k \iff \bigwedge_{i = 1}^n g_i \in \gen{S}.
-    \qedhere
-  \end{equation*}
 \end{proof}
 
 %% \todo{Show the probability of success for a randomized reduction to the membership problem for each of these algebraic structures.}
@@ -105,67 +85,69 @@ That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigro
   For groups the problem is also in $\bFOLL$ since a group is a quasigroup.
 \end{proof}
 
-These reductions can be generalized to the problem of computing the size of a minimum generating set for an arbitrary subset of the magma elements.
-The \textsc{Generalized Magma Rank} problem is defined as follows (and there are analagous problems for the other algebraic structures).
-Given a magma $G$ as a Cayley table, a finite set $T$ of magma elements, and a natural number $k$ in unary, decide whether there is a set $S$ of size at most $k$ such that $S \subseteq T \subseteq \gen{S}$.
-\textsc{Magma Rank} occurs as a special case when choosing $T = G$.
-Still, this problem reduces to the appropriate membership problem by the same reduction as in \autoref{lem:ranktomem}: nondeterministically choose a subset $S$ of $T$ with $|S| \leq k$, then decide whether each element of $T$ is in $\gen{S}$.
+%% These reductions can be generalized to the problem of computing the size of a minimum generating set for an arbitrary subset of the magma elements.
+%% The \textsc{Generalized Magma Rank} problem is defined as follows (and there are analagous problems for the other algebraic structures).
+%% Given a magma $G$ as a Cayley table, a finite set $T$ of magma elements, and a natural number $k$ in unary, decide whether there is a set $S$ of size at most $k$ such that $S \subseteq T \subseteq \gen{S}$.
+%% \textsc{Magma Rank} occurs as a special case when choosing $T = G$.
+%% Still, this problem reduces to the appropriate membership problem by the same reduction as in \autoref{lem:ranktomem}: nondeterministically choose a subset $S$ of $T$ with $|S| \leq k$, then decide whether each element of $T$ is in $\gen{S}$.
 
-We can reprove \autocite[Theorem~3.4]{ctw13} using this strategy as well.
-The alternate proof is a reduction from \textsc{Quasigroup Isomorphism} to the join of \emph{two} languages, \textsc{Cube Membership} and \textsc{Product Equality}.
-The latter is the problem of deciding whether two parenthesized products are equal according to the quasigroup operation given as a Cayley table.
-If the parenthesization is of depth $O(\log \log n)$, this problem is in $\FOLL$ by \autoref{lem:product}.
+%% We can reprove \autocite[Theorem~3.4]{ctw13} using this strategy as well.
+%% The alternate proof is a reduction from \textsc{Quasigroup Isomorphism} to the join of \emph{two} languages, \textsc{Cube Membership} and \textsc{Product Equality}.
+%% The latter is the problem of deciding whether two parenthesized products are equal according to the quasigroup operation given as a Cayley table.
+%% If the parenthesization is of depth $O(\log \log n)$, this problem is in $\FOLL$ by \autoref{lem:product}.
 
-\begin{theorem}[{\autocite[Theorem~3.4]{ctw13}}]
-  \textsc{Quasigroup Isomorphism} is in $\bFOLL$.
-\end{theorem}
-\begin{proof}
-  This is a brief overview of the alternate proof.
-  We will show a $\bAC^0$ conjunctive normal form truth-table reduction from $\textsc{Quasigroup Isomorphism}$ to the join of $\textsc{Cube Membership}$ and $\textsc{Product Equality}$, both of which are in $\FOLL$.
-  Assuming this reduction exists, we conclude using a proof similar to that of \autoref{lem:ctt} that \textsc{Quasigroup Isomorphism} is in $\bFOLL$.
+%% \begin{theorem}[{\autocite[Theorem~3.4]{ctw13}}]
+%%   \textsc{Quasigroup Isomorphism} is in $\bFOLL$.
+%% \end{theorem}
+%% \begin{proof}
+%%   This is a brief overview of the alternate proof.
+%%   We will show a $\bAC^0$ conjunctive normal form truth-table reduction from $\textsc{Quasigroup Isomorphism}$ to the join of $\textsc{Cube Membership}$ and $\textsc{Product Equality}$, both of which are in $\FOLL$.
+%%   Assuming this reduction exists, we conclude using a proof similar to that of \autoref{lem:ctt} that \textsc{Quasigroup Isomorphism} is in $\bFOLL$.
 
-  The reduction first guesses two cube generating sequences, $\mathbf{g}$ for $G$ and $\mathbf{h}$ for $H$, both of length $O(\log n)$ and a parenthesization $P$ of depth $O(\log \log n)$, then outputs the conjunction of the following queries.
-  \begin{align}
-    & \bigwedge_{g \in G} g \in \cube_P(\mathbf{g}) \\
-    & \bigwedge_{h \in H} h \in \cube_P(\mathbf{h}) \\
-    & \; \bigwedge_{\mathclap{\epsilon, \eta, \nu \in \{0, 1\}^k}} \left(P(\mathbf{g}^\epsilon) = P(\mathbf{g}^\eta) \cdot P(\mathbf{g}^\nu) \iff P(\mathbf{h}^\epsilon) = P(\mathbf{h}^\eta) \cdot P(\mathbf{h}^\nu)\right)
-  \end{align}
-  The first two formulas ensure that $\mathbf{g}$ and $\mathbf{h}$ are cube generating sequences for $G$ and $H$, respectively.
-  In the third formula, if $\mathbf{g} = (g_0, g_1, \dotsc, g_k)$, then $\mathbf{g}^\epsilon$ denotes $(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k})$.
-  This formula checks that the bijection $g_i \mapsto h_i$ is a homomorphism.
+%%   The reduction first guesses two cube generating sequences, $\mathbf{g}$ for $G$ and $\mathbf{h}$ for $H$, both of length $O(\log n)$ and a parenthesization $P$ of depth $O(\log \log n)$, then outputs the conjunction of the following queries.
+%%   \begin{align}
+%%     & \bigwedge_{g \in G} g \in \cube_P(\mathbf{g}) \\
+%%     & \bigwedge_{h \in H} h \in \cube_P(\mathbf{h}) \\
+%%     & \; \bigwedge_{\mathclap{\epsilon, \eta, \nu \in \{0, 1\}^k}} \left(P(\mathbf{g}^\epsilon) = P(\mathbf{g}^\eta) \cdot P(\mathbf{g}^\nu) \iff P(\mathbf{h}^\epsilon) = P(\mathbf{h}^\eta) \cdot P(\mathbf{h}^\nu)\right)
+%%   \end{align}
+%%   The first two formulas ensure that $\mathbf{g}$ and $\mathbf{h}$ are cube generating sequences for $G$ and $H$, respectively.
+%%   In the third formula, if $\mathbf{g} = (g_0, g_1, \dotsc, g_k)$, then $\mathbf{g}^\epsilon$ denotes $(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k})$.
+%%   This formula checks that the bijection $g_i \mapsto h_i$ is a homomorphism.
 
-  Each of the first two formulas comprises $n$ conjunctive queries to \textsc{Cube Membership}.
-  The last formula comprises a polynomial number of queries in conjunctive normal form to \textsc{Product Equality}.
-  Thus we have the required reduction.
-\end{proof}
+%%   Each of the first two formulas comprises $n$ conjunctive queries to \textsc{Cube Membership}.
+%%   The last formula comprises a polynomial number of queries in conjunctive normal form to \textsc{Product Equality}.
+%%   Thus we have the required reduction.
+%% \end{proof}
 
-We conclude this section with a few observations about \autoref{thm:rank}.
-First, in this proof, we did not use the reduction from \textsc{Quasigroup Rank} to \textsc{Bounded Subquasigroup Membership}, because the closure of $\bFOLL$ under $\bAC^0$ conjunctive truth-table reductions is $\NFOLL$, that is, $\FOLL$ with a polynomial amount of nondeterminism, whereas the closure of $\FOLL$ under the same reductions is $\bFOLL$, a subset of $\NFOLL$.
+%%We conclude this section with a few observations about \autoref{thm:rank}.
+%%First,
+In this proof we did not use the reduction from \textsc{Quasigroup Rank} to \textsc{Bounded Subquasigroup Membership}, because the closure of $\bFOLL$ under $\bAC^0$ conjunctive truth-table reductions is $\NFOLL$, that is, $\FOLL$ with a polynomial amount of nondeterminism, whereas the closure of $\FOLL$ under the same reductions is $\bFOLL$, a subset of $\NFOLL$.
 
-Second, a slight generalization of \autocite[Theorem~7]{py96} already proves that \textsc{Magma Rank} is in (and complete for) the class of problems decidable by a polynomial-time Turing machine with $O(n \log n)$ nondeterministic bits.
-We have nevertheless included the fact that \textsc{Magma Rank} is in $\NP$ to highlight the general strategy for proving these upper bounds for each class of algebraic structure.
+%% Second, a slight generalization of \autocite[Theorem~7]{py96} already proves that \textsc{Magma Rank} is in (and complete for) the class of problems decidable by a polynomial-time Turing machine with $O(n \log n)$ nondeterministic bits.
+%% We have nevertheless included the fact that \textsc{Magma Rank} is in $\NP$ to highlight the general strategy for proving these upper bounds for each class of algebraic structure.
 
-Third, we can almost show a reduction in the opposite direction of \autoref{lem:ranktomem}.
-The \textsc{Submagma Rank} problem (a search problem) is defined as follows.
-Given the Cayley table of a magma and a set of magma elements $S$, output the rank of $\gen{S}$.
-(The \textsc{Submagma Rank} problem is more general than the \textsc{Magma Rank} problem: the latter reduces to the former by choosing $S = G$.)
+%% Third, we can almost show a reduction in the opposite direction of \autoref{lem:ranktomem}.
+%% The \textsc{Submagma Rank} problem (a search problem) is defined as follows.
+%% Given the Cayley table of a magma and a set of magma elements $S$, output the rank of $\gen{S}$.
+%% (The \textsc{Submagma Rank} problem is more general than the \textsc{Magma Rank} problem: the latter reduces to the former by choosing $S = G$.)
 
-\begin{proposition}
-  \textsc{Submagma Membership} reduces to the \textsc{Submagma Rank} function by a nonadaptive $\AC^0$ Turing reduction making exactly two queries.
-\end{proposition}
-\begin{proof}
-  We know that for any magma $G$, any magma element $h$, and any subset of magma elements $S$,
-  \begin{equation*}
-    h \in \gen{S} \iff \rank(\gen{S}) = \rank(\gen{S \cup \{h\}}).
-  \end{equation*}
-  (This is analogous to the corresponding situation in linear algebra: a vector $h$ is in the span of a set of vectors $S$ exactly when the rank of $S$ does not increase when $h$ is added to $S$.)
-  Thus the generator of the reduction is the function $(G, h, S) \mapsto ((G, S), (G, S \cup \{h\}))$ and the evaluator of the reduction compares $\rank({S})$ to $\rank(\gen{S \cup \{h\}})$ for equality.
-\end{proof}
+%% \begin{proposition}
+%%   \textsc{Submagma Membership} reduces to the \textsc{Submagma Rank} function by a nonadaptive $\AC^0$ Turing reduction making exactly two queries.
+%% \end{proposition}
+%% \begin{proof}
+%%   We know that for any magma $G$, any magma element $h$, and any subset of magma elements $S$,
+%%   \begin{equation*}
+%%     h \in \gen{S} \iff \rank(\gen{S}) = \rank(\gen{S \cup \{h\}}).
+%%   \end{equation*}
+%%   (This is analogous to the corresponding situation in linear algebra: a vector $h$ is in the span of a set of vectors $S$ exactly when the rank of $S$ does not increase when $h$ is added to $S$.)
+%%   Thus the generator of the reduction is the function $(G, h, S) \mapsto ((G, S), (G, S \cup \{h\}))$ and the evaluator of the reduction compares $\rank({S})$ to $\rank(\gen{S \cup \{h\}})$ for equality.
+%% \end{proof}
 
-However, this reduction is not satisfying, because the \textsc{Submagma Rank} is essentially the \textsc{Magma Rank} problem when the input is provided as a set of generators instead of as a Cayley table.
-As stated in the reduction, this representation may be exponentially smaller than the Cayley table representation.
+%% However, this reduction is not satisfying, because the \textsc{Submagma Rank} is essentially the \textsc{Magma Rank} problem when the input is provided as a set of generators instead of as a Cayley table.
+%% As stated in the reduction, this representation may be exponentially smaller than the Cayley table representation.
 
-Fourth, although the precise relationship between $\FOLL$ and $\L$ is unknown, $\FOLL$ does not contain any class containing the \textsc{Parity} problem.
+%% Fourth,
+Although the precise relationship between $\FOLL$ and $\L$ is unknown, $\FOLL$ does not contain any class containing the \textsc{Parity} problem.
 Since \textsc{Parity} is in $\L$, we know $\FOLL$ does not contain $\L$.
 Stated in a slightly more general way, $\FOLL$ cannot be hard under $\AC^0$ many-one reductions for any complexity class that contains \textsc{Parity} \cite[Proposition~2.1]{bklm01}.
 This is true even when the circuit is augmented with a polylogarithmic number of nondeterministic bits \cite[Section~4]{ctw13}.
@@ -180,8 +162,8 @@ Specifically, \textsc{Quasigroup Rank} is not hard for any of the classes in the
   \ACC^0 \subseteq \TC^0 \subseteq \NC^1 \subseteq \L \subseteq \NL \subseteq (\LOGCFL \cup \DET).
 \end{equation*}
 
-Finally, we consider whether there is a randomized logarithmic space algorithm for \textsc{Group Rank}, which would immediately improve the upper bound of \autoref{thm:rank}.
-Let $\RL$ be the class of languages $L$ for which there is a deterministic Turing machine with a two-way read-only tape for the input string, a one-way read-only tape for the random bits, and a two-way read-write work tape in which only $O(\log n)$ cells are used, such that $x \in L$ implies that at least half the binary strings $r$ of polynomial of length cause the machine to accept on input $x$ and random bits $r$ and $x \notin L$ implies that none of the binary strings $r$ cause the machine to accept.
-Let $\rL$ be the class of languages for which the tape containing the random bits is \emph{two-way} read-only tape, and for which the length of the binary string $r$ is $O(\log^2 n)$.
-By \autocite[Corollary~1]{nisan92} (see also \autocite{nisan90}), $\RL \subseteq \rL$, and by the definitions, $\rL \subseteq \bL$.
-Now our question is whether \textsc{Group Rank} is in $\rL$, or even in $\RL$.
+%% Finally, we consider whether there is a randomized logarithmic space algorithm for \textsc{Group Rank}, which would immediately improve the upper bound of \autoref{thm:rank}.
+%% Let $\RL$ be the class of languages $L$ for which there is a deterministic Turing machine with a two-way read-only tape for the input string, a one-way read-only tape for the random bits, and a two-way read-write work tape in which only $O(\log n)$ cells are used, such that $x \in L$ implies that at least half the binary strings $r$ of polynomial of length cause the machine to accept on input $x$ and random bits $r$ and $x \notin L$ implies that none of the binary strings $r$ cause the machine to accept.
+%% Let $\rL$ be the class of languages for which the tape containing the random bits is \emph{two-way} read-only tape, and for which the length of the binary string $r$ is $O(\log^2 n)$.
+%% By \autocite[Corollary~1]{nisan92} (see also \autocite{nisan90}), $\RL \subseteq \rL$, and by the definitions, $\rL \subseteq \bL$.
+%% Now our question is whether \textsc{Group Rank} is in $\rL$, or even in $\RL$.

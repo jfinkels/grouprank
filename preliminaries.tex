@@ -4,28 +4,21 @@ Here, $\log n$ denotes the base two logarithm of $n$, for any natural number $n$
 
 \subsection{Complexity}
 
-Here is a brief summary of the definitions of the complexity classes that appear in this paper.
+We assume familiarity with the basics of computational complexity theory, as can be found in \autocite{ab09}, for example.
+We use the standard definitions of the complexity classes $\P$, $\L$, $\NL$, and $\AC$, as well as the standard definition of many-one reductions.
+We denote by $\L^2$ the class of languages decidable in $O(\log^2 n)$ space by $\L^2$.
 
-\begin{itemize}
-\item
-  $\L$ is the class of languages decidable by a deterministic Turing machine that uses $O(\log n)$ space on inputs of length $n$.
-  $\L^2$ is similar, but with $O(\log^2 n)$ space.
-\item
-  $\NL$ is the class of languages decidable by a nondeterministic Turing machine that uses $O(\log n)$ space.
-  Equivalently, this is the class of languages $L$ for which there is a deterministic Turing machine with a two-way read-only tape for the input string, a one-way read-only tape for the nondeterministic bits, and a two-way read-write work tape in which only $O(\log n)$ cells are used, such that $x \in L$ if and only if there is a binary string $w$ of polynomial length such that the machine accepts on input $x$ and nondeterministic bits $w$.
-\item $\NL[\log^2 n]$ is the subclass of $\NL$ in which the length of $w$ is bounded by $O(\log^2 n)$.
-\item $\bL$ is the superclass of $\NL[\log^2 n]$ in which the machine has two-way access to the tape containing the nondeterministic bits.
-  Equivalently, this is the class of languages $L$ such that there is a language $L' \in L$ such that $x \in L$ if and only if there is a binary string $w$ of length $O(\log^2 n)$ such that $(x, w) \in L'$.
-\item
-  $\FOLL$ is the class of languages decidable by a $\L$-uniform family of circuits with polynomial size, unbounded fan-in, and $O(\log \log n)$ depth.
-  $\bFOLL$ is the class of languages decidable by $\FOLL$ circuits that have been augmented with $O(\log^2 n)$ nondeterministic bits (gates with no inputs and one output).
-\item
-  $\AC^0$ and $\bAC^0$ are the restrictions of $\FOLL$ and $\bFOLL$, respectively, to depth $O(1)$.
-  $\NAC^0$ allows a polynomial number of nondeterministic bits.
-\end{itemize}
-In general, the class $\beta_2 \mathcal{C}$ is the class of languages decidable by $\mathcal{C}$ machines augmented with $O(\log^2 n)$ bits of nondeterminism, or equivalently, the class of languages verifiable by $\mathcal{C}$ machines when given a certificate of length $O(\log^2 n)$.
+We denote by $\NL[\log^2 n]$ the subclass of $\NL$ in which the number of nondeterministic choices is bounded by $O(\log^2 n)$.
+The class $\bL$ is the superclass of $\NL[\log^2 n]$ in which the Turing machine has two-way read-only access to the input string, \emph{two-way} read-only access to the tape containing the witness string, and two-way read-write access to the work tape.
+Equivalently, $\bL$ is the class of languages $A$ such that there is a language $A' \in \L$ such that $x \in A$ if and only if there is a binary string $w$ of length $O(\log^2 n)$ such that $(x, w) \in A'$.
 
-If $L_1$ and $L_2$ are languages, there is a \emph{logarithmic space many-one reduction} from $L_1$ to $L_2$, denoted $L_1 \leq_m^{\L} L_2$, if there is a function $f$ such that $f$ is computable in logarithmic space and $x \in L_1$ if and only if $f(x) \in L_2$.
+$\FOLL$ is the class of languages decidable by a $\L$-uniform family of circuits with polynomial size, unbounded fan-in, and $O(\log \log n)$ depth.
+$\bFOLL$ is the class of languages decidable by $\FOLL$ circuits that have been augmented with $O(\log^2 n)$ nondeterministic bits (gates with no inputs and one output).
+$\bAC^0$ is the restriction of $\bFOLL$ to depth $O(1)$.
+The class $\NAC^0$ is $\AC^0$ augmented with a polynomial number of nondeterministic bits.
+%% In general, the class $\beta_2 \mathcal{C}$ is the class of languages decidable by $\mathcal{C}$ machines augmented with $O(\log^2 n)$ bits of nondeterminism, or equivalently, the class of languages verifiable by $\mathcal{C}$ machines when given a certificate of length $O(\log^2 n)$.
+
+%% If $L_1$ and $L_2$ are languages, there is a \emph{logarithmic space many-one reduction} from $L_1$ to $L_2$, denoted $L_1 \leq_m^{\L} L_2$, if there is a function $f$ such that $f$ is computable in logarithmic space and $x \in L_1$ if and only if $f(x) \in L_2$.
 %%\todo{CORRECT THIS DEFINITION to be more clear about nondeterministic function outputs (exists/forall)}
 %% SHOWS UP IN A LATER SECTION \todo{Does Immerman-Szelpcsenyi Theorem apply to $\bL$?}
 %% NO It seems not, since it would require guessing up to m shortcut edges. \todo{Is directed planar graph reachability in $\beta \L$? In $\NL[\log^{O(1)} n]$? See ``shortcut graphs'' by Thorup.}
@@ -49,37 +42,38 @@ A reduction of this form is really a nondeterministic polynomial-time conjunctiv
   \item If $L_1 \leq^{\bAC^0}_{ctt} L_2$ and $L_2$ is in $\L$, then $L_1$ is in $\bL$.
   \end{enumerate}
 \end{lemma}
-\begin{proof}
-  In each case, let $f$ denote the reduction, $M_2$ denote the machine that decides $L_2$, and $q(n)$ denote the polynomial that bounds the number of outputs produced by $f$.
-  We construct a nondeterministic machine $M_1$ of the appropriate type as follows on input $x$ of length $n$.
-  Nondeterministically choose a string $w$ of the appropriate length (polynomial or polylogarithmic), simulate $f(x, w)$, then run $M_2$ on each $y_i$, where $f(x, w) = (y_1, \dotsc, y_{q(n)})$.
-  The machine $M_1$ accepts if and only if each of the simulations of $M_2$ accepts.
-  The correctness of $M_1$ follows from the correctness of $f$ and $M_2$.
-  The only remaining issue is the complexity of $M_1$.
+%% \begin{proof}
+%%   In each case, let $f$ denote the reduction, $M_2$ denote the machine that decides $L_2$, and $q(n)$ denote the polynomial that bounds the number of outputs produced by $f$.
+%%   We construct a nondeterministic machine $M_1$ of the appropriate type as follows on input $x$ of length $n$.
+%%   Nondeterministically choose a string $w$ of the appropriate length (polynomial or polylogarithmic), simulate $f(x, w)$, then run $M_2$ on each $y_i$, where $f(x, w) = (y_1, \dotsc, y_{q(n)})$.
+%%   The machine $M_1$ accepts if and only if each of the simulations of $M_2$ accepts.
+%%   The correctness of $M_1$ follows from the correctness of $f$ and $M_2$.
+%%   The only remaining issue is the complexity of $M_1$.
 
-  In the first case, the $\NP$ machine $M_1$, after choosing its nondeterministic bits, can simulate $f$ in polynomial time and can simulate a polynomial number of instances of $M_2$ in polynomial time.
+%%   In the first case, the $\NP$ machine $M_1$, after choosing its nondeterministic bits, can simulate $f$ in polynomial time and can simulate a polynomial number of instances of $M_2$ in polynomial time.
 
-  For the last two cases, we use the fact that $\bAC^0 \subseteq (\bFOLL \cap \bL)$.
-  If $L_2$ is in $\FOLL$, we define $M_1$ to be the circuit
-  \begin{equation*}
-    M_1(x, w) = \bigwedge_{i = 1}^{q(n)} M_2(y_i),
-  \end{equation*}
-  where $n$ is the length of $x$, the string $w$ is the nondeterministic string of length $O(\log^2 n)$, and $q(n)$ is the polynomial bounding the number of outputs of $f$ on inputs of length $n$.
-  The depth of the $M_1$ circuit is the depth of $f$ plus the depth of $M_2$, which is $O(1) + O(\log \log n)$, or simply $O(\log \log n)$.
-  The number of nondeterministic bits required by $M_1$ is the same as the number of nondeterministic bits required by $f$, which is $O(\log^2 n)$.
-  The circuit is polynomial in size because $f$ is polynomial in size, $M_2$ is polynomial in size, and there are a polynomial number of parallel instances of the circuit $M_2$.
-  Thus $M_1$ is in $\bFOLL$.
+%%   For the last two cases, we use the fact that $\bAC^0 \subseteq (\bFOLL \cap \bL)$.
+%%   If $L_2$ is in $\FOLL$, we define $M_1$ to be the circuit
+%%   \begin{equation*}
+%%     M_1(x, w) = \bigwedge_{i = 1}^{q(n)} M_2(y_i),
+%%   \end{equation*}
+%%   where $n$ is the length of $x$, the string $w$ is the nondeterministic string of length $O(\log^2 n)$, and $q(n)$ is the polynomial bounding the number of outputs of $f$ on inputs of length $n$.
+%%   The depth of the $M_1$ circuit is the depth of $f$ plus the depth of $M_2$, which is $O(1) + O(\log \log n)$, or simply $O(\log \log n)$.
+%%   The number of nondeterministic bits required by $M_1$ is the same as the number of nondeterministic bits required by $f$, which is $O(\log^2 n)$.
+%%   The circuit is polynomial in size because $f$ is polynomial in size, $M_2$ is polynomial in size, and there are a polynomial number of parallel instances of the circuit $M_2$.
+%%   Thus $M_1$ is in $\bFOLL$.
 
-  The proof is similar if $L_2$ is in $\L$.
-  The only difference is that instead of a circuit computing the conjunction of $q(n)$ bits, we loop over each $y_i$ and check if each one causes $M_2$ to accept.
-  Since there are a polynomial number of them, indexing them requires only logarithmic space.
-  We also require the fact that logarithmic space computable functions compose.
-\end{proof}
+%%   The proof is similar if $L_2$ is in $\L$.
+%%   The only difference is that instead of a circuit computing the conjunction of $q(n)$ bits, we loop over each $y_i$ and check if each one causes $M_2$ to accept.
+%%   Since there are a polynomial number of them, indexing them requires only logarithmic space.
+%%   We also require the fact that logarithmic space computable functions compose.
+%% \end{proof}
 
+The proof is a straightforward composition of the function computing the reduction with the machine that decides the language $L_2$.
 Conondeterministic reductions yield similar closures.
 
-Finally, if $L$ is a language and $F$ is a function, there is a \emph{nonadaptive $\AC^0$ Turing reduction} from $L$ to $F$ if there is an $\AC^0$ function $g$ and an $\AC^0$ circuit $C$ such that $x \in L$ if and only if $C(x, F(y_1), \dotsc, F(y_m)) = 1$, where $(y_1, \dotsc, y_m)$ is the output of $g(x)$ and $m$ is bounded by a polynomial in $|x|$.
-The function $g$ is called the \emph{generator of the reduction} and the circuit $C$ is called the \emph{evaluator of the reduction}.
+%% Finally, if $L$ is a language and $F$ is a function, there is a \emph{nonadaptive $\AC^0$ Turing reduction} from $L$ to $F$ if there is an $\AC^0$ function $g$ and an $\AC^0$ circuit $C$ such that $x \in L$ if and only if $C(x, F(y_1), \dotsc, F(y_m)) = 1$, where $(y_1, \dotsc, y_m)$ is the output of $g(x)$ and $m$ is bounded by a polynomial in $|x|$.
+%% The function $g$ is called the \emph{generator of the reduction} and the circuit $C$ is called the \emph{evaluator of the reduction}.
 
 \subsection{Algebra}
 
@@ -186,9 +180,9 @@ If $S$ is a subset of magma elements, the \emph{submagma} generated by $S$, deno
   For any quasigroup on $n$ elements given as a Cayley table, any sequence $(g_0, \dotsc, g_k)$, and any parenthesization $P$ of depth $d$ on that sequence, the parenthesized product $P(g_0, \dotsc, g_k)$ can be computed by an $\L$-uniform family of unbounded fan-in circuits with size $O(k n^2 \log n)$ and depth $O(d)$.
 \end{lemma}
 \begin{proof}
-  How does a circuit access and use a Cayley table for a quasigroup?%
-  \footnote{We avoid representing problems using first-order logic, as in the original definition of $\FOLL$ from \autocite{bklm01}, though the logic definition may provide a more natural representation of this sort of information.}
-  One way for a circuit to compute the product of two quasigroup elements using the Cayley table is via a multiplexer.
+  %% How does a circuit access and use a Cayley table for a quasigroup?%
+  %% \footnote{We avoid representing problems using first-order logic, as in the original definition of $\FOLL$ from \autocite{bklm01}, though the logic definition may provide a more natural representation of this sort of information.}
+  One way for a circuit to compute the product of two quasigroup elements using the Cayley table is via a \emph{multiplexer}.
   In the multiplexer, each input has $O(\log n)$ bits, since each quasigroup element can be represented with $O(\log n)$ bits and each input is a pair of quasigroup elements.
   A multiplexer that selects from $n^2$ inputs, each of length $O(\log n)$, can be implemented by an \emph{unbounded fan-in} circuit of depth $O(1)$ and size $O(n^2 \log n)$.
 \end{proof}

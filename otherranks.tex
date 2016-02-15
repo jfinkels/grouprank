@@ -58,68 +58,72 @@ For any magma $G$,
 
 These are called \emph{large rank}, \emph{upper rank}, \emph{intermediate rank}, \emph{lower rank}, and \emph{small rank}, respectively.
 The lower rank is the notion of rank discussed in the previous sections of the paper.
-\begin{proposition}
-  For each finite magma $G$,
-  \begin{equation*}
+For each finite magma $G$,
+%% \begin{proposition}
+%%   For each finite magma $G$,
+$$
     \rank_s(G) \leq \rank_\ell(G) \leq \rank_i(G) \leq \rank_u(G) \leq \rank_L(G).
-  \end{equation*}
-\end{proposition}
-\begin{proof}
-  \autocite{hr00} states this chain of inequalities for semigroups; we show that it holds for finite magmas as well.
+$$
+%% \end{proposition}
+%% \begin{proof}
+%%   \autocite{hr00} states this chain of inequalities for semigroups; we show that it holds for finite magmas as well.
 
-  The inequalities $\rank_\ell(G) \leq \rank_i(G) \leq \rank_u(G)$ follow from the fact that the collection of independent generating sets is the intersection of the collection of independent sets and the collection of generating sets.
+%%   The inequalities $\rank_\ell(G) \leq \rank_i(G) \leq \rank_u(G)$ follow from the fact that the collection of independent generating sets is the intersection of the collection of independent sets and the collection of generating sets.
 
-  Next we prove that $\rank_s(G) \leq \rank_\ell(G)$.
-  If $\rank_\ell(G) = |G|$, then we are done since $\rank_s(G)$ must be bounded above by $|G|$ by definition.%
-  \footnote{A semigroup $G$ with $\rank_\ell(G) = |G|$ is sometimes called a ``royal semigroup'' (because it has the highest possible rank) \autocite{gh85}.}
-  Thus it suffices to consider only magmas with $\rank_\ell(G) < |G|$.
-  Assume with the intention of producing a contradiction that $\rank_s(G) > \rank_\ell(G)$.
-  Let $S$ be the generating set of cardinality $\rank_\ell(G)$.
-  Let $x \in G \setminus S$, which exists because $\rank_\ell(G) < |G|$.
-  Now $S \cup \{x\}$ is a generating set of cardinality at most $\rank_s(G)$.
-  By definition of $\rank_s(G)$, this means $S \cup \{x\}$ is independent.
-  But $x \in \gen{S}$ since $S$ generates $G$, so $S$ cannot be independent.
-  This is a contradiction, therefore $\rank_s(G) \leq \rank_\ell(G)$.
+%%   Next we prove that $\rank_s(G) \leq \rank_\ell(G)$.
+%%   If $\rank_\ell(G) = |G|$, then we are done since $\rank_s(G)$ must be bounded above by $|G|$ by definition.%
+%%   \footnote{A semigroup $G$ with $\rank_\ell(G) = |G|$ is sometimes called a ``royal semigroup'' (because it has the highest possible rank) \autocite{gh85}.}
+%%   Thus it suffices to consider only magmas with $\rank_\ell(G) < |G|$.
+%%   Assume with the intention of producing a contradiction that $\rank_s(G) > \rank_\ell(G)$.
+%%   Let $S$ be the generating set of cardinality $\rank_\ell(G)$.
+%%   Let $x \in G \setminus S$, which exists because $\rank_\ell(G) < |G|$.
+%%   Now $S \cup \{x\}$ is a generating set of cardinality at most $\rank_s(G)$.
+%%   By definition of $\rank_s(G)$, this means $S \cup \{x\}$ is independent.
+%%   But $x \in \gen{S}$ since $S$ generates $G$, so $S$ cannot be independent.
+%%   This is a contradiction, therefore $\rank_s(G) \leq \rank_\ell(G)$.
 
-  Finally we prove that $\rank_u(G) \leq \rank_L(G)$.
-  If $\rank_L(G) = |G|$, then $G$ is the smallest generating set, so $\rank_\ell(G) = \rank_L(G)$, which subsumes the equality $\rank_u(G) = \rank_L(G)$.
-  Thus it suffices to consider only magmas with $\rank_L(G) < |G|$.
-  Assume with the intention of producing a contradiction that $\rank_u(G) > \rank_L(G)$.
-  Let $S$ be the independent set of cardinality $\rank_u(G)$ and let $x$ be an arbitrary element of $S$.
-  Then the set $S \setminus \{x\}$ has cardinality at least $\rank_L(G)$, so it is a generating set for $G$.
-  This means $x \in \gen{S \setminus \{x\}}$, a contradiction with the hypothesis that $S$ is independent.
-  Therefore, $\rank_u(G) \leq \rank_L(G)$.
-\end{proof}
+%%   Finally we prove that $\rank_u(G) \leq \rank_L(G)$.
+%%   If $\rank_L(G) = |G|$, then $G$ is the smallest generating set, so $\rank_\ell(G) = \rank_L(G)$, which subsumes the equality $\rank_u(G) = \rank_L(G)$.
+%%   Thus it suffices to consider only magmas with $\rank_L(G) < |G|$.
+%%   Assume with the intention of producing a contradiction that $\rank_u(G) > \rank_L(G)$.
+%%   Let $S$ be the independent set of cardinality $\rank_u(G)$ and let $x$ be an arbitrary element of $S$.
+%%   Then the set $S \setminus \{x\}$ has cardinality at least $\rank_L(G)$, so it is a generating set for $G$.
+%%   This means $x \in \gen{S \setminus \{x\}}$, a contradiction with the hypothesis that $S$ is independent.
+%%   Therefore, $\rank_u(G) \leq \rank_L(G)$.
+%% \end{proof}
 
 The framework of \autoref{sec:rank} provides a simple way of determining the complexity of computing these functions.
-The decision problems corresponding to these rank functions are defined as follows.
-\begin{align*}
-  \textsc{Magma Large Rank} & = \{ (G, k) \, | \, \rank_L(G) \leq k \} \\
-  \textsc{Magma Upper Rank} & = \{ (G, k) \, | \, \rank_u(G) \geq k \} \\
-  \textsc{Magma Intermediate Rank} & = \{ (G, k) \, | \, \rank_i(G) \geq k \} \\
-  \textsc{Magma Lower Rank} & = \{ (G, k) \, | \, \rank_\ell(G) \leq k \} \\
-  \textsc{Magma Small Rank} & = \{ (G, k) \, | \, \rank_s(G) \geq k \}
-\end{align*}
-Some of these are maximization problems and some are minimization problems, depending on whether the rank is a minimum or a maximum.
-The problems are defined similarly for the other algebraic structures.
+The decision problems corresponding to these rank functions are defined similar to the rank problems above.
+%% \begin{align*}
+%%   \textsc{Magma Large Rank} & = \{ (G, k) \, | \, \rank_L(G) \leq k \} \\
+%%   \textsc{Magma Upper Rank} & = \{ (G, k) \, | \, \rank_u(G) \geq k \} \\
+%%   \textsc{Magma Intermediate Rank} & = \{ (G, k) \, | \, \rank_i(G) \geq k \} \\
+%%   \textsc{Magma Lower Rank} & = \{ (G, k) \, | \, \rank_\ell(G) \leq k \} \\
+%%   \textsc{Magma Small Rank} & = \{ (G, k) \, | \, \rank_s(G) \geq k \}
+%% \end{align*}
+Some are maximization problems and some are minimization problems, depending on whether the rank is a minimum or a maximum.
+%% The problems are defined similarly for the other algebraic structures.
 
-We can construct nondeterministic or conondeterministic reductions as follows.
+We show how to construct a nondeterministic reduction from the upper rank problem, but the technique can be applied to each other type of rank problem by replacing existence with universal quantification where necessary and by using the appropriate logical formula for ``is generating'' or ``is independent''.
 Let $G^k$ denote the collection of subsets of $G$ of cardinality $k$.
-\begin{align*}
-  \rank_L(G) \leq k & \iff \forall S \subseteq G^k\colon S \text{ is a generating set} \\
-  \rank_u(G) \geq k & \iff \exists S \subseteq G^k\colon S \text{ is independent} \\
-  \rank_i(G) \geq k & \iff \exists S \subseteq G^k\colon S \text{ is an independent generating set} \\
-  \rank_\ell(G) \leq k & \iff \exists S \subseteq G^k\colon S \text{ is a generating set} \\
-  \rank_s(G) \geq k & \iff \forall S \subseteq G^k\colon S \text{ is an independent set}
-\end{align*}
+%% \begin{align*}
+%%   \rank_L(G) \leq k & \iff \forall S \subseteq G^k\colon S \text{ is a generating set} \\
+%%   \rank_u(G) \geq k & \iff \exists S \subseteq G^k\colon S \text{ is independent} \\
+%%   \rank_i(G) \geq k & \iff \exists S \subseteq G^k\colon S \text{ is an independent generating set} \\
+%%   \rank_\ell(G) \leq k & \iff \exists S \subseteq G^k\colon S \text{ is a generating set} \\
+%%   \rank_s(G) \geq k & \iff \forall S \subseteq G^k\colon S \text{ is an independent set}
+%% \end{align*}
 Since $S$ is an independent set exactly when $x \notin \gen{S \setminus \{x\}}$ for each $x$ and $S$ is a generating set for $G$ exactly when $g \in \gen{S}$ for each $g$ in $G$, these reductions are nondeterministic or conondeterministic truth-table reductions.
-\begin{align*}
-  \rank_L(G) \leq k & \iff \forall S \subseteq G^k\colon \bigwedge_{g \in G} g \in \gen{S} \\
-  \rank_u(G) \geq k & \iff \exists S \subseteq G^k\colon \bigwedge_{x \in S} x \notin \gen{S \setminus \{x\}} \\
-  \rank_i(G) \geq k & \iff \exists S \subseteq G^k\colon \bigwedge_{g \in G} g \in \gen{S} \land \bigwedge_{x \in S} x \notin \gen{S \setminus \{x\}} \\
-  \rank_\ell(G) \leq k & \iff \exists S \subseteq G^k\colon \bigwedge_{g \in G} g \in \gen{S} \\
-  \rank_s(G) \geq k & \iff \forall S \subseteq G^k\colon \bigwedge_{x \in S} x \notin \gen{S \setminus \{x\}}
-\end{align*}
+$$
+  \rank_u(G) \geq k \iff \exists S \subseteq G^k\colon \bigwedge_{x \in S} x \notin \gen{S \setminus \{x\}}
+$$
+%% \begin{align*}
+%%   \rank_L(G) \leq k & \iff \forall S \subseteq G^k\colon \bigwedge_{g \in G} g \in \gen{S} \\
+%%   \rank_u(G) \geq k & \iff \exists S \subseteq G^k\colon \bigwedge_{x \in S} x \notin \gen{S \setminus \{x\}} \\
+%%   \rank_i(G) \geq k & \iff \exists S \subseteq G^k\colon \bigwedge_{g \in G} g \in \gen{S} \land \bigwedge_{x \in S} x \notin \gen{S \setminus \{x\}} \\
+%%   \rank_\ell(G) \leq k & \iff \exists S \subseteq G^k\colon \bigwedge_{g \in G} g \in \gen{S} \\
+%%   \rank_s(G) \geq k & \iff \forall S \subseteq G^k\colon \bigwedge_{x \in S} x \notin \gen{S \setminus \{x\}}
+%% \end{align*}
 
 By \autoref{lem:magind}, the upper rank of any finite group is $\log n$, so the small, lower, and intermediate ranks have an upper bound of $\log n$ as well.
 (For large rank, however, it seems that any bound must depend on the prime factorization of $n$.)
@@ -148,9 +152,7 @@ The fact that $\L$ is closed under complement yields the following upper bound f
   \mbox{}
   \begin{enumerate}
   \item $\textsc{Group Large Rank}$ is in $\coNP$.
-  \item $\textsc{Group Upper Rank}$ is in $\bL$.
-  \item $\textsc{Group Intermediate Rank}$ is in $\bL$.
-  \item $\textsc{Group Lower Rank}$ is in $\bL$.
+  \item \textsc{Group Upper Rank}, \textsc{Group Intermediate Rank}, and \textsc{Group Lower Rank} are each in $\bL$.
   \item $\textsc{Group Small Rank}$ is in $\co\bL$.
   \end{enumerate}
 \end{theorem}
