@@ -13,7 +13,7 @@ We represent it as a pair of Cayley tables, one for the group and one for the mo
 
 % need (focus on readers) why you? - why this is relevant to the reader, and why something needed to be done
 Since our purpose for asking questions about the rank of an algebraic structure is to determine the smallest number of elements required to generate all other elements, we define the \emph{rank of a ring $R$} to be the minimum cardinality of a set $S$ such that $\gen{S} = R$, where $\gen{S}$ is the closure of $S$ under \emph{both} addition and multiplication.
-The rank of a ring is bounded above by the minimum of the rank of its additive group and the rank of its multiplicative monoid, but there are finite rings that have strictly smaller rank; see \autoref{ex:ringsmaller}.
+The rank of a ring is bounded above by the minimum of the rank of its additive group and the rank of its multiplicative monoid, but there are finite rings that have strictly smaller rank, like $(\mathbb{Z} / 2 \mathbb{Z})^3$.
 % task (focus on author) why me? - what was undertaken to address the need
 We believe it enlightening to show how to use the same strategy used to determine the complexity of \textsc{Magma Rank} on \textsc{Ring Rank}.
 % object (focus on document) why this document - what the document covers
@@ -32,26 +32,26 @@ Not all rings have an interesting rank problem.
 In the special case that the ring is a finite domain (that is, it has no nontrivial zero divisors), then by Wedderburn's little theorem \autocite[Theorem~3~§~11.1]{nicholson12}, the ring is a finite field.
 The multiplicative group of any finite field is cyclic \autocite[Theorem~7~§~6.4]{nicholson12}, so the rank of a finite field, and hence any finite domain, is one and the computational problem is uninteresting.
 But in general, for arbitrary (commutative or non-commutative) rings, the problem has nontrivial complexity.
-Even for small commutative rings, the rank of the ring can be strictly smaller than the rank of the group and of the monoid.
+%% Even for small commutative rings, the rank of the ring can be strictly smaller than the rank of the group and of the monoid.
 
-\begin{example}[{\autocite{mse}}]\label{ex:ringsmaller}
-  The ring $(\mathbb{Z} / 2 \mathbb{Z})^3$, with both addition and multiplication defined componentwise, has rank strictly smaller than both the rank of its underlying group and the rank of its underlying monoid.
+%% \begin{example}[{\autocite{mse}}]\label{ex:ringsmaller}
+%%   The ring $(\mathbb{Z} / 2 \mathbb{Z})^3$, with both addition and multiplication defined componentwise, has rank strictly smaller than both the rank of its underlying group and the rank of its underlying monoid.
 
-  The group is the elementary abelian $2$-group of order $2^3$, and so has rank three by \autoref{ex:elementary}.
-  The monoid has rank four via the generating set $\{(0, 1, 1), (1, 0, 1), (1, 1, 0), (1, 1, 1)\}$.
-  This set is a generating set because the product of any pair of the first three elements yields the elements $(0, 0, 1)$, $(0, 1, 0)$, and $(1, 0, 0)$, and the product of any pair of those three yields the remaining element, $(0, 0, 0)$.
-  No smaller set can generate the entire monoid, since the identity generates only itself and no other element generates it, and removing any one of the first three makes it impossible to generate an element with a zero in the same coordinate as in the removed element.
-  Thus the rank of the monoid is four.
+%%   The group is the elementary abelian $2$-group of order $2^3$, and so has rank three by \autoref{ex:elementary}.
+%%   The monoid has rank four via the generating set $\{(0, 1, 1), (1, 0, 1), (1, 1, 0), (1, 1, 1)\}$.
+%%   This set is a generating set because the product of any pair of the first three elements yields the elements $(0, 0, 1)$, $(0, 1, 0)$, and $(1, 0, 0)$, and the product of any pair of those three yields the remaining element, $(0, 0, 0)$.
+%%   No smaller set can generate the entire monoid, since the identity generates only itself and no other element generates it, and removing any one of the first three makes it impossible to generate an element with a zero in the same coordinate as in the removed element.
+%%   Thus the rank of the monoid is four.
 
-  However, the rank of the ring is at most two.
-  Starting with the generating set $\{(0, 1, 1), (1, 1, 0)\}$ we have
-  \begin{align*}
-    (0, 1, 1) + (1, 1, 0) &= (1, 0, 1), \\
-    (0, 1, 1) \cdot (1, 1, 0) &= (0, 1, 0), \\
-    (1, 0, 1) + (0, 1, 0) &= (1, 1, 1).
-  \end{align*}
-  At this point, we have generated each element in the generating set for the monoid, so we can generate all other elements.
-\end{example}
+%%   However, the rank of the ring is at most two.
+%%   Starting with the generating set $\{(0, 1, 1), (1, 1, 0)\}$ we have
+%%   \begin{align*}
+%%     (0, 1, 1) + (1, 1, 0) &= (1, 0, 1), \\
+%%     (0, 1, 1) \cdot (1, 1, 0) &= (0, 1, 0), \\
+%%     (1, 0, 1) + (0, 1, 0) &= (1, 1, 1).
+%%   \end{align*}
+%%   At this point, we have generated each element in the generating set for the monoid, so we can generate all other elements.
+%% \end{example}
 
 In order to compute the rank of the ring, we reduce the problem to the corresponding membership problem as in \autoref{sec:rank}.
 

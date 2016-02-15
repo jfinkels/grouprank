@@ -95,92 +95,92 @@ If a quasigroup is nonempty and associative, then it is a \emph{group}.
 Alternately, if a semigroup has an identity and inverses, then it is a group.
 %% Thus if a magma is nonempty, a semigroup, and a quasigroup, it is a group.
 
-\begin{example}\label{ex:quasigroup}
-  The smallest nonempty quasigroup that is not also a group has three elements, $\{a, b, c\}$.
-  Its Cayley table is
-  \begin{equation*}
-    \begin{array}{c | c c c}
-      \cdot & a & b & c \\
-      \hline
-      a & a & b & c \\
-      b & c & a & b \\
-      c & b & c & a \\
-    \end{array}
-  \end{equation*}
-  Examining the table reveals that there is exactly one of each quasigroup element in each row and column.
-  This quasigroup is not associative because $b \cdot (a \cdot b) = b \cdot b = a$ but $(b \cdot a) \cdot b = c \cdot b = c$.
-  Also, it has a left identity, $a$, but no right identity.
-\end{example}
+%% \begin{example}\label{ex:quasigroup}
+%%   The smallest nonempty quasigroup that is not also a group has three elements, $\{a, b, c\}$.
+%%   Its Cayley table is
+%%   \begin{equation*}
+%%     \begin{array}{c | c c c}
+%%       \cdot & a & b & c \\
+%%       \hline
+%%       a & a & b & c \\
+%%       b & c & a & b \\
+%%       c & b & c & a \\
+%%     \end{array}
+%%   \end{equation*}
+%%   Examining the table reveals that there is exactly one of each quasigroup element in each row and column.
+%%   This quasigroup is not associative because $b \cdot (a \cdot b) = b \cdot b = a$ but $(b \cdot a) \cdot b = c \cdot b = c$.
+%%   Also, it has a left identity, $a$, but no right identity.
+%% \end{example}
 
-\begin{example}\label{ex:zero}
-  The \emph{right zero semigroup} is the semigroup in which each element is a right zero.
-  Its Cayley table is
-  \begin{equation*}
-    \begin{array}{c | c c c}
-      \cdot & a & b & c \\
-      \hline
-      a & a & b & c \\
-      b & a & b & c \\
-      c & a & b & c \\
-    \end{array}
-  \end{equation*}
-  The associativity of this semigroup can be determined by examining all possible triples $(x, y, z)$ in $G^3$ and checking that $(x \cdot y) \cdot z = x \cdot (y \cdot z)$.
-  Each element of this semigroup is a left identity and a right zero, but there are no right identities, so it is not a group.
+%% \begin{example}\label{ex:zero}
+%%   The \emph{right zero semigroup} is the semigroup in which each element is a right zero.
+%%   Its Cayley table is
+%%   \begin{equation*}
+%%     \begin{array}{c | c c c}
+%%       \cdot & a & b & c \\
+%%       \hline
+%%       a & a & b & c \\
+%%       b & a & b & c \\
+%%       c & a & b & c \\
+%%     \end{array}
+%%   \end{equation*}
+%%   The associativity of this semigroup can be determined by examining all possible triples $(x, y, z)$ in $G^3$ and checking that $(x \cdot y) \cdot z = x \cdot (y \cdot z)$.
+%%   Each element of this semigroup is a left identity and a right zero, but there are no right identities, so it is not a group.
 
-  Unlike for the Latin square property in the previous example, there is no obvious way to tell whether a binary operation is associative simply by scanning the rows and columns.
-  In other words, given only its Cayley table, determining whether a magma is a quasigroup \emph{seems} easier than determining whether a magma is a semigroup.
-  However, there is a polynomial-time algorithm, attributed to F.~W.~Light, for deciding whether a magma is associative; it is simply the naïve algorithmic implementation of the associativity condition.
-\end{example}
+%%   Unlike for the Latin square property in the previous example, there is no obvious way to tell whether a binary operation is associative simply by scanning the rows and columns.
+%%   In other words, given only its Cayley table, determining whether a magma is a quasigroup \emph{seems} easier than determining whether a magma is a semigroup.
+%%   However, there is a polynomial-time algorithm, attributed to F.~W.~Light, for deciding whether a magma is associative; it is simply the naïve algorithmic implementation of the associativity condition.
+%% \end{example}
 
-\begin{example}
-  There is a unique (up to isomorphism) group on three elements $\{a, b, c\}$.
-  Its Cayley table is
-  \begin{equation*}
-    \begin{array}{c | c c c}
-      \cdot & a & b & c \\
-      \hline
-      a & a & b & c \\
-      b & b & c & a \\
-      c & c & a & b \\
-    \end{array}
-  \end{equation*}
-  This group is the group of integers under addition modulo three.
-  It is both a semigroup and a quasigroup.
-\end{example}
+%% \begin{example}
+%%   There is a unique (up to isomorphism) group on three elements $\{a, b, c\}$.
+%%   Its Cayley table is
+%%   \begin{equation*}
+%%     \begin{array}{c | c c c}
+%%       \cdot & a & b & c \\
+%%       \hline
+%%       a & a & b & c \\
+%%       b & b & c & a \\
+%%       c & c & a & b \\
+%%     \end{array}
+%%   \end{equation*}
+%%   This group is the group of integers under addition modulo three.
+%%   It is both a semigroup and a quasigroup.
+%% \end{example}
 
 A \emph{parenthesization} $P$ of a sequence of magma elements $(g_1, \dotsc, g_k)$ is a binary tree that has the magma elements as its leaves (in the order indicated by the sequence).
 The \emph{parenthesized product} of a sequence of magma elements $(g_1, \dotsc, g_k)$ with parenthesization $P$, denoted $P(g_1, \dotsc, g_k)$, is the element that results from performing the magma operation in the order indicated by the parenthesization.
 If $S$ is a subset of magma elements, the \emph{submagma} generated by $S$, denoted $\gen{S}$, is the closure of $S$ under the magma operation and under any parenthesization.
 (For semigroups, and hence for groups, the operation is associative, so the parenthesization is superfluous.)
 
-\begin{example}
-  Consider $(a, c, a, b)$, a sequence of four elements from the quasigroup defined in \autoref{ex:quasigroup}.
-  One parenthesization of this sequence is
-  \begin{equation*}
-    \begin{tikzpicture}[xscale=0.5, yscale=0.3]
-      \node[minimum size=0pt, inner sep=0pt] {}
-      child {
-        child {
-          child {node {$a$}}
-          child[color=white] {}
-        }
-        child[color=white] {}
-      }
-      child {
-        child {
-          child {node {$c$}}
-          child {node {$a$}}
-        }
-        child {
-          child[color=white] {}
-          child {node {$b$}}
-        }
-      };
-    \end{tikzpicture}
-  \end{equation*}
-  which corresponds to the parenthesized product $a \cdot ((c \cdot a) \cdot b)$.
-  According to the Cayley table, this product equals $a$.
-\end{example}
+%% \begin{example}
+%%   Consider $(a, c, a, b)$, a sequence of four elements from the quasigroup defined in \autoref{ex:quasigroup}.
+%%   One parenthesization of this sequence is
+%%   \begin{equation*}
+%%     \begin{tikzpicture}[xscale=0.5, yscale=0.3]
+%%       \node[minimum size=0pt, inner sep=0pt] {}
+%%       child {
+%%         child {
+%%           child {node {$a$}}
+%%           child[color=white] {}
+%%         }
+%%         child[color=white] {}
+%%       }
+%%       child {
+%%         child {
+%%           child {node {$c$}}
+%%           child {node {$a$}}
+%%         }
+%%         child {
+%%           child[color=white] {}
+%%           child {node {$b$}}
+%%         }
+%%       };
+%%     \end{tikzpicture}
+%%   \end{equation*}
+%%   which corresponds to the parenthesized product $a \cdot ((c \cdot a) \cdot b)$.
+%%   According to the Cayley table, this product equals $a$.
+%% \end{example}
 
 \begin{lemma}\label{lem:product}
   For any quasigroup on $n$ elements given as a Cayley table, any sequence $(g_0, \dotsc, g_k)$, and any parenthesization $P$ of depth $d$ on that sequence, the parenthesized product $P(g_0, \dotsc, g_k)$ can be computed by an $\L$-uniform family of unbounded fan-in circuits with size $O(k n^2 \log n)$ and depth $O(d)$.
@@ -198,31 +198,31 @@ If $S$ is a subset of magma elements, the \emph{submagma} generated by $S$, deno
 An element $x$ of a subset $S$ of a magma is \emph{independent with respect to $S$} if $x$ is not in $\gen{S \setminus \{x\}}$.
 A subset $S$ is \emph{independent} if each element of $S$ is independent with respect to $S$.
 
-\begin{example}
-  In the finite group $C_6$, the cyclic group on six elements, the set $\{g^2, g^3\}$ is independent but the set $\{g^2, g^4\}$ is not independent.
-\end{example}
+%% \begin{example}
+%%   In the finite group $C_6$, the cyclic group on six elements, the set $\{g^2, g^3\}$ is independent but the set $\{g^2, g^4\}$ is not independent.
+%% \end{example}
 
 The dual notion of an independent set is that of a generating set.
 If $\gen{S} = G$, then $S$ is called a \emph{generating set for $G$}.
 The \emph{rank of a magma $G$}, denoted $\rank(G)$, is the minimum cardinality of a generating set.
 This terminology extends to semigroups and groups as well.
 
-\begin{example}\label{ex:semigroupgen}
-  Consider the right zero semigroup on $n$ elements, a generalization of \autoref{ex:zero}.
-  In this semigroup, call it $G$, we have $x \cdot y = y$ for each $x$ and $y$ in $G$.
-  The rank of this semigroup must be $n$.
-  Assume for the sake of producing a contradiction that the rank is strictly less than $n$.
-  Thus there is an element $z$ not in the generating set such that $x_1 \cdot \dotsb \cdot x_n = z$, where each $x_i$ is an element of the generating set.
-  This is a contradiction with the fact that $x_1 \cdot \dotsb \cdot x_n = x_n$, since $x_n$ is a right zero.
-  Therefore the rank of the semigroup must be $n$.
-\end{example}
+%% \begin{example}\label{ex:semigroupgen}
+%%   Consider the right zero semigroup on $n$ elements, a generalization of \autoref{ex:zero}.
+%%   In this semigroup, call it $G$, we have $x \cdot y = y$ for each $x$ and $y$ in $G$.
+%%   The rank of this semigroup must be $n$.
+%%   Assume for the sake of producing a contradiction that the rank is strictly less than $n$.
+%%   Thus there is an element $z$ not in the generating set such that $x_1 \cdot \dotsb \cdot x_n = z$, where each $x_i$ is an element of the generating set.
+%%   This is a contradiction with the fact that $x_1 \cdot \dotsb \cdot x_n = x_n$, since $x_n$ is a right zero.
+%%   Therefore the rank of the semigroup must be $n$.
+%% \end{example}
 
-\begin{example}\label{ex:elementary}
-  Consider the elementary abelian $2$-group, $(\mathbb{Z} / 2 \mathbb{Z})^k$, for some positive integer $k$.
-  Let $n$ denote the order of this group, so $n = 2^k$.
-  The minimum generating set for this group is $\{e_1, \dotsc, e_k\}$, where $e_i$ is the $k$-tuple with a one in the $i$th position and a zero in each other position (if we consider the group as a vector space, $e_i$ is the standard basis vector).
-  Thus the group has a minimum generating set of size $k$, which is $\log n$.
-\end{example}
+%% \begin{example}\label{ex:elementary}
+%%   Consider the elementary abelian $2$-group, $(\mathbb{Z} / 2 \mathbb{Z})^k$, for some positive integer $k$.
+%%   Let $n$ denote the order of this group, so $n = 2^k$.
+%%   The minimum generating set for this group is $\{e_1, \dotsc, e_k\}$, where $e_i$ is the $k$-tuple with a one in the $i$th position and a zero in each other position (if we consider the group as a vector space, $e_i$ is the standard basis vector).
+%%   Thus the group has a minimum generating set of size $k$, which is $\log n$.
+%% \end{example}
 
 For quasigroups, we consider a slightly more specific notion of ``generating''\kern-0.5em.
 If $(g_0, \dotsc, g_k)$ is a finite sequence of quasigroup elements denoted $S$ and $P$ is a parenthesization of that sequence, then the \emph{cube of $S$ with respect to $P$}, denoted $\cube_P(S)$, is defined
@@ -250,7 +250,7 @@ However, we conjecture that for sufficiently large sizes, there is a quasigroup 
 If this is incorrect, that is if a small generating set implies a small cube generating sequence, we could use the same definition of rank for all our algebraic structures, simplifying our proofs.
 
 Quasigroups have small cube generating sequences, and groups have small generating sets.
-As of this publication, upper bounds on the size of generating sets for semigroups remain the subject of research \autocite{gray14}, although in general, some semigroups of order $n$ have rank $n$ (see \autoref{ex:semigroupgen}).
+As of this publication, upper bounds on the size of generating sets for semigroups remain the subject of research \autocite{gray14}, although in general, some semigroups of order $n$ have rank $n$ (the zero semigroup, for example).
 Magmas have even less structure than semigroups, and hence lack a meaningful upper bound as well.
 
 An upper bound for the minimum size of a generating set for quasigroups can be proven by the probabilistic method.
@@ -298,7 +298,7 @@ Furthermore, each finite group has an independent \emph{generating} set.
   Therefore the minimum cardinality generating set is independent.
 \end{proof}
 
-Combining the previous two lemmas we conclude that the minimum cardinality of a generating set of a finite group is at most $\log n$; \autoref{ex:elementary} gives a group that achieves the upper bound.
+Combining the previous two lemmas we conclude that the minimum cardinality of a generating set of a finite group is at most $\log n$; the group $(\mathbb{Z} / 2 \mathbb{Z})^k$ achieves this upper bound.
 
 \begin{lemma}\label{lem:log}
   If $G$ is a finite group of order $n$ then the minimum cardinality of a generating set is at most $\log n$, with equality when the group is a finite elementary abelian $2$-group.
