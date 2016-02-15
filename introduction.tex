@@ -26,6 +26,35 @@ We improve the best upper bound on the complexity of the rank problem for quasig
 % object (focus on document) why this document - what the document covers
 This paper proves that with short certificates of correctness, the rank problem for quasigroups and groups can be verified by highly restricted models of computation, and demonstrates how the same strategy can be applied to other algebraic structures.
 
+\begin{wrapfigure}{r}{0pt}
+  \begin{tikzpicture}
+    \node at ( 0, 6) (l2) {$\L^2$};
+    \node at ( 1, 5) (p) {$\P$};
+    \node at ( 0, 5) (bac1) {$\bAC^1$};
+    \node at ( 1, 4) (ac1) {$\AC^1$};
+    \node at ( 0, 4) (bl) {$\bL$};
+    \node at ( 1, 3) (nllog2) {$\NL[\log^2 n]$};
+    \node at (-1, 3) (bfoll) {$\bFOLL$};
+    \node at ( 0, 2) (bfollandbl) {$\bFOLL \cap \bL$};
+    \node at (-1, 1) (foll) {$\FOLL$};
+    \node at ( 1, 1) (l) {$\L$};
+    \node at ( 0, 0) (ac0) {$\AC^0$};
+    \draw (ac0) to (l);
+    \draw (ac0) to (foll);
+    \draw (ac0) to (bfollandbl);
+    \draw[bend left] (foll) to (bfoll);
+    \draw[bend right] (l) to (nllog2);
+    \draw (nllog2) to (bl);
+    \draw (bfollandbl) to (bl);
+    \draw (bfollandbl) to (bfoll);
+    \draw (bfoll) to (bac1);
+    \draw (bl) to (bac1);
+    \draw (nllog2) to (ac1);
+    \draw (ac1) to (bac1);
+    \draw (ac1) to (p);
+    \draw (bac1) to (l2);
+  \end{tikzpicture}
+\end{wrapfigure}
 % Summary
 %
 % findings (focus on author) what? - what the work revealed when performing the task
@@ -35,53 +64,24 @@ The general strategy is to reduce the problem of computing rank to the problem o
 For the sake of completeness, we show how this strategy applies to semigroups and magmas in general, though these results are less interesting because those algebraic structures lack the small generating sets that quasigroups have.
 We show that the rank problem for rings is decidable by a circuit of depth $O(\log n)$ augmented with $O(\log^2 n)$ nondeterministic bits (a class denoted $\bAC^1$).
 Finally, we show how this technique applies to other notions of rank.
-\autoref{tab:summary} summarizes these improvements, and \autoref{fig:inclusions} demonstrates graphically why these improvements are so significant.
-(We could not find an explicit upper bound for magmas, semigroups, or rings, but other papers imply that the problems are in $\NP$.)
-\begin{table}
-  \caption{\label{tab:summary}We improve algorithms for computing rank of finite algebraic structures.}
-  \begin{center}
-    \begin{tabular}{r l l}
-      & old & new \\[5pt]
-      magma & $\NP$ & $\NP$ \\
-      semigroup & $\NP$ & $\NP$ \\
-      quasigroup & $\bP$ & $\bFOLL$ \\
-      group & $\L^2$ & $\bFOLL \cap \bL$ \\
-      ring & $\NP$ & $\bAC^1$
-    \end{tabular}
-  \end{center}
-\end{table}
-\begin{figure}
-  \caption{\label{fig:inclusions}Hierarchies of complexity classes with limited nondeterminism can circumvent common deterministic complexity classes.}
-  \begin{center}
-    \begin{tikzpicture}
-      \node at ( 0, 6) (l2) {$\L^2$};
-      \node at ( 1, 5) (p) {$\P$};
-      \node at ( 0, 5) (bac1) {$\bAC^1$};
-      \node at ( 1, 4) (ac1) {$\AC^1$};
-      \node at ( 0, 4) (bl) {$\bL$};
-      \node at ( 1, 3) (nllog2) {$\NL[\log^2 n]$};
-      \node at (-1, 3) (bfoll) {$\bFOLL$};
-      \node at ( 0, 2) (bfollandbl) {$\bFOLL \cap \bL$};
-      \node at (-1, 1) (foll) {$\FOLL$};
-      \node at ( 1, 1) (l) {$\L$};
-      \node at ( 0, 0) (ac0) {$\AC^0$};
-      \draw (ac0) to (l);
-      \draw (ac0) to (foll);
-      \draw (ac0) to (bfollandbl);
-      \draw[bend left] (foll) to (bfoll);
-      \draw[bend right] (l) to (nllog2);
-      \draw (nllog2) to (bl);
-      \draw (bfollandbl) to (bl);
-      \draw (bfollandbl) to (bfoll);
-      \draw (bfoll) to (bac1);
-      \draw (bl) to (bac1);
-      \draw (nllog2) to (ac1);
-      \draw (ac1) to (bac1);
-      \draw (ac1) to (p);
-      \draw (bac1) to (l2);
-    \end{tikzpicture}
-  \end{center}
-\end{figure}
+%% \autoref{tab:summary} summarizes these improvements, and
+The inclusion diagram at right demonstrates graphically why these improvements are so significant.
+%% (We could not find an explicit upper bound for magmas, semigroups, or rings, but other papers imply that the problems are in $\NP$.)
+%% \begin{table}
+%%   \caption{\label{tab:summary}We improve algorithms for computing rank of finite algebraic structures.}
+%%   \begin{center}
+%%     \begin{tabular}{r l l}
+%%       & old & new \\[5pt]
+%%       magma & $\NP$ & $\NP$ \\
+%%       semigroup & $\NP$ & $\NP$ \\
+%%       quasigroup & $\bP$ & $\bFOLL$ \\
+%%       group & $\L^2$ & $\bFOLL \cap \bL$ \\
+%%       ring & $\NP$ & $\bAC^1$
+%%     \end{tabular}
+%%   \end{center}
+%% \end{table}
+%% \begin{figure}
+%%   \caption{\label{fig:inclusions}Hierarchies of complexity classes with limited nondeterminism can circumvent common deterministic complexity classes.}
 
 % conclusion (focus on readers) so what? - what the findings mean for the audience
 These are improvements on the previous best upper bounds for these problems.
