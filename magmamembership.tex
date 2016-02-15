@@ -94,7 +94,7 @@ Although the notion of cube generating sequence will give us a better upper boun
 Since we know from \autoref{lem:small} that we need only consider candidate generating sets of size $O(\log n)$ and candidate parenthesizations of depth $O(\log \log n)$, we use a generalized form of the quasigroup membership problem that allows us to specify bounds on the generating set size and parenthesization depth.
 
 The \textsc{Bounded Subquasigroup Membership} problem is defined as follows.
-The inputs are a quasigroup $G$ given as a Cayley table, a quasigroup element $h$, a finite set $S$ of semigroup elements, a positive integer $k$, and a positive integer $d$.
+The inputs are a quasigroup $G$ given as a Cayley table, a quasigroup element $h$, a finite set $S$ of quasigroup elements, a positive integer $k$, and a positive integer $d$.
 The problem is to decide whether there is a sequence $s$ in $S^k$ and a parenthesization of depth $d$ on $k$ elements such that $h = P(s)$.
 (This is the definition of ``$h \in \gen{S}$'', but with specific size and depth bounds on the binary tree that generates $h$.)
 This problem should be at least as difficult as \textsc{Cube Membership}: the former requires finding an appropriate sequence and parenthesization, whereas for the latter, they are fixed beforehand.
