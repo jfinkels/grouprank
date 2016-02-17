@@ -21,7 +21,7 @@ However, we could use other definitions of rank for groups, semigroups, etc., th
 %
 % What was undertaken to address the need?
 %
-We apply the same analysis as in \autoref{sec:rank} with the new definition to get some similar results;
+We apply the same analysis as in Section~\ref{sec:rank} with the new definition to get some similar results;
 % %% Object (document - why this document?) %%
 %
 % What does this document cover?
@@ -34,7 +34,7 @@ this section summarizes those similarities and differences.
 %
 % What did the work reveal when performing the task?
 %
-\autoref{thm:otherranks} shows that for groups, most other rank definitions yield limited nondeterminism (or conondeterminism) algorithms with simple verifiers, similar to that of \autoref{thm:rank}.
+Theorem~\ref{thm:otherranks} shows that for groups, most other rank definitions yield limited nondeterminism (or conondeterminism) algorithms with simple verifiers, similar to that of Theorem~\ref{thm:rank}.
 % %% Conclusion (readers - so what?)
 %
 % What did the findings mean for the audience?
@@ -93,7 +93,7 @@ Each type of rank is bounded below by the type of rank listed below it.
 %%   Therefore, $\rank_u(G) \leq \rank_L(G)$.
 %% \end{proof}
 
-The framework of \autoref{sec:rank} provides a simple way of determining the complexity of computing these functions.
+The framework of Section~\ref{sec:rank} provides a simple way of determining the complexity of computing these functions.
 The decision problems corresponding to these rank functions are defined similar to the rank problems above.
 %% \begin{align*}
 %%   \textsc{Magma Large Rank} & = \{ (G, k) \, | \, \rank_L(G) \leq k \} \\
@@ -126,7 +126,7 @@ $$
 %%   \rank_s(G) \geq k & \iff \forall S \subseteq G^k\colon \bigwedge_{x \in S} x \notin \gen{S \setminus \{x\}}
 %% \end{align*}
 
-By \autoref{lem:magind}, the upper rank of any finite group is $\log n$, so the small, lower, and intermediate ranks have an upper bound of $\log n$ as well.
+By Lemma~\ref{lem:magind}, the upper rank of any finite group is $\log n$, so the small, lower, and intermediate ranks have an upper bound of $\log n$ as well.
 (For large rank, however, it seems that any bound must depend on the prime factorization of $n$.)
 
 For any language $L$, let $\overline{L}$ denote the complement of $L$ in $\Sigma^*$.

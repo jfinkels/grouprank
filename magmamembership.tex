@@ -84,14 +84,14 @@ The problem is to decide whether $h \in \cube_P(S)$.
   Thus the circuit consists of $2^k$ subcircuits joined to a single \textsc{or} gate, each subcircuit deciding whether one of the $2^k$ possible $k$-bit sequences $(\epsilon_1, \dotsc, \epsilon_k)$ produces $h$ under the given parenthesization.
 
   The subcircuit corresponding to binary sequence $(\epsilon_1, \dotsc, \epsilon_k)$ computes the parenthesized product $P(g_0, g_1^{\epsilon_1}, \dotsc, g_k^{\epsilon_k})$.
-  Computing the parenthesized product can be implemented in $O(k n^2 \log n)$ size and $O(d)$ depth by \autoref{lem:product}.
+  Computing the parenthesized product can be implemented in $O(k n^2 \log n)$ size and $O(d)$ depth by Lemma~\ref{lem:product}.
   Comparing the element produced this way to the element $h$ can be done with a constant depth, $O(\log n)$ size equality comparison circuit.
 
   We conclude that the overall size of the circuit is $O(2^k k n^2 \log n)$ and the overall depth of the circuit is $O(d)$.
 \end{proof}
 
 Although the notion of cube generating sequence will give us a better upper bound for computing quasigroup rank, we prefer to consider the more natural notion of a generating set, as we did for magmas, semigroups, and quasigroups.
-Since we know from \autoref{lem:small} that we need only consider candidate generating sets of size $O(\log n)$ and candidate parenthesizations of depth $O(\log \log n)$, we use a generalized form of the quasigroup membership problem that allows us to specify bounds on the generating set size and parenthesization depth.
+Since we know from Lemma~\ref{lem:small} that we need only consider candidate generating sets of size $O(\log n)$ and candidate parenthesizations of depth $O(\log \log n)$, we use a generalized form of the quasigroup membership problem that allows us to specify bounds on the generating set size and parenthesization depth.
 
 The \textsc{Bounded Subquasigroup Membership} problem is defined as follows.
 The inputs are a quasigroup $G$ given as a Cayley table, a quasigroup element $h$, a finite set $S$ of quasigroup elements, a positive integer $k$, and a positive integer $d$.
@@ -105,10 +105,10 @@ This problem should be at least as difficult as \textsc{Cube Membership}: the fo
   In particular, if $k = O(\log n)$ and $d = O(\log \log n)$, then \textsc{Bounded Subquasigroup Membership} is in $\bFOLL$.
 \end{lemma}
 \begin{proof}
-  The algorithm is similar to that of \autoref{lem:cubemem}, except now we must nondeterministically choose a sequence and parenthesization.
+  The algorithm is similar to that of Lemma~\ref{lem:cubemem}, except now we must nondeterministically choose a sequence and parenthesization.
   The circuit nondeterministically chooses $k$ elements of $S$ and a parenthesization of $k$ elements of depth $d$, then accepts if and only if that parenthesized product is $h$.
   Choosing $k$ elements, each of size $O(\log n)$, requires $O(k \log n)$ bits and choosing a parenthesization requires $O(k)$ bits, so the total number of nondeterministic bits required is $O(k \log n)$.
-  By \autoref{lem:product}, computing the parenthesized product requires a circuit of size $O(k n^2 \log n)$ and depth $O(d)$.
+  By Lemma~\ref{lem:product}, computing the parenthesized product requires a circuit of size $O(k n^2 \log n)$ and depth $O(d)$.
   The final equality comparison requires size $O(\log n)$ and depth $O(1)$.
   We conclude that the overall size of the circuit is $O(k n^2 \log n)$ and the overall depth of the circuit is $O(d)$.
 \end{proof}

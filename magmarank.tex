@@ -14,7 +14,7 @@ This section uses these reductions and the results of the previous section to pr
 % Summary
 %
 % findings (focus on author) what? - what the work revealed when performing the task
-\autoref{thm:rank} proves that for semigroups and magmas, the rank problem is in $\NP$ (which was already known), for quasigroups $\bFOLL$, and for groups $\bFOLL \cap \bL$.
+Theorem~\ref{thm:rank} proves that for semigroups and magmas, the rank problem is in $\NP$ (which was already known), for quasigroups $\bFOLL$, and for groups $\bFOLL \cap \bL$.
 % conclusion (focus on readers) so what? - what the findings mean for the audience
 This means that for groups and quasigroups, the problem can be verified quickly in parallel given a very short witness.
 % perspective (focus on anyone) what now? - what should be done next
@@ -50,16 +50,16 @@ That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigro
   For the reduction to \textsc{Bounded Subquasigroup Membership}, the witness includes also the depth $d$ of parenthesizations, and the reduction must output $d$ as well as the number $k$.
 
   The correctness of the reductions follows immediately from the definitions of rank, but the real interest is in the complexity.
-  Unlike for quasigroups and groups (\autoref{lem:small} and \autoref{lem:log}), we have no general upper bound on the minimum size of a generating set for magmas.
+  Unlike for quasigroups and groups (Lemma~\ref{lem:small} and Lemma~\ref{lem:log}), we have no general upper bound on the minimum size of a generating set for magmas.
   Thus, for magmas, the best we can do is nondeterministically choose a set of $k$ generators and determine if that set generates the magma, where $k$ can be as large as the number of elements in the magma.
   Since each magma element can be represented by $O(\log n)$ bits, the number of nondeterministic bits used is $O(n \log n)$.
   For semigroups, we apply the exact same analysis.
 
-  By \autoref{lem:small}, it suffices to consider inputs to \textsc{Quasigroup Rank} in which $k$ is in $O(\log n)$ and inputs to \textsc{Cube Membership} in which $P$ is of depth $O(\log \log n)$.
+  By Lemma~\ref{lem:small}, it suffices to consider inputs to \textsc{Quasigroup Rank} in which $k$ is in $O(\log n)$ and inputs to \textsc{Cube Membership} in which $P$ is of depth $O(\log \log n)$.
   Therefore, the witness for that reduction is a sequence $S$ of $k$ quasigroup elements and a parenthesization $P$ of depth $O(\log \log n)$.
   Now the number of nondeterministic bits used is $O(\log^2 n)$, since $S$ is a set of $O(\log n)$ strings, each of length $O(\log n)$.
-  For the reduction to \textsc{Bounded Subquasigroup Membership}, we still need $O(\log^2 n)$ bits to guess the generating set and the depth $d$, but we can assume $k = O(\log n)$ and $d = O(\log \log n)$, by \autoref{lem:small}.
-  For groups, we invoke \autoref{lem:log}, which states that any group of order $n$ has a generating set of size at most $\log n$.
+  For the reduction to \textsc{Bounded Subquasigroup Membership}, we still need $O(\log^2 n)$ bits to guess the generating set and the depth $d$, but we can assume $k = O(\log n)$ and $d = O(\log \log n)$, by Lemma~\ref{lem:small}.
+  For groups, we invoke Lemma~\ref{lem:log}, which states that any group of order $n$ has a generating set of size at most $\log n$.
   Also, we don't need to guess a parenthesization (although we still use $O(\log^2 n)$ nondeterministic bits to guess the generating set).
 \end{proof}
 
@@ -75,12 +75,12 @@ That theorem demonstrates a $\bFOLL$ algorithm for deciding whether two quasigro
   \end{enumerate}
 \end{theorem}
 \begin{proof}
-  Follows from \autoref{lem:ctt} and \autoref{lem:ranktomem}, along with
+  Follows from Lemma~\ref{lem:ctt} and Lemma~\ref{lem:ranktomem}, along with
   \begin{enumerate}
-  \item \autoref{lem:submagmamem} for magmas,
-  \item \autoref{lem:subsemigroupmem} for semigroups,
-  \item \autoref{lem:cubemem} for quasigroups,
-  \item \autoref{lem:subgroupmem} for groups.
+  \item Lemma~\ref{lem:submagmamem} for magmas,
+  \item Lemma~\ref{lem:subsemigroupmem} for semigroups,
+  \item Lemma~\ref{lem:cubemem} for quasigroups,
+  \item Lemma~\ref{lem:subgroupmem} for groups.
   \end{enumerate}
   For groups the problem is also in $\bFOLL$ since a group is a quasigroup.
 \end{proof}

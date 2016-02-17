@@ -22,7 +22,7 @@ This section shows how to reduce the rank problem to the membership problem, the
 % Summary
 %
 % findings (focus on author) what? - what the work revealed when performing the task
-\autoref{thm:ringrank} below yields an upper bound of $\bAC^1$ for computing the rank of a ring given as a pair of Cayley tables.
+Theorem~\ref{thm:ringrank} below yields an upper bound of $\bAC^1$ for computing the rank of a ring given as a pair of Cayley tables.
 % conclusion (focus on readers) so what? - what the findings mean for the audience
 The hardness of this problem lies in computing the rank with respect to the underlying monoid (which is just a semigroup with an identity element, so the worst-case complexity of the rank problem for monoids and for semigroups is the same).
 % perspective (focus on anyone) what now? - what should be done next
@@ -53,13 +53,13 @@ But in general, for arbitrary (commutative or non-commutative) rings, the proble
 %%   At this point, we have generated each element in the generating set for the monoid, so we can generate all other elements.
 %% \end{example}
 
-In order to compute the rank of the ring, we reduce the problem to the corresponding membership problem as in \autoref{sec:rank}.
+In order to compute the rank of the ring, we reduce the problem to the corresponding membership problem as in Section~\ref{sec:rank}.
 
 \begin{lemma}\label{lem:ringranktomem}
   $\textsc{Ring Rank} \leq_{ctt}^{\bAC^0} \textsc{Subring Membership}$.
 \end{lemma}
 \begin{proof}
-  The reduction is identical to the ones in \autoref{lem:ranktomem}, and uses only $O(\log^2 n)$ bits of nondeterminism because any generating set must generate the additive group, and the additive group has a generating set of size at most $\log n$ by \autoref{lem:log}.
+  The reduction is identical to the ones in Lemma~\ref{lem:ranktomem}, and uses only $O(\log^2 n)$ bits of nondeterminism because any generating set must generate the additive group, and the additive group has a generating set of size at most $\log n$ by Lemma~\ref{lem:log}.
 \end{proof}
 
 \begin{lemma}\label{lem:memtopath}
@@ -104,9 +104,9 @@ In order to compute the rank of the ring, we reduce the problem to the correspon
 \end{theorem}
 \begin{proof}
   %% We already know that \textsc{Ring Rank} is in $\P$ by \autocite[Theorem~7]{at06}, which provides a polynomial-time algorithm for computing a minimum generating set for a nilpotent group, and the underlying additive group of any ring is nilpotent because it is abelian by definition.
-  \textsc{Directed Path} is in $\NL$, and $\NL$ is closed under logarithmic space many-one reductions, so \textsc{Subring Membership} is in $\NL$, by \autoref{lem:memtopath}.
+  \textsc{Directed Path} is in $\NL$, and $\NL$ is closed under logarithmic space many-one reductions, so \textsc{Subring Membership} is in $\NL$, by Lemma~\ref{lem:memtopath}.
   Since $\NL \subseteq \AC^1$, there is a $\bAC^0$ conjunctive truth-table reduction from \textsc{Ring Rank} to a problem in $\AC^1$.
-  Thus, by a proof similar to that of \autoref{lem:ctt}, we have \textsc{Ring Rank} in $\bAC^1$.
+  Thus, by a proof similar to that of Lemma~\ref{lem:ctt}, we have \textsc{Ring Rank} in $\bAC^1$.
 \end{proof}
 
 %% Can the complexity of \textsc{Subring Membership} be reduced, thereby reducing the complexity of \textsc{Ring Rank}?
