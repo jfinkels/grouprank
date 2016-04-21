@@ -1,0 +1,76 @@
+\newcommand{\dash}{\textnormal{-}}
+\section{Parameterized complexity of magma rank}\label{sec:parameterized}
+
+\todo{Introduction to this section.}
+\todo{Describe the results of this section in the introduction to the paper.}
+
+% Foreword
+%
+% context (focus on anyone) why now? - current situation, and why the need is so important
+% need (focus on readers) why you? - why this is relevant to the reader, and why something needed to be done
+% task (focus on author) why me? - what was undertaken to address the need
+% object (focus on document) why this document - what the document covers
+%
+% Summary
+%
+% findings (focus on author) what? - what the work revealed when performing the task
+% conclusion (focus on readers) so what? - what the findings mean for the audience
+% perspective (focus on anyone) what now? - what should be done next
+
+Using the standard parameterization of the rank problem, the parameterized version of the magma rank problem is $\para \WP$-complete ($\para \WP$ is also known as $\W[P]$ and $\para \P$ is also known as $\FPT$).
+
+\begin{theorem}[{\autocite[Theorem~3.19]{fg06}}]
+  $p \dash \textsc{Magma Rank}$ is complete for $\para \WP$ under $\para \P$ reductions.
+\end{theorem}
+
+The parameterized version of the semigroup rank problem is $\para \WNL$-complete.
+  
+\begin{theorem}[{\autocite[Theorem~3.12]{est15}}]
+  $p \dash \textsc{Semigroup Rank}$ is complete for the class $\para \WNL$ under $\para \FO$ reductions 
+\end{theorem}
+
+The parameterized version of the quasigroup rank problem is even easier, since we deal only with cube generating sequences instead of generating sets.
+
+\begin{theorem}
+   $p \dash \textsc{Quasigroup Rank}$ is in $\para \WAC^{0\uparrow}$.
+\end{theorem}
+\begin{proof}
+  The algorithm for deciding quasigroup rank given in \autoref{thm:rank} is as follows.
+  Given a quasigroup $G$, and integer $k$, and a witness sequence $(x_0, \dotsc, x_k)$ and parenthesization $P$, the circuit
+  \[
+  \bigwedge_{g \in G} \bigvee_{\vec{\epsilon} \in \{0, 1\}^k} g = P(x_0, x_1^{\epsilon_1}, \dotsc, x_k^{\epsilon_k})
+  \]
+  decides whether each element of $G$ is in $\cube_P(S)$.
+  The sequence $(x_0, \dotsc, x_k)$ requires $O(k \log n)$ bits and the parenthesization $P$ requires $O(k)$ bits.
+  There are $n$ conjuncts and $2^k$ disjuncts, so the size of the circuit is $O(n 2^k)$ times the size of the circuit required to compute the parenthesized product of $k + 1$ quasigroup elements, which is $O(k n^2 \log n)$ by \autoref{lem:product}.
+  Thus the size is of the form $f(k) n^{O(1)}$.
+  The depth of this circuit is dominated by the depth of computing the parenthesization $P$, which is $O(d)$ by \autoref{lem:product}.
+  Since the depth of the parenthesization of $k$ elements is at most $k$, the overall depth of this circuit is of the form $g(k)$ for some computable function $g$.
+  Since the number of nondeterministic bits is of the form $h(k) \log n$, the size of the circuit is of the form $f(k) n^{O(1)}$, and the depth of the circuit is of the form $g(k)$, we conclude that the parameterized group rank problem is in $\para \WAC^0$.
+\end{proof}
+
+\begin{corollary}
+  $p \dash \textsc{Group Rank}$ is in $\para \WAC^{0\uparrow}$.
+\end{corollary}
+
+Using the more natural generating set definition of group rank instead of the cube generating sequence definition, our naïve reduction to the subgroup membership problem does not work.
+For this, we would need to know the parameterized complexity of the subgroup membership problem when parameterized by the cardinality of the generating set.
+Although the subgroup membership (decision) problem reduces to the undirected reachability problem, it is not clear whether the parameterized version reduces to the parameterized undirected reachability problem, parameterized by the length of the path.
+The problem here is that the parameters are independent, in a sense: the cardinality of the generating set does not tell us anything about the \emph{length} of the path from the identity element to the target group element.
+Even using the Reachability Lemma \autocite[Theorem~3.1]{bs84}, the distance to the target element is $O(\log^2 n)$, an upper bound that depends on the size of the input, not the parameter.
+
+Still, the problem is in $\para \WL$.
+
+\begin{theorem}
+  $p \dash \textsc{Group Rank}$ is in $\para \WL$.
+\end{theorem}
+\begin{proof}
+  The input to the Turing machine is $G$ and $k$ and the witness is $S$.
+  The Turing machine simulates the expression
+  \[
+  \bigwedge_{g \in G} g \in \gen{S}.
+  \]
+  Enumerating each $g$ uses at most $O(\log n)$ space, and deciding whether $g \in \gen{S}$ is decidable in space $O(\log n)$ by \autoref{lem:subgroupmem}.
+  The size of the witness in bits is $O(k \log n)$.
+  Two-way access to the witness is required, since each $g \in \gen{S}$ query requires two-way access to $S$.
+\end{proof}
